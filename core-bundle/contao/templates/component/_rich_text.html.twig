@@ -23,7 +23,7 @@
 
     {% set rich_text_attributes = attrs(rich_text.attributes|default)
         .addClass('rte')
-        .mergeWith(rich_text_attributes ?? null)
+        .mergeWith(rich_text_attributes|default)
     %}
     <div{% block rich_text_attributes %}{{ rich_text_attributes }}{% endblock %}>
         {% block rich_text_inner %}

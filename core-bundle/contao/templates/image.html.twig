@@ -3,7 +3,7 @@
         <a{{ attrs()
             .set('href', imageHref|default(href))
             .setIfExists('title', linkTitle|default|insert_tag)
-            .mergeWith(attributes ?? null)
+            .mergeWith(attributes|default)
         }}>
     {% endif %}
 

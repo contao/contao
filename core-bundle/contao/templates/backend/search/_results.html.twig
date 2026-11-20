@@ -29,7 +29,7 @@
                                             .set('title', 'MSC.searchHitView'|trans([hit.title]))
                                             .set('data-contao--tooltips-target', 'tooltip')
                                             .addClass('hit_title')
-                                            .mergeWith(hit_title_attributes ?? null)
+                                            .mergeWith(hit_title_attributes|default)
                                         %}
                                         <a{{ hit_title_attributes }}>
                                             {% for item in hit.breadcrumbs %}

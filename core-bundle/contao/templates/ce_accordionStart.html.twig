@@ -1,7 +1,7 @@
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'ce_accordion', 'block'])
     .addStyle(style|default)
-    .mergeWith(wrapperAttributes ?? null)
+    .mergeWith(wrapperAttributes|default)
 %}
 
 <section{{ wrapperAttributes }}>

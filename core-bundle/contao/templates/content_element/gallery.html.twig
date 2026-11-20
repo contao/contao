@@ -4,7 +4,7 @@
 
 {% set attributes = attrs()
     .addClass("content-#{type}--cols-#{items_per_row|default(4)}")
-    .mergeWith(attributes ?? null)
+    .mergeWith(attributes|default)
 %}
 
 {% block content %}

@@ -6,7 +6,7 @@
         {% set link_attributes = attrs()
             .set('href', '#top')
             .set('data-toplink')
-            .mergeWith(link_attributes ?? null)
+            .mergeWith(link_attributes|default)
         %}
         <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
             {%- block link_inner %}
@@ -20,7 +20,7 @@
             {% add 'toplink_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
-                    .mergeWith(script_attributes ?? null)
+                    .mergeWith(script_attributes|default)
                 %}
                 <script{{ script_attributes }}>
                     document.querySelectorAll('*[data-toplink]').forEach(link => {

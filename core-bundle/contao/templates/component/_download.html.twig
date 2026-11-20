@@ -42,7 +42,7 @@
             .set('href', download.href)
             .setIfExists('title', title)
             .setIfExists('type', download.file.mimeType(''))
-            .mergeWith(download_link_attributes ?? null)
+            .mergeWith(download_link_attributes|default)
         %}
         <a{% block download_link_attributes %}{{ download_link_attributes }}{% endblock %}>
             {%- if as_editor_view|default -%}

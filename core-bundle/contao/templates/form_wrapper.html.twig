@@ -1,7 +1,7 @@
 {% set wrapperAttributes = attrs(cssID|default)
     .addClass([class, 'block'])
     .addStyle(style|default)
-    .mergeWith(wrapperAttributes ?? null)
+    .mergeWith(wrapperAttributes|default)
 %}
 
 <!-- indexer::stop -->

@@ -81,7 +81,7 @@
             {% add 'list_script' to body %}
                 {% set script_attributes = attrs()
                     .setIfExists('nonce', csp_nonce('script-src'))
-                    .mergeWith(script_attributes ?? null)
+                    .mergeWith(script_attributes|default)
                 %}
                 <script{{ script_attributes }}>
                     {# Shuffle lists #}
@@ -142,7 +142,7 @@
     {% if not pagination|default %}
         {% set link_attributes = attrs()
             .set('data-page', page)
-            .mergeWith(link_attributes ?? null)
+            .mergeWith(link_attributes|default)
         %}
     {% endif %}
     {{ parent() }}

@@ -1,6 +1,6 @@
 {% set wrapperAttributes = attrs()
     .addClass([this.prefix, this.class|default])
-    .mergeWith(wrapperAttributes ?? null)
+    .mergeWith(wrapperAttributes|default)
 %}
 
 <div{{ wrapperAttributes }}>

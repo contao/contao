@@ -12,7 +12,7 @@
         .addClass('tl_select')
         .addClass('active', active|default)
         .set('onchange', 'this.form.requestSubmit()', auto_submit|default(false))
-        .mergeWith(select_attributes ?? null)
+        .mergeWith(select_attributes|default)
     %}
     <select{{ select_attributes }}>
         {% for option in options %}
