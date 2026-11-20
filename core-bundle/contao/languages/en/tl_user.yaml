@@ -1,0 +1,161 @@
+tl_user:
+    username:
+        - Username
+        - Please enter a unique username.
+    name:
+        - Name
+        - Please enter the first and last name.
+    email:
+        - E-mail address
+        - Please enter a valid e-mail address.
+    language:
+        - Back end language
+        - Here you can choose the back end language.
+    backendWidth:
+        - Maximum width
+        - Here you can limit the width of the back end container.
+    uploader:
+        - File uploader
+        - Here you can choose a file uploader.
+    showHelp:
+        - Show explanation
+        - Show a short explanation text below each input field.
+    thumbnails:
+        - Show thumbnail images
+        - Show thumbnail images in the file manager.
+    useRTE:
+        - Enable the rich text editor
+        - Use the rich text editor to format text elements.
+    useCE:
+        - Enable the code editor
+        - Use the code editor to modify code elements.
+    doNotCollapse:
+        - Do not collapse content elements
+        - Do not collapse content elements in the back end preview.
+    doNotHideMessages:
+        - Keep pop-up messages
+        - Do not automatically hide pop-up messages.
+    pwChange:
+        - Password change required
+        - Make the user change his password upon the next login.
+    admin:
+        - Make the user an administrator
+        - Administrators have unlimited access to all modules and elements!
+    groups:
+        - User groups
+        - Here you can assign the user to one or more groups.
+    inherit:
+        - Permission inheritance
+        - Here you can define which group permissions the user inherits.
+    group:
+        - Use group settings only
+        - The user inherits only group permissions.
+    extend:
+        - Extend group settings
+        - The group permissions are extended by individual ones.
+    custom:
+        - Use individual settings only
+        - Only individual permissions are applied.
+    modules:
+        - Back end modules
+        - Here you can grant access to one or more back end modules.
+    themes:
+        - Theme modules
+        - Here you can grant access to the theme modules.
+    elements:
+        - Content elements
+        - Here you can select the allowed content element types.
+    fields:
+        - Form fields
+        - Here you can select the allowed form field types.
+    frontendModules:
+        - Front end modules
+        - Here you can select the allowed front end module types.
+    pagemounts:
+        - Pagemounts
+        - Here you can grant access to one or more pages (subpages are included automatically).
+    alpty:
+        - Allowed page types
+        - Here you can select the page types you want to allow.
+    filemounts:
+        - Filemounts
+        - Here you can grant access to one or more folders (subfolders will be included automatically).
+    imageSizes:
+        - Image sizes
+        - Here you can grant access to one or more image sizes.
+    forms:
+        - Allowed forms
+        - Here you can grant access to one or more forms.
+    amg:
+        - Allowed member groups
+        - Members of these groups can be used in the front end preview.
+    cud:
+        0: Table permissions
+        1: Here you can select which operations are allowed for which table.
+        create: Create
+        update: Update
+        delete: Delete
+        other: Additional permissions
+        table_create: Create records in "%s"
+        table_update: Update records of "%s"
+        table_delete: Delete records of "%s"
+    disable:
+        - Deactivate
+        - Temporarily disable the account.
+    start:
+        - Activate on
+        - If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        - Deactivate on
+        - If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    session:
+        - Purge data
+        - Please select the data you want to purge.
+    name_legend: Name and e-mail
+    backend_legend: Back end settings
+    password_legend: Password settings
+    admin_legend: Administrator
+    groups_legend: User groups
+    modules_legend: Allowed modules
+    elements_legend: Allowed elements
+    pagemounts_legend: Pagemounts
+    filemounts_legend: Filemounts
+    imageSizes_legend: Image sizes
+    forms_legend: Form permissions
+    amg_legend: Allowed member groups
+    cud_legend: Table permissions
+    account_legend: Account settings
+    session_legend: Clear cache
+    sessionLabel: Session data
+    htmlLabel: Image cache
+    previewLabel: Preview cache
+    tempLabel: Shared cache
+    sessionPurged: The session data has been purged
+    htmlPurged: The image cache has been purged
+    previewPurged: The preview cache has been purged
+    tempPurged: The shared cache has been purged
+    FileUpload: Default uploader
+    useTwoFactor: Use two-factor authentication
+    new:
+        1: Create a new user
+    show:
+        1: Show the details of user ID %s
+    versions:
+        1: Show the versions of user ID %s
+    edit:
+        1: Edit user ID %s
+    copy:
+        - Duplicate
+        - Duplicate user ID %s
+    delete:
+        1: Delete user ID %s
+    toggle:
+        - Activate/deactivate user
+        - Deactivate user ID %s
+        - Activate user ID %s
+        - Deactivate
+        - Activate
+    su:
+        - Switch user
+        - Switch to user ID %s
+    tableLabel: User

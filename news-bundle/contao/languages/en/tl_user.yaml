@@ -1,0 +1,5 @@
+tl_user:
+    news:
+        - Allowed archives
+        - Here you can grant access to one or more news archives.
+    news_legend: News permissions

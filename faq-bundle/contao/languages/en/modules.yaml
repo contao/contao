@@ -1,0 +1,16 @@
+MOD:
+    faq:
+        - FAQ
+        - Manage frequently asked questions
+    tl_faq: Questions
+FMD:
+    faq: FAQ
+    faqlist:
+        - FAQ list
+        - Adds a list of frequently asked questions to the page
+    faqreader:
+        - FAQ reader
+        - Shows the answer to a frequently asked question
+    faqpage:
+        - FAQ page
+        - Shows the FAQ list and FAQ reader on the same page

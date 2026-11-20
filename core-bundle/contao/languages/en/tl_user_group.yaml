@@ -1,0 +1,47 @@
+tl_user_group:
+    name:
+        - Title
+        - Please enter the group title.
+    alexf:
+        - Allowed fields
+        - Here you can choose which fields will be editable.
+    disable:
+        - Deactivate
+        - Temporarily disable the group.
+    start:
+        - Activate on
+        - If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        - Deactivate on
+        - If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    title_legend: Title
+    modules_legend: Allowed modules
+    elements_legend: Allowed elements
+    pagemounts_legend: Pagemounts
+    filemounts_legend: Filemounts
+    imageSizes_legend: Image sizes
+    forms_legend: Form permissions
+    amg_legend: Allowed member groups
+    cud_legend: Table permissions
+    alexf_legend: Allowed fields
+    account_legend: Group settings
+    new:
+        1: Create a new user group
+    show:
+        1: Show the details of user group ID %s
+    versions:
+        1: Show the versions of user group ID %s
+    edit:
+        1: Edit user group ID %s
+    copy:
+        - Duplicate
+        - Duplicate user group ID %s
+    delete:
+        1: Delete user group ID %s
+    toggle:
+        - Activate/deactivate user group
+        - Deactivate user group ID %s
+        - Activate user group ID %s
+        - Deactivate
+        - Activate
+    tableLabel: User group

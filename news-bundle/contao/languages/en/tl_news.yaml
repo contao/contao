@@ -1,0 +1,130 @@
+tl_news:
+    headline:
+        - Title
+        - Please enter the news title.
+    alias:
+        - News alias
+        - The news alias is a unique reference to the news item which can be called instead of its numeric ID.
+    author:
+        - Author
+        - Here you can change the author of the news item.
+    date:
+        - Date
+        - Please enter the date according to the global date format.
+    time:
+        - Time
+        - Please enter the time according to the global time format.
+    pageTitle:
+        - Meta title
+        - Here you can add a custom meta title to overwrite the default page title.
+    robots:
+        - Robots tag
+        - Here you can overwrite how search engines handle the news item.
+    description:
+        - Meta description
+        - Here you can add a custom meta description to overwrite the default page description.
+    canonicalLink:
+        - Canonical URL
+        - Here you can set a custom canonical URL like https://example.com/.
+    subheadline:
+        - Subheadline
+        - Here you can enter a subheadline.
+    teaser:
+        - News teaser
+        - The news teaser can be shown in a news list instead of the full story. A "read more …" link will be added automatically.
+    text:
+        - News text
+        - Here you can enter the news text.
+    addImage:
+        - Add an image
+        - Add an image to the news item.
+    addEnclosure:
+        - Add enclosures
+        - Add one or more downloadable files to the news item.
+    enclosure:
+        - Enclosures
+        - Please choose the files you want to attach.
+    source:
+        - Redirect target
+        - Here you can override the default redirect target.
+    default:
+        - Use default
+        - By clicking the "read more …" button, visitors will be redirected to the default page of the news archive.
+    internal:
+        - Page
+        - By clicking the "read more …" button, visitors will be redirected to a page.
+    article:
+        - Article
+        - By clicking the "read more …" button, visitors will be redirected to an article.
+    external:
+        - Custom URL
+        - By clicking the "read more …" button, visitors will be redirected to a custom URL.
+    linkText:
+        - Link text
+        - Here you can override the default "read more…" link text.
+    jumpTo:
+        - Redirect page
+        - Please choose the page to which visitors will be redirected when clicking the news item.
+    articleId:
+        - Article
+        - Please choose the article to which visitors will be redirected when clicking the news item.
+    cssClass:
+        - CSS class
+        - Here you can enter one or more classes.
+    featured:
+        - Feature item
+        - Show the news item in a featured news list.
+    published:
+        - Publish item
+        - Make the news item publicly visible on the website.
+    start:
+        - Show from
+        - If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        - Show until
+        - If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    tstamp:
+        - Revision date
+        - Date and time of the latest revision
+    title_legend: Title and author
+    date_legend: Date and time
+    teaser_legend: Subheadline and teaser
+    text_legend: News text
+    image_legend: Image settings
+    enclosure_legend: Enclosures
+    source_legend: Redirect target
+    meta_legend: Metadata
+    expert_legend: Expert settings
+    publish_legend: Publish settings
+    new:
+        1: Create a new news item
+    show:
+        1: Show the details of news item ID %s
+    versions:
+        1: Show the versions of news item ID %s
+    edit:
+        1: Edit news item ID %s
+    children:
+        - Content elements
+        - Edit the content elements of news item ID %s
+    copy:
+        1: Duplicate news item ID %s
+    cut:
+        1: Move news item ID %s
+    delete:
+        1: Delete news item ID %s
+    toggle:
+        - Publish/unpublish news item
+        - Unpublish news item ID %s
+        - Publish news item ID %s
+        - Unpublish
+        - Publish
+    feature:
+        - Feature/unfeature news item ID %s
+        - Unfeature news item ID %s
+        - Feature news item ID %s
+        - Unfeature
+        - Feature
+    pasteafter:
+        - Paste into this news archive
+    tableLabel: News

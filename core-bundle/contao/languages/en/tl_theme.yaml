@@ -1,0 +1,76 @@
+tl_theme:
+    name:
+        - Title
+        - Please enter a unique theme title.
+    author:
+        - Author
+        - Please enter the name of the theme designer.
+    folders:
+        - Folders
+        - Please select the folders that belong to the theme from the files directory.
+    templates:
+        - Templates folder
+        - Here you can select a templates folder that will be exported with the theme.
+    screenshot:
+        - Screenshot
+        - Here you can choose a screenshot of the theme.
+    source:
+        - Source files
+        - Here you can upload one or more .cto, .zip or .sql files to be imported.
+    tstamp:
+        - Revision date
+        - Date and time of the latest revision
+    title_legend: Title and author
+    config_legend: Configuration
+    theme_imported: Theme "%s" has been imported.
+    checking_theme: The theme data is being checked
+    tables_fields: Tables and fields
+    missing_field: The field <strong>%s</strong> is missing in the database and will not be imported.
+    tables_ok: The tables have been successfully checked.
+    missing_xml: Theme "%s" is corrupt and cannot be imported.
+    custom_templates: Custom templates
+    template_exists: The template <strong>"%s"</strong> exists and will be overwritten.
+    templates_ok: No conflicts detected.
+    store:
+        - Theme store
+        - Find more themes in the Contao theme store
+    importTheme:
+        - Import
+        - Import a theme
+    selectExampleWebsite:
+        - Import an example website
+        - Here you can import an <code>.sql</code> file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.
+    exampleWebsiteImportType:
+        - Import type
+        - Here you can select the import type.
+    exampleWebsiteImport:
+        full: Full SQL import
+        data: Data only
+        data_no_truncate: Data only without truncating tables
+    editmeta: Edit the theme settings
+    new:
+        1: Create a new theme
+    show:
+        1: Show the details of theme ID %s
+    versions:
+        1: Show the versions of theme ID %s
+    edit:
+        1: Edit theme ID %s
+    delete:
+        1: Delete theme ID %s
+    modules:
+        - Front end modules
+        - Edit the front end modules of theme ID %s
+    elements:
+        - Content elements
+        - Edit the content elements of theme ID %s
+    layout:
+        - Page layouts
+        - Edit the page layouts of theme ID %s
+    imageSizes:
+        - Image sizes
+        - Edit the image sizes of theme ID %s
+    exportTheme:
+        - Export theme
+        - Export theme ID %s
+    tableLabel: Theme

@@ -1,0 +1,160 @@
+MOD:
+    content: Content
+    article:
+        - Articles
+        - Manage articles and content elements
+    form:
+        - Forms
+        - Create custom forms and store or send the submitted data
+    design: Layout
+    themes:
+        - Themes
+        - Manage themes, front end modules, page layouts or image sizes
+    page:
+        - Pages
+        - Set up the pages of your website(s)
+    template_studio:
+        - Template Studio
+        - Add or edit Twig templates
+    tpl_editor:
+        - Templates
+        - Add or edit custom templates
+    accounts: Accounts
+    member:
+        - Members
+        - Manage member accounts (front end)
+    mgroup:
+        - Member groups
+        - Manage member groups (front end)
+    user:
+        - Users
+        - Manage user accounts (back end)
+    group:
+        - User groups
+        - Manage user groups (back end)
+    opt_in:
+        - Double opt-in
+        - Manage double opt-in tokens
+    system: System
+    files:
+        - Files
+        - Manage files and folders
+    log:
+        - System log
+        - Browse the system log
+    settings:
+        - Settings
+        - Adjust the Contao configuration
+    preview_link:
+        - Preview links
+        - Manage preview links for the front end.
+    maintenance:
+        - Maintenance
+        - Crawl the website or purge generated data
+    security:
+        - Security
+        - Secure your account
+    undo:
+        - Restore
+        - Restore deleted records
+    jobs:
+        - Jobs
+        - Overview of the system jobs
+    login:
+        - User profile
+        - Change your personal data or set a new password
+    favorites:
+        - Favorites
+        - Manage your back end menu favorites
+    tl_content: Content elements
+    tl_form_field: Fields
+    tl_image_size: Image sizes
+    tl_image_size_item: Media queries
+    tl_layout: Page layouts
+    tl_module: Front end modules
+    elements: Content elements
+    modules: Front end modules
+    layout: Page layouts
+    image_sizes: Image sizes
+    theme_import: Theme import
+    theme_export: Theme export
+FMD:
+    navigationMenu: Navigation
+    navigation:
+        - Navigation menu
+        - Generates a navigation menu from the pages
+    customnav:
+        - Custom navigation
+        - Generates a custom navigation menu
+    breadcrumb:
+        - Breadcrumb navigation
+        - Generates a breadcrumb navigation menu
+    quicknav:
+        - Quick navigation
+        - Generates a drop-down menu from the pages
+    quicklink:
+        - Quick link
+        - Generates a custom drop-down menu
+    booknav:
+        - Book navigation
+        - Generates a book navigation menu
+    articlenav:
+        - Article navigation
+        - Generates a pagination menu to navigate articles
+    sitemap:
+        - HTML sitemap
+        - Generates a list of all pages
+    user: User
+    login:
+        - Login form
+        - Generates a login form
+    personalData:
+        - Personal data
+        - Generates a form to edit a member's personal data
+    registration:
+        - Registration
+        - Generates a member registration form
+    changePassword:
+        - Change password
+        - Generates a form to change the password
+    lostPassword:
+        - Lost password
+        - Generates a form to request a new password
+    closeAccount:
+        - Close account
+        - Generates a form to delete a member account
+    application: Applications
+    form:
+        - Form
+        - Adds a form to the page
+    search:
+        - Search engine
+        - Adds a search form to the page
+    articlelist:
+        - Article list
+        - Generates a list of articles of a column
+    miscellaneous: Miscellaneous
+    randomImage:
+        - Random image
+        - Adds a random image to the page
+    html:
+        - Custom HTML
+        - Allows you to add custom HTML code
+    unfiltered_html:
+        - Unfiltered HTML
+        - Allows you to add custom, unfiltered HTML code
+    template:
+        - Custom template
+        - Generates a module to insert a custom template.
+    rssReader:
+        - RSS reader (deprecated)
+        - Adds an RSS feed to the page
+    feed_reader:
+        - Feed reader
+        - Adds an RSS, Atom or JSON feed to the page
+    two_factor:
+        - Two-factor authentication
+        - Generates a form to set up or change two-factor authentication
+    root_page_dependent_modules:
+        - Root page dependent modules
+        - Generates different modules depending on the website root page

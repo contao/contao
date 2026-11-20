@@ -1,0 +1,4 @@
+tl_calendar_events:
+    noComments:
+        - Disable comments
+        - Do not allow comments for this particular event.

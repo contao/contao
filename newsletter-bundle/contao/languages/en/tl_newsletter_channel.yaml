@@ -1,0 +1,45 @@
+tl_newsletter_channel:
+    title:
+        - Title
+        - Please enter the title of the channel.
+    jumpTo:
+        - Redirect page
+        - Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.
+    template:
+        - E-mail template
+        - Here you can select an e-mail template.
+    mailerTransport:
+        - Mailer transport
+        - Here you can override the mailer transport used to send newsletters in this channel.
+    sender:
+        - Sender e-mail address
+        - Please enter the e-mail address of the sender.
+    senderName:
+        - Sender name
+        - Here you can enter an optional sender name.
+    tstamp:
+        - Revision date
+        - Date and time of the latest revision
+    title_legend: Title and redirect
+    template_legend: Template settings
+    sender_legend: Sender settings
+    new:
+        1: Create a new channel
+    show:
+        1: Show the details of channel ID %s
+    versions:
+        1: Show the versions of channel ID %s
+    edit:
+        1: Edit channel ID %s
+    children:
+        - Newsletters
+        - Edit the newsletters of channel ID %s
+    copy:
+        - Duplicate
+        - Duplicate channel ID %s
+    delete:
+        1: Delete channel ID %s
+    recipients:
+        - Recipients
+        - Edit the recipients of channel ID %s
+    tableLabel: Newsletter channel

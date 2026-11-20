@@ -1,0 +1,1083 @@
+ERR:
+    general: An error occurred!
+    submit: The data could not be saved because an error occurred!
+    unique: This entry already exists!
+    mandatory: Field "%s" must not be empty!
+    mdtryNoLabel: This field must not be empty!
+    minlength: Field "%s" has to be at least %d characters long!
+    maxlength: Field "%s" must not be longer than %d characters!
+    minval: Field "%s" has to be at least %s!
+    maxval: Field "%s" must not be greater than %s!
+    digit: Please enter digits only!
+    natural: Please enter natural numbers only!
+    prcnt: Please enter a percentage between 0 and 100!
+    alpha: Please enter alphabetic characters only!
+    alnum: Please enter alphanumeric characters only!
+    phone: Please enter a valid phone number!
+    extnd: 'For security reasons, you cannot use the following characters here: #<>()\='
+    email: Please enter a valid e-mail address!
+    emails: There is at least one invalid e-mail address!
+    url: Please enter a valid URL format and encode special characters!
+    locale: Please enter a valid locale such as "en" or "en_US"!
+    language: Please enter a valid language code such as "en" or "en-US"!
+    alias: 'Please enter only alphanumeric characters and the following special characters: .-_'
+    folderalias: 'Please enter only alphanumeric characters and the following special characters: .-/_'
+    date: Please enter the date as "%s"!
+    time: Please enter the time as "%s"!
+    dateTime: Please enter date and time as "%s"!
+    invalidDate: Invalid date "%s"!
+    noSpace: Field "%s" must not contain any whitespace characters!
+    filename: The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!
+    filesize: The maximum size for file uploads is %s (Contao or php.ini settings)!
+    filetype: File type "%s" is not allowed to be uploaded!
+    filepartial: File %s was only partially uploaded!
+    filewidth: File %s exceeds the maximum image width of %d pixels!
+    fileheight: File %s exceeds the maximum image height of %d pixels!
+    fileerror: Error %s occurred when uploading file %s!
+    filetarget: Cannot move %s to %s because the target exists!
+    multipleFilesNotAllowed: Uploading multiple files is not allowed for this field!
+    invalidReferer: Access denied! The current host address (%s) does not match the referer host address (%s)!
+    invalidPass: Invalid password!
+    passwordLength: A password has to be at least %d characters long!
+    passwordName: Your username and password must not be the same!
+    tooManyLoginAttempts: Too many failed login attempts, please try again later.
+    invalidLogin: Login failed (note that usernames and passwords are case-sensitive)!
+    invalidColor: Invalid color format!
+    all_fields: Please select at least one field!
+    emptyUpload: Please select at least one file!
+    aliasExists: The alias "%s" already exists!
+    aliasNumeric: Numeric aliases are not supported!
+    urlPrefixExists: The URL prefix "%s" is already used by another website root page with the same domain name!
+    pageUrlExists: A page with the URL "%s" already exists!
+    pageUrlNameExists: This alias leads to a conflict with page "%s" (ID %s)!
+    pageUrlSuffix: This URL suffix will lead to duplicate URLs (e.g. %s)!
+    pageUrlPrefix: This URL prefix will lead to duplicate URLs (e.g. %s)!
+    importFolder: The folder "%s" cannot be imported!
+    notWriteable: The file "%s" is not writeable and can therefore not be updated!
+    invalidName: This file or folder name is invalid!
+    invalidFile: The file or folder "%s" is invalid!
+    fileExists: The file "%s" already exists!
+    filesOnly: You can only select files!
+    foldersOnly: You can only select folders!
+    pathOnly: You can only select files or folders within "%s"!
+    extensionsOnly: You can only select "%s" files!
+    forbiddenExtensions: 'The following file extensions are not allowed: %s'
+    invalidPages: Your selection contains invalid page IDs!
+    circularReference: Invalid redirect target (circular reference)!
+    circularPicker: Invalid selection (circular reference)!
+    noFallbackEmpty: None of the active website root pages without an explicit DNS setting have the language fallback option set.
+    noFallbackDns: None of the active website root pages for <strong>%s</strong> have the language fallback option set.
+    multipleFallback: You can only define one website root page per domain as the language fallback.
+    topLevelRoot: Top-level pages must be website root pages!
+    topLevelRegular: There are top-level pages which are not website root pages.
+    form: The form could not be sent
+    formCookieWarning: You will not be able to send this form, because you have disabled cookies in your browser.
+    captcha: Please answer the security question!
+    download: File "%s" is not available for download!
+    invalid: Invalid option value!
+    fileNotFoundSync: No database entry found for %s. Please synchronize the file system.
+    invalidFieldName: 'Please enter only the following characters: A-Z0-9[]_-'
+    largeImage: Image exceeds the maximum dimensions of %sx%s.
+    invalidTwoFactor: Invalid verification code!
+    emptyTitleOrId: Please enter both title and ID!
+    duplicateSectionTitle: Duplicate layout section title "%s"!
+    duplicateSectionId: Duplicate layout section ID "%s"!
+    moduleWithoutColumn: Please assign all modules to a column!
+    invalidHttpUrl: Please enter an absolute URL starting with https:// or http://!
+    customRgxp: Please enter a value that matches %s!
+    invalidCustomRgxp: Invalid custom regular expression!
+    applicationCache: Please run the "cache:clear" command or use the Contao Manager to rebuild your application cache.
+    invalidThemeTemplatePath: 'The template path "%s" must not contain the following characters: %s'
+    previewSwitchInvalidUsername: 'Unknown username: %s'
+    versionNotRestored: Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.
+    undoNotRestored: The deleted records could not be restored. No changes have been made.
+    startStop: The end time must be later than the start time.
+    noAdminEmailUrl: There is no administrator e-mail address set in the <a href="%s" target="_top">system settings</a>.
+    noAdminEmail: There is no administrator e-mail address set, please contact the site administrator.
+    altchaJavaScriptRequired: JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.
+    altchaVerificationFailed: Anti-spam verification failed. Are you a human or a robot?
+    altchaInsecureConnection: ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.
+    passkeysUnsupported: Passkeys are not supported on this device.
+    passkeyAssertionFailure: Login with passkey failed.
+    passkeyAttestationFailure: Passkey could not be created.
+    moveFailed: The record could not be moved.
+    copyUnique: Element ID %d cannot be inserted here because it conflicts with an existing element.
+    grantAdminOnly: You can only grant access to "%s" if you are an admin.
+    sizesStartWithAuto: The "auto" keyword is only allowed at the beginning of the sizes attribute and must be followed by a comma if there are additional values.
+    lazyLoadingSizesAuto: Lazy loading must be enabled if the sizes attribute is set to "auto".
+    fragmentResponseException: This element cannot be previewed.
+SEC:
+    question1: Please add %d and %d.
+    question2: What is the sum of %d and %d?
+    question3: Please calculate %d plus %d.
+CTE:
+    texts: Text elements
+    change_password:
+        - Change password
+        - Generates a form to change the password.
+    close_account:
+        - Close account
+        - Generates a form to delete a member account.
+    headline:
+        - Headline
+        - Generates a headline (h1 - h6).
+    miscellaneous: Miscellaneous
+    text:
+        - Text
+        - Generates a rich text element.
+    html:
+        - HTML
+        - Allows you to add custom HTML code.
+    unfiltered_html:
+        - Unfiltered HTML
+        - Allows you to add custom, unfiltered HTML code.
+    list:
+        - List
+        - Generates an ordered or unordered list.
+    description_list:
+        - Description list
+        - Generates a description list with terms and details.
+    table:
+        - Table
+        - Generates an optionally sortable table.
+    accordion:
+        - Accordion
+        - Generates an accordion.
+    element_group:
+        - Element group
+        - Generates a group of nested elements.
+    accordionStart:
+        - Accordion wrapper start
+        - Generates the opening part of the accordion wrapper.
+    accordionStop:
+        - Accordion wrapper stop
+        - Generates the closing part of the accordion wrapper.
+    accordionSingle:
+        - Accordion single element
+        - Generates a single accordion element.
+    code:
+        - Code
+        - Highlights code snippets and prints them to the screen.
+    markdown:
+        - Markdown
+        - Generates HTML code from a Markdown text.
+    template:
+        - Custom template
+        - Generates an element to insert a custom template.
+    swiper:
+        - Content slider
+        - Generates a content slider element.
+    slider: Content slider
+    sliderStart:
+        - Slider wrapper start
+        - Generates the opening part of the slider wrapper.
+    sliderStop:
+        - Slider wrapper stop
+        - Generates the closing part of the slider wrapper.
+    links: Link elements
+    hyperlink:
+        - Hyperlink
+        - Generates a link to another website.
+    toplink:
+        - Top link
+        - Generates a link to jump to the top of the page.
+    media: Media elements
+    image:
+        - Image
+        - Generates a stand-alone image.
+    gallery:
+        - Gallery
+        - Generates a lightbox image gallery.
+    player:
+        - Video/audio
+        - Generates a video or audio player.
+    youtube:
+        - YouTube
+        - Adds a YouTube video.
+    vimeo:
+        - Vimeo
+        - Adds a Vimeo video.
+    files: File elements
+    download:
+        - Download
+        - Generates a link to download a file.
+    downloads:
+        - Downloads
+        - Generates multiple links to download files.
+    includes: Include elements
+    article:
+        - Article
+        - Includes another article.
+    alias:
+        - Content element
+        - Includes another content element.
+    form:
+        - Form
+        - Includes a form.
+    module:
+        - Module
+        - Includes a front end module.
+    teaser:
+        - Article teaser
+        - Displays the teaser text of an article.
+    two_factor:
+        - Two-factor authentication
+        - Generates a form to set up or change two-factor authentication.
+    legacy: Legacy elements
+    user: User
+    manage_passkeys:
+        - Manage passkeys
+        - Allows members to manage their passkeys.
+    login:
+        - Login form
+        - Generates a login form.
+    root_page_dependent_elements:
+        - Root page dependent elements
+        - Generates different elements depending on the website root page.
+FFL:
+    explanation:
+        - Explanation
+        - A custom field to insert an explanation text.
+    html:
+        - HTML code
+        - A custom field to insert HTML code.
+    fieldsetStart:
+        - Fieldset start
+        - The opening part of a fieldset with an optional legend.
+    fieldsetStop:
+        - Fieldset stop
+        - The closing part of a fieldset.
+    text:
+        - Text field
+        - A single-line input field for a short or medium text.
+    password:
+        - Password field
+        - A single-line input field for a password. Contao automatically adds a confirmation field.
+    textarea:
+        - Textarea
+        - A multi-line input field for a medium or long text.
+    select:
+        - Select menu
+        - A single- or multi-line drop-down menu.
+    radio:
+        - Radio button menu
+        - A list of multiple options from which one can be selected.
+    checkbox:
+        - Checkbox menu
+        - A list of multiple options from which any can be selected.
+    upload:
+        - File upload
+        - A single-line input field to upload a local file to the server.
+    range:
+        - Range slider
+        - A range slider to select a value or range of values between a specified min and max.
+    hidden:
+        - Hidden field
+        - A single-line input field that is not visible in the form.
+    altcha:
+        - ALTCHA antispam
+        - Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).
+    captcha:
+        - Security question
+        - A simple math question to verify that the form is being submitted by a human (CAPTCHA).
+    submit:
+        - Submit field
+        - A button to submit the form.
+PTY:
+    regular:
+        - Regular page
+        - A regular page contains articles and content elements. It is the default page type.
+    redirect:
+        - External redirect
+        - This type of page automatically redirects visitors to an external website. It works like a hyperlink.
+    forward:
+        - Internal redirect
+        - This type of page automatically forwards visitors to another page.
+    root:
+        - Website root
+        - This type of page marks the starting point of a new website.
+    logout:
+        - Logout
+        - This type of page automatically logs out the user.
+    error_401:
+        - 401 Not authenticated
+        - If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.
+    error_403:
+        - 403 Access denied
+        - If a member requests a protected page without permission, a 403 error page will be loaded instead.
+    error_404:
+        - 404 Page not found
+        - If a visitor requests a non-existent page, a 404 error page will be loaded instead.
+    error_503:
+        - 503 Service unavailable
+        - When a website root page is in maintenance mode, all requests will show a 503 error page.
+FOP:
+    fop:
+        - File operation permissions
+        - Here you can select the file operations you want to allow.
+    f1: Upload files to the server
+    f2: Edit, copy or move files and folders
+    f3: Delete single files and empty folders
+    f4: Delete folders including all files and subfolders (!)
+    f5: Edit files in the source editor
+    f6: Synchronize the file system with the database
+CHMOD:
+    createpage: Create pages
+    editpage: Edit pages
+    editnavigation: Move pages
+    deletepage: Delete pages
+    createarticles: Create articles
+    editarticles: Edit articles
+    movearticles: Move articles
+    deletearticles: Delete articles
+    cuser: Owner
+    cgroup: Group
+    cworld: Everybody
+DATE:
+    a: am
+    A: AM
+    d: DD
+    j: D
+    m: MM
+    'n': M
+    'y': YY
+    'Y': YYYY
+    h: hh
+    H: hh
+    g: h
+    G: h
+    i: mm
+    s: ss
+DAYS:
+    - Sunday
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    - Saturday
+DAYS_SHORT:
+    - Sun
+    - Mon
+    - Tue
+    - Wed
+    - Thu
+    - Fri
+    - Sat
+MONTHS:
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
+MONTHS_SHORT:
+    - Jan
+    - Feb
+    - Mar
+    - Apr
+    - May
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Oct
+    - Nov
+    - Dec
+MSC:
+    dayShortLength: '3'
+    monthShortLength: '3'
+    weekOffset: '0'
+    titleFormat: '%B %d%o, %Y'
+    url:
+        - Link target
+        - Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.
+    target:
+        - Open in new window
+        - Open the link in a new browser window.
+    openTab: Open in a new tab
+    decimalSeparator: .
+    thousandsSeparator: ','
+    separator:
+        - Separator
+        - Please choose a field delimiter.
+    source:
+        - Source files
+        - Please upload the CSV files to be imported.
+    imgSize:
+        - Image size
+        - Here you can set the image dimensions and the resize mode.
+    comma: Comma
+    semicolon: Semicolon
+    tabulator: Tabulator
+    linebreak: Line break
+    lw_import:
+        - CSV import
+        - Import list items from a CSV file
+    lw_copy: Duplicate the element
+    lw_up: Move the element one position up
+    lw_down: Move the element one position down
+    lw_delete: Delete the element
+    ow_import:
+        - CSV import
+        - Import options from a CSV file
+    tw_import:
+        - CSV import
+        - Import table items from a CSV file
+    tw_expand: Increase the input field size
+    tw_shrink: Decrease the input field size
+    tw_rcopy: Duplicate the row
+    tw_rup: Move the row one position up
+    tw_rdown: Move the row one position down
+    tw_rdelete: Delete the row
+    tw_ccopy: Duplicate the column
+    tw_cmovel: Move the column one position left
+    tw_cmover: Move the column one position right
+    tw_cdelete: Delete the column
+    tw_insert_above: Insert above
+    tw_insert_below: Insert below
+    tw_insert_left: Insert left
+    tw_insert_right: Insert right
+    tw_duplicate: Duplicate
+    tw_clear: Clear content
+    tw_delete: Delete
+    tw_row_actions: Row actions and sorting
+    tw_col_actions: Column actions and sorting
+    tw_add_row: Click to add a new row. Drag to add or remove rows.
+    tw_add_column: Click to add a new column. Drag to add or remove columns.
+    tw_add_row_column: Click to add rows/columns. Drag to add or remove rows/columns.
+    ow_copy: Duplicate the row
+    ow_up: Move the row one position up
+    ow_down: Move the row one position down
+    ow_delete: Delete the row
+    ow_value: Value
+    ow_label: Label
+    ow_key: Key
+    ow_default: Default
+    ow_group: Group
+    mw_copy: Duplicate the row
+    mw_up: Move the row one position up
+    mw_down: Move the row one position down
+    mw_delete: Delete the row
+    mw_module: Module or content element
+    mw_column: Layout section
+    mw_enable: Enable/disable the module or content element
+    mw_modules: Front end modules
+    mw_elements: Content elements
+    aw_title: Title
+    aw_alt: Alternate text
+    aw_link: Link
+    aw_caption: Caption
+    aw_license: License URL
+    sw_title: Title
+    sw_id: ID
+    sw_template: Template
+    sw_position: Position
+    image_sizes: Predefined dimensions
+    custom:
+        - Custom dimensions
+        - The image will be resized to the given dimensions.
+    proportional:
+        - Proportional
+        - The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
+    box:
+        - Fit the box
+        - The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.
+    crop:
+        - Crop (important part)
+        - Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.
+    left_top:
+        - Left | Top
+        - Preserves the left part of a landscape image and the top part of a portrait image.
+    center_top:
+        - Center | Top
+        - Preserves the center part of a landscape image and the top part of a portrait image.
+    right_top:
+        - Right | Top
+        - Preserves the right part of a landscape image and the top part of a portrait image.
+    left_center:
+        - Left | Center
+        - Preserves the left part of a landscape image and the center part of a portrait image.
+    center_center:
+        - Center | Center
+        - Preserves the center part of a landscape image and the center part of a portrait image.
+    right_center:
+        - Right | Center
+        - Preserves the right part of a landscape image and the center part of a portrait image.
+    left_bottom:
+        - Left | Bottom
+        - Preserves the left part of a landscape image and the bottom part of a portrait image.
+    center_bottom:
+        - Center | Bottom
+        - Preserves the center part of a landscape image and the bottom part of a portrait image.
+    right_bottom:
+        - Right | Bottom
+        - Preserves the right part of a landscape image and the bottom part of a portrait image.
+    id:
+        - ID
+        - Note that changing the ID can break data integrity!
+    pid:
+        - Parent ID
+        - Note that changing the parent ID can break data integrity!
+    sorting:
+        - Sorting value
+        - The sorting value is usually assigned automatically.
+    all:
+        - Edit multiple
+        - Edit multiple elements at once
+    all_override:
+        - Override multiple
+        - Override multiple elements at once
+    all_fields:
+        - Available fields
+        - Please select the fields you want to edit.
+    password:
+        - Password
+        - Please enter a password.
+    confirm:
+        - Confirm password
+        - Please confirm the password.
+    showPassword: Show password
+    hidePassword: Hide password
+    dateAdded:
+        - Date added
+        - 'Date added: %s'
+    lastLogin:
+        - Previous login
+        - Your previous login was %s. Welcome back!
+    currentLogin:
+        - Last login
+        - 'Last login: %s'
+    firstLogin: This seems to be your first login. Welcome to Contao!
+    move: Move the item via drag and drop
+    move_up:
+        - Move up
+        - Move the item one position up
+    move_down:
+        - Move down
+        - Move the item one position down
+    shortcuts:
+        - Back end keyboard shortcuts
+        - Learn more about speeding up your workflow by using <a href="%s" target="_blank" rel="noreferrer noopener">keyboard shortcuts</a>.
+    toggleAll:
+        - Toggle all
+        - Expand or collapse all nodes
+    toggleMobile:
+        - Mobile version
+        - Go to the mobile version
+    toggleDesktop:
+        - Desktop version
+        - Go to the desktop version
+    feLink: Go to front end
+    fePreview: Preview
+    fePreviewTitle: Front end preview
+    profile: Profile
+    profileTitle: User profile
+    feUser: Member
+    backToTop: Back to top
+    backToTopTitle: Go to the top of the page
+    home: Home
+    homeTitle: Back to the back end start page
+    learnMore: Learn more on %s
+    user: User
+    loginBT: Login
+    logoutBT: Logout
+    switchBT: Back to %s
+    logoutBTTitle: Close the current session
+    backBT: Go back
+    backBTTitle: Go up one level
+    cancelBT: Cancel
+    confirmTitle: Are you sure?
+    deleteConfirm: Do you really want to delete element ID %s?
+    delAllConfirm: Do you really want to delete the selected records?
+    deleteConfirmFile: Do you really want to delete file or folder %s?
+    delAllConfirmFile: Do you really want to delete the selected resources?
+    filterRecords: Records
+    filterAll: All
+    treeRecordLimitReached: More records are available but hidden for performance reasons. Collapse the tree or apply filters to restrict the view.
+    showRecord: Show the details of record %s
+    editRecord: Edit record %s
+    all_info: Edit selected records of table %s
+    showOnly: Show
+    sortBy: Sort
+    filter: Filter
+    search: Search
+    file: File
+    noResult: No records found.
+    noResultWithFilter: No records match the current filter settings.
+    searchExclude: Unsynchronized directories are not included in the search results.
+    save: Save
+    saveNclose: Save and close
+    saveNedit: Save and edit child elements
+    saveNcreate: Save and new
+    saveNduplicate: Save and duplicate
+    continue: Continue
+    close: Close
+    skipNavigation: Skip navigation
+    selectAll: Select all
+    pw_new: Change password
+    pw_change: Please enter a new password.
+    pw_changed: The password has been updated.
+    fallback: default
+    view: View in a new window
+    fullsize: Open full size image in a new window
+    datepicker: Date picker
+    colorpicker: Color picker
+    pagepicker: Page picker
+    filepicker: File picker
+    ppHeadline: Contao pages
+    fpHeadline: Contao files
+    'yes': yes
+    'no': no
+    goBack: Go back
+    reload: Reload
+    above: above
+    below: below
+    date: Date
+    tstamp: Revision date
+    entry: '%s entry'
+    entries: '%s entries'
+    files: '%s file(s)'
+    left: left
+    center: center
+    right: right
+    justify: justified
+    male: Male
+    female: Female
+    other: Other
+    fileSize: File size
+    fileCreated: Created
+    fileModified: Last modified
+    fileAccessed: Last accessed
+    fileDownload: Download the file
+    fileUuid: Unique ID
+    fileImageSize: Width/height in pixel
+    filePath: Relative path
+    fileMeta: Metadata
+    imageMetadata: '%s metadata'
+    versioning: Version management
+    version: Version
+    versionA: Version A
+    versionB: Version B
+    restore: Restore
+    backendModules: Back end modules
+    dashboard: Dashboard
+    updateVersion: Contao version %s is available.
+    saveAlert: ATTENTION! You will lose any unsaved changes. Continue?
+    toggleNodes: Toggle all nodes
+    expandNode: Expand node
+    collapseNode: Collapse node
+    folderC: Public folder
+    folderCP: Protected folder
+    typeOfFile: '%s file'
+    loadingData: Loading data
+    deleteSelected: Delete
+    editSelected: Edit
+    overrideSelected: Override
+    moveSelected: Move
+    copySelected: Copy
+    copyMultiple: Copy repeatedly
+    aliasSelected: Generate aliases
+    changeSelected: Change selection
+    resetSelected: Reset selection
+    filePicker: Files
+    pagePicker: Pages
+    articlePicker: Articles
+    systemMessages: Alerts
+    noSystemMessages: Currently there are no alerts.
+    clearClipboard: Clear clipboard
+    hiddenElements: Unpublished
+    hiddenHide: hide
+    hiddenShow: show
+    apply: Apply
+    applyTitle: Apply the changes
+    reset: Reset
+    resetTitle: Reset the filters
+    filterTitle: Filter
+    searchAndFilter: Search and filter functions
+    mandatory: Mandatory field
+    create: Create
+    delete: Delete
+    protected: protected
+    guests: Guests (not logged in)
+    updateMode: Update mode
+    updateAdd: Add the selected values
+    updateRemove: Remove the selected values
+    updateReplace: Replace the existing entries
+    ascending: ascending
+    descending: descending
+    default: Default
+    helpWizard: Open the help wizard
+    helpWizardTitle: Help wizard
+    jsDisabled: It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.
+    copyOf: '%s (copy)'
+    name: Name
+    emailAddress: E-mail address
+    register: Register
+    resendActivation: The activation mail has been resent to your e-mail address.
+    accountActivated: Your account has been activated.
+    accountError: Unable to process the current request.
+    emailSubject: Your registration on %s
+    adminSubject: New registration on %s
+    adminText: A new member (ID %s) has registered on your website.%sIf you have not enabled e-mail activation, you must activate the account manually in the back end.
+    requestPassword: Request password
+    setNewPassword: Set new password
+    newPasswordSet: Your password has been updated.
+    passwordSubject: Your password request for %s
+    accountNotFound: No matching account found
+    oldPassword: Old password
+    newPassword: New password
+    changePassword: Change password
+    oldPasswordWrong: The old password is not correct
+    securityQuestion: Security question
+    closeAccount: Close account
+    changeSelection: Change selection
+    currentlySelected: Selected
+    selectNode: Only show this node
+    selectAllNodes: Show all nodes
+    showDifferences: Show differences
+    recordOfTable: Record %s of table %s
+    editElement: Edit the element
+    table: Table
+    ptable: Parent table
+    description: Description
+    noVersions: Currently there are no versions.
+    latestChanges: Latest changes
+    identicalVersions: The two selected versions are identical.
+    selectNewPosition: Next, please choose the (new) position of the element
+    go: Go
+    quicknav: Quick navigation
+    quicklink: Quick link
+    lostPassword: Forgot your password?
+    username: Username
+    login: Login
+    logout: Logout
+    loggedInAs: You are logged in as %s.
+    emptyField: Please enter your username and password!
+    reauthenticate: Please enter your password to verify your identity.
+    verify: Verify
+    confirmation: Confirmation
+    sMatches: '%s occurrences for %s'
+    sEmpty: No matches for <strong>%s</strong>
+    sResults: Results %s - %s of %s for <strong>%s</strong>
+    sNoResult: Your search for <strong>%s</strong> returned no results.
+    sKeywordHint: Note that keywords shorter than %s characters and without a modifier have been ignored.
+    seconds: seconds
+    up: Up
+    first: First
+    previous: Previous
+    next: Next
+    last: Last
+    goToPage: Go to page %s
+    totalPages: Page %s of %s
+    fileUploaded: File %s uploaded successfully.
+    fileExceeds: Image %s is too big to be resized automatically.
+    fileResized: Image %s was scaled down to the maximum dimensions.
+    searchLabel: Search
+    keywords: Keywords
+    options: Options
+    matchAll: match all words
+    matchAny: match any word
+    saveData: Save data
+    savedData: Your data has been saved.
+    printPage: Print this page
+    facebookShare: Share on Facebook
+    twitterShare: Share on X (formerly Twitter)
+    pleaseWait: Please wait
+    loading: Loading …
+    more: Read more …
+    readMore: 'Read the article: %s'
+    targetPage: Target page
+    invalidPage: Sorry, item "%s" does not exist.
+    list_orderBy: Order by %s
+    list_perPage: Results per page
+    or: or
+    published: Published
+    unpublished: Unpublished
+    addComment: Add a comment
+    autologin: Remember me
+    createdOn: Created at
+    activation: Activation token
+    relevance: '%s relevance'
+    invalidToken: Invalid token
+    tokenConfirmed: This token has already been confirmed
+    tokenEmailMismatch: The e-mail address of the token does not match
+    resendToken: The token has been resent to %s.
+    invalidTokenUrl: The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.
+    tooManyPasswordResetAttempts: You have tried to reset your password too many times. Please try again in 15 minutes.
+    tooManyResendActivationAttempts: You have tried to resend the activation email too many times. Please try again in 15 minutes.
+    versionConflict: Version conflict
+    versionConflict1: Another user has created version %s while you were editing version %s of this record.
+    versionConflict2: 'Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:'
+    dragItemsHint: Drag the items to re-order them
+    templatesTheme: Theme %s
+    location: Location
+    download: Download %s
+    metaNoLanguages: You have to add a website root page to enter file metadata.
+    breadcrumbMenu: Breadcrumb
+    mainNavigation: Main
+    headerNavigation: Header
+    showProfile: Show user profile
+    hideProfile: Hide user profile
+    showMainNavigation: Show main navigation
+    hideMainNavigation: Hide main navigation
+    pagination: Pagination
+    validCharacters:
+        unicodeLowercase: Unicode numbers and lowercase letters
+        unicode: Unicode numbers and letters
+        asciiLowercase: ASCII numbers and lowercase letters
+        ascii: ASCII numbers and letters
+    sortOrder: Sort order
+    security: Security
+    twoFactorAuthentication: Two-factor authentication
+    twoFactorVerification: Verification code
+    twoFactorVerificationHelp: Please enter the verification code generated by your 2FA/TOTP app.
+    twoFactorExplain: Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.
+    twoFactorScan: Please scan the QR code with your 2FA/TOTP app.
+    twoFactorActive: Two-factor authentication has been enabled.
+    twoFactorEnforced: Please enable up two-factor authentication before you continue.
+    twoFactorTextCode: 'If you cannot scan the QR code, enter this key instead:'
+    twoFactorBackupCodesLabel: Backup codes
+    twoFactorBackupCodesExplain: Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as LastPass, 1Password or Keeper.
+    twoFactorBackupCodesInfo: Make sure to copy the codes now. You will not be able to see them again!
+    twoFactorBackupCodesGenerate: Generate backup codes
+    twoFactorBackupCodesRegenerate: Regenerate backup codes
+    twoFactorBackupCodesRegenerateInfo: When you regenerate the backup codes, your old codes will not work anymore.
+    twoFactorTrustDevice: Trust this device
+    favorites: Favorites
+    trail: Show trail
+    siblings: Show siblings
+    favorite: Save URL as favorite
+    unfavorite: Remove URL from favorites
+    confirmUnfavorite: Do you really want to remove the current URL from your favorites?
+    editFavorites: Edit favorites
+    userTemplateEditor: There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!
+    groupTemplateEditor: There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!
+    userThemeImport: There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!
+    groupThemeImport: There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!
+    userThemeLayout: There is at least one regular user with permission to edit page layouts. Since layouts can contain arbitrary scripts, these users implicitly have full control over the system!
+    groupThemeLayout: There is at least one user group granting permission to edit page layouts. Since layouts can contain arbitrary scripts, users of these groups implicitly have full control over the system!
+    userListingModule: There is at least one regular user with access to the listing module. Since the module can contain arbitrary SQL queries, these users implicitly have full control over the system!
+    groupListingModule: There is at least one user group granting access to the listing module. Since the module can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!
+    groupUnfilteredHtml: There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!
+    userUnfilteredHtml: There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!
+    enable: Enable
+    disable: Disable
+    edit: Edit
+    serpPreview:
+        - Google search results preview
+        - Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.
+    numberOfItems:
+        - Number of items
+        - Here you can limit the total number of items. Set to 0 to show all.
+    clearTrustedDevices: Clear trusted devices
+    trustedDevices: Trusted devices
+    noTrustedDevices: Currently there are no trusted devices.
+    device: Device
+    browser: Browser
+    operatingSystem: Operating system
+    openToolbar: Open the Contao toolbar
+    closeToolbar: Close the Contao toolbar
+    noSerpPreview: The preview URL cannot be generated, because the route has mandatory parameters.
+    noSerpPreviewPost: The preview URL cannot be generated, because the form has errors.
+    noSerpIndexSetting: The URL will not be indexed due to the robots tag settings.
+    unknownOption: 'Unknown option: %s'
+    copyURL: Copy URL
+    shareURL: Share URL
+    parent: Parent
+    manual: Manual
+    confirmJobAdded: The task has been queued. Check the jobs overview for status updates.
+    jobs: Job overview
+    viewAttachments: View attachments
+    downloadAttachment: Download attachment %s
+    splashScreen: Please click to load the video.
+    dataTransmission: Your IP address will be transmitted to %s.
+    showFrom: visible from %s
+    showTo: visible until %s
+    showFromTo: visible from %s to %s
+    editImageSize: Edit the image size
+    booleanNot: Not %s
+    darkMode: Dark mode
+    lightMode: Light mode
+    passkeys: Passkeys
+    passkeysDescription: Passkeys allow you to log in securely and easily without the need for a password and two-factor token.
+    passkeyLogin: Sign in with a passkey
+    passkeysName: Name/ID
+    passkeyNameInput: Name this passkey
+    passkeysCreatedAt: Created at
+    addPasskey: Add passkey
+    editPasskey: Edit passkey "%s"
+    savePasskey: Save passkey "%s"
+    deletePasskey: Delete passkey "%s"
+    personalAccessTokens: Personal access tokens
+    personalAccessTokensDescription: Personal access tokens allow you to authenticate as your backend user for stateless APIs.
+    generatePersonalAccessToken: Generate token
+    personalAccessTokenName: Name
+    personalAccessTokenNameDescription: What‘s this token for?
+    personalAccessTokenCopy: Copy the token to your clipboard
+    personalAccessTokenExpiresAt: Expires at
+    personalAccessTokenExpiresIn: Expires in
+    personalAccessTokenExpiresAtDescription: The token will expire on the given date.
+    personalAccessTokenExpiresAtOptions:
+        '7': 7 days
+        '30': 30 days
+        '60': 60 days
+        '90': 90 days
+        '365': 1 year
+        unlimited: No expiration
+    lastUsed: Last used
+    searchResultsPlaceholder: Type to start searching
+    searchResultsMin: Please enter at least %s characters
+    searchResultsLoading: Loading results …
+    searchShortcut: Ctrl+K
+    searchShortcutMacos: ⌘+K
+    searchHitView: View %s
+    searchHitEdit: Edit %s
+    searchFacetTitle:
+        type: Type
+        tags: Tags
+    noResultsOrNotEnoughPermissions: No results found or not enough permissions to view the corresponding results.
+    noResults: No results found.
+    noOptions: No options to choose from.
+    removeItem: Remove item
+    ariaMenuExpand: 'Expand menu: '
+    ariaMenuCollapse: 'Collapse menu: '
+    skipToContent: Skip to content
+    clipboardCopy: Copied to clipboard.
+    searchIndexer:
+        - Search indexer
+        - Here you can override the robots meta tag setting for the internal search index.
+    always_index: Always index
+    never_index: Never index
+    field: Field
+    keyword: Keyword
+    enter_fullscreen: Enter fullscreen mode
+    scrollLeft: Scroll left
+    scrollRight: Scroll right
+    outdent: Outdent
+    indent: Indent
+    previewTime: Time
+    clearPreviewTime: Clear preview time
+UNITS:
+    - Byte
+    - KiB
+    - MiB
+    - GiB
+    - TiB
+    - PiB
+    - EiB
+    - ZiB
+    - YiB
+CONFIRM:
+    do: Module
+    table: Affected table
+    act: Action
+    id: Affected record
+DP:
+    select_a_time: Select a time
+    use_mouse_wheel: Use the mouse wheel to quickly change value
+    time_confirm_button: OK
+    apply_range: Apply
+    cancel: Cancel
+    week: Wk
+COLS:
+    header: Header
+    left: Left column
+    main: Main column
+    right: Right column
+    footer: Footer
+SECTIONS:
+    top: Before the wrapper
+    before: After the page header
+    main: Inside the main column
+    after: Before the page footer
+    bottom: After the wrapper
+    manual: Manual output
+DCA:
+    all:
+        - Edit multiple
+        - Edit multiple elements at once
+    toggleNodes:
+        - Toggle all
+        - Expand or collapse all nodes
+    expandNodes:
+        - Expand all
+        - Expand all nodes
+    collapseNodes:
+        - Collapse all
+        - Collapse all nodes
+    toggleFilter:
+        - Filter
+        - Show the filter panel
+        - Hide the filter panel
+    new:
+        - New
+        - Create a new element
+    show:
+        - Details
+        - Show the details of element ID %s
+    edit:
+        - Edit
+        - Edit element ID %s
+    cut:
+        - Move
+        - Move element ID %s
+    copy:
+        - Copy
+        - Copy element ID %s
+    copyChildren:
+        - Copy recursively
+        - Copy element ID %s with child nodes
+    delete:
+        - Delete
+        - Delete element ID %s
+    versions:
+        - Versions
+        - Show the versions of element ID %s
+    drag: Drag element ID %s
+    global_operations: Show all global operations
+    operations: Show operations for element ID %s
+    children:
+        - Child elements
+        - Edit the child elements of element ID %s
+    toggle:
+        - Publish/unpublish element
+        - Unpublish element ID %s
+        - Publish element ID %s
+        - Unpublish
+        - Publish
+    pastetop: Paste at the top
+    pasteroot: Paste at the top
+    pasteinto:
+        - Paste into
+        - Paste into element ID %s
+    pasteafter:
+        - Paste after
+        - Paste after element ID %s
+    pastenewtop:
+        - New at the top
+        - Create a new element at the top
+    pastenewafter:
+        - New after
+        - Create a new element after element ID %s
+    pastenewinto:
+        - New inside
+        - Create a new element inside element ID %s
+    permissions_legend: Permissions
+    permissions:
+        '0': Back end permissions
+        '1': The changes made here are saved in the user and group settings.
+        groups: Groups
+        users: Users
+CRAWL:
+    searchIndex:
+        summary: Indexed %d URI(s) successfully. %d failed.
+        warning: '%d URI(s) were skipped.'
+    brokenLinkChecker:
+        summary: Checked %d link(s) successfully. %d were broken.

@@ -1,0 +1,40 @@
+tl_image_size_item:
+    media:
+        - Media query
+        - 'Here you can define when to use the image size, e.g. <em>(max-width: 600px)</em>.'
+    invisible:
+        - Invisible
+        - Do not use the image size definition.
+    tstamp:
+        - Revision date
+        - Date and time of the latest revision
+    title_legend: Image size settings
+    source_legend: Image source settings
+    visibility_legend: Visibility
+    new:
+        1: Create a new media query
+    show:
+        1: Show the details of media query ID %s
+    versions:
+        1: Show the versions of media query ID %s
+    edit:
+        1: Edit media query ID %s
+    cut:
+        1: Move media query ID %s
+    copy:
+        1: Copy media query ID %s
+    delete:
+        1: Delete media query ID %s
+    toggle:
+        - Activate/deactivate media query
+        - Deactivate media query ID %s
+        - Activate media query ID %s
+        - Deactivate
+        - Activate
+    pasteafter:
+        1: Paste after media query ID %s
+    pastenewtop:
+        1: Create a new media query at the top
+    pastenewafter:
+        1: Create a new media query after media query ID %s
+    tableLabel: Media query

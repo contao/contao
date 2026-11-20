@@ -1,0 +1,33 @@
+tl_favorites:
+    title:
+        - Title
+        - The menu item title.
+    url:
+        - URL
+        - The menu item URL.
+    url_legend: Title and URL
+    new:
+        1: Create a new favorite
+    show:
+        1: Show the details of favorite ID %s
+    edit:
+        1: Edit favorite ID %s
+    cut:
+        1: Move favorite ID %s
+    copy:
+        1: Copy favorite ID %s
+    copyChildren:
+        1: Copy favorite ID %s with its children
+    delete:
+        1: Delete favorite ID %s
+    pasteinto:
+        1: Paste into favorite ID %s
+    pasteafter:
+        1: Paste after favorite ID %s
+    pastenewtop:
+        1: Add a new favorite at the top
+    pastenewafter:
+        1: Add a new favorite after favorite ID %s
+    pastenewinto:
+        1: Add a new favorite inside favorite ID %s
+    tableLabel: Favorite

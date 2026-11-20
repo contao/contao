@@ -1,0 +1,46 @@
+tl_module:
+    news_archives:
+        - News archives
+        - Please select one or more news archives.
+    news_featured:
+        - Featured items
+        - Here you can choose how featured items are handled.
+    news_jumpToCurrent:
+        - No period selected
+        - Here you can define what to display if no period is selected.
+    news_readerModule:
+        - News reader module
+        - Automatically switch to the newsreader if an item has been selected.
+    news_template:
+        - News template
+        - Here you can select a news template.
+    news_format:
+        - Archive format
+        - Here you can choose the news archive format.
+    news_startDay:
+        - Week start day
+        - Here you can choose the week start day.
+    news_order:
+        - Sort order
+        - Here you can choose the sort order.
+    news_showQuantity:
+        - Show number of items
+        - Show the number of news items of each month.
+    news_keepCanonical:
+        - Use the current URL for canonical links
+        - Keep the current URL instead of the configured reader page for canonical links.
+    news_overview_legend: Overview page
+    news_day: Day
+    news_month: Month
+    news_year: Year
+    hide_module: Hide the module
+    show_current: Jump to the current period
+    all_items: Show all news items
+    featured: Show featured news items only
+    unfeatured: Skip featured news items
+    featured_first: Show featured news items first
+    order_date_asc: Date ascending
+    order_date_desc: Date descending
+    order_headline_asc: Headline ascending
+    order_headline_desc: Headline descending
+    order_random: Random order

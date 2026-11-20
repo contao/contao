@@ -1,0 +1,175 @@
+tl_layout:
+    name:
+        - Title
+        - Please enter the layout title.
+    type:
+        - Layout type
+        - Here you can select the layout type.
+    rows:
+        - Rows
+        - Please choose the number of rows.
+    1rw:
+        - Main row only
+        - Show only one row.
+    2rwh:
+        - Header and main row
+        - Show a header above the main row.
+    2rwf:
+        - Main row and footer
+        - Show a footer below the main row.
+    3rw:
+        - Header, main row and footer
+        - Show a header above and a footer below the main row.
+    headerHeight:
+        - Header height
+        - Please enter the height of the page header.
+    footerHeight:
+        - Footer height
+        - Please enter the height of the page footer.
+    cols:
+        - Columns
+        - Please choose the number of columns.
+    1cl:
+        - Main column only
+        - Show only one column.
+    2cll:
+        - Left and main column
+        - Show two columns with the main column on the right side.
+    2clr:
+        - Main and right column
+        - Show two columns with the main column on the left side.
+    3cl:
+        - Main, left and right column
+        - Show three columns with the main column in the middle.
+    widthLeft:
+        - Left column width
+        - Please enter the width of the left column.
+    widthRight:
+        - Right column width
+        - Please enter the width of the right column.
+    sections:
+        - Custom layout sections
+        - Here you can define custom layout sections.
+    framework:
+        - CSS framework
+        - Here you can activate the components of the Contao CSS framework.
+    layout\.css:
+        - Layout builder
+        - Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!
+    responsive\.css:
+        - Responsive layout
+        - Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.
+    grid\.css:
+        - 12-column grid
+        - Adds a responsive 12-column grid that is triggered by the CSS classes "grid1" to "grid12" and "offset1" to "offset12".
+    reset\.css:
+        - CSS reset
+        - Removes the inconsistent default styling of HTML elements in different browsers.
+    form\.css:
+        - Basic forms
+        - Adds basic form elements and buttons formatting.
+    icons\.css:
+        - Basic icons
+        - Adds basic mime icons for downloads and enclosures.
+    external:
+        - External style sheets
+        - Here you can add external CSS, SCSS or LESS files from the file system.
+    combineScripts:
+        - Combine scripts
+        - Combine the .css and .js files (recommended).
+    lightboxSize:
+        - Lightbox image size
+        - Here you can select an image size for the images shown in the lightbox.
+    defaultImageDensities:
+        - Default image pixel densities
+        - Here you can define the default pixel densities, e.g. <em>1x, 1.5x, 2x</em>.
+    modules:
+        - Included elements
+        - Here you can assign front end modules and content elements to the layout.
+    template:
+        - Page template
+        - Here you can select the page template.
+    minifyMarkup:
+        - Minify the markup
+        - Minify the HTML markup before it is sent to the browser.
+    cssClass:
+        - Body class
+        - Here you can add custom classes to the &lt;body&gt; tag.
+    viewport:
+        - Viewport tag
+        - Here you can set a custom viewport tag.
+    titleTag:
+        - Title tag
+        - Here you can overwrite the title tag.
+    onload:
+        - Body onload
+        - Here you can add a body <em>onload</em> attribute.
+    head:
+        - Additional &lt;head&gt; tags
+        - Here you can add individual tags to the &lt;head&gt; section of the page.
+    addJQuery:
+        - Include jQuery
+        - Include the jQuery library in the layout.
+    jquery:
+        - jQuery templates
+        - Here you can select one or more jQuery templates.
+    addMooTools:
+        - Include MooTools
+        - Include the MooTools library in the layout.
+    mootools:
+        - MooTools templates
+        - Here you can select one or more MooTools templates.
+    scripts:
+        - JavaScript templates
+        - Here you can select one or more JavaScript templates.
+    analytics:
+        - Analytics templates
+        - Here you can select one or more analytics templates.
+    externalJs:
+        - External JavaScripts
+        - Here you can add external JS files from the file system.
+    script:
+        - Custom JavaScript code
+        - The JavaScript code which will be inserted at the bottom of the page.
+    static:
+        - Static layout
+        - Create a static layout with a fixed width and alignment.
+    width:
+        - Overall width
+        - The overall width will be applied to the wrapper element.
+    align:
+        - Alignment
+        - Please select the alignment of the page.
+    title_legend: Title and type
+    header_legend: Rows
+    column_legend: Columns
+    sections_legend: Custom sections
+    image_legend: Image sizes
+    style_legend: Style sheets
+    feed_legend: Feeds
+    modules_legend: Include settings
+    expert_legend: Expert settings
+    script_legend: JavaScript
+    static_legend: Static layout
+    jquery_legend: jQuery
+    mootools_legend: MooTools
+    modern: Twig layout with slots
+    default: Default layout
+    edit_module: Edit the module
+    analytics_google: Google Analytics
+    analytics_matomo: Matomo
+    new:
+        1: Create a new page layout
+    show:
+        1: Show the details of page layout ID %s
+    versions:
+        1: Show the versions of page layout ID %s
+    edit:
+        1: Edit page layout ID %s
+    copy:
+        1: Copy page layout ID %s
+    cut:
+        1: Move page layout ID %s
+    delete:
+        1: Delete page layout ID %s
+    tableLabel: Layout

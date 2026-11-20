@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Config\Loader\YamlFileLoader;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
@@ -430,6 +431,7 @@ abstract class System
 		// Prepare the XLIFF loader
 		$container = static::getContainer();
 		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
+		$yamlLoader = new YamlFileLoader(true);
 		$strCacheDir = $container->getParameter('kernel.cache_dir');
 
 		if (null === self::$arrAvailableLanguageFiles)
@@ -454,8 +456,8 @@ abstract class System
 			}
 			else
 			{
-				// Find the given filename either as .php or .xlf file
-				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				// Find the given filename either as .php, .xlf or .yaml file
+				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf|yaml)$/');
 
 				foreach ($finder as $file)
 				{
@@ -467,6 +469,10 @@ abstract class System
 
 						case 'xlf':
 							$xlfLoader->load($file, $strCreateLang);
+							break;
+
+						case 'yaml':
+							$yamlLoader->load($file, $strCreateLang);
 							break;
 
 						default:

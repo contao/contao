@@ -1,0 +1,69 @@
+tl_maintenance:
+    cacheTables:
+        - Purge data
+        - Please select the data you want to purge or rebuild.
+    job: Job
+    description: Description
+    clearCache: Purge data
+    cacheCleared: The data has been purged
+    updateHelp: Please enter your %s here.
+    crawler: Crawler
+    startCrawling: Start crawling
+    crawlSubscribers:
+        - Enabled features
+        - The crawler crawls all URLs it finds. Here you can decide what to do with these results.
+    crawlDepth:
+        - Maximum depth
+        - The maximum depth to crawl.
+    crawlMember:
+        - Front end member
+        - Automatically log in a front end member to index protected pages.
+    crawlHint: Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the <code>%s</code> setting in the system configuration to speed up the crawling process. Refer to the <a href="%s" target="_blank" rel="noreferrer noopener">Contao manual</a> for more information.
+    crawlWaitToBeFinished: The crawler is currently working. Please wait for it to finish to see the results.
+    crawlDebugLog: Debug log
+    crawlDebugLogExplain: If errors occurred or pages were skipped, check the debug log for more information.
+    crawlDownloadLog: Download log
+    crawlSubscriberNames:
+        search-index: Update the search index
+        broken-link-checker: Check for broken links
+    backend_search:
+        title: Back end search
+        disabled: To use the back end search, please enable the <a href="%s" target="_blank">Contao cronjob framework</a>.
+        button: Rebuild index
+tl_maintenance_jobs:
+    index:
+        - Purge the search index
+        - Truncates the tables <code>tl_search</code>, <code>tl_search_index</code> and <code>tl_search_term</code>. Afterwards, you have to rebuild the search index (see above).
+    undo:
+        - Purge the undo table
+        - Truncates the <code>tl_undo</code> table which stores the deleted records. This job permanently deletes these records.
+    versions:
+        - Purge the version table
+        - Truncates the <code>tl_version</code> table which stores the previous versions of a record. This job permanently deletes these records.
+    log:
+        - Purge the system log
+        - Truncates the <code>tl_log</code> table which stores all the system log entries. This job permanently deletes these records.
+    crawl_queue:
+        - Purge the crawl queue
+        - Truncates the <code>tl_crawl_queue</code> table which stores all the queue information from crawl processes.
+    images:
+        - Purge the image cache
+        - Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.
+    previews:
+        - Purge the preview cache
+        - Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.
+    scripts:
+        - Purge the script cache
+        - Removes the automatically generated <code>.css</code> and <code>.js</code> files and then purges the shared cache, so there are no links to deleted resources.
+    pages:
+        - Purge the shared cache
+        - Removes the cached versions of the front end pages.
+    temp:
+        - Purge the temp folder
+        - Removes the temporary files.
+    xml:
+        - Recreate the XML files
+        - Recreates the XML files in the <code>share</code> folder and then purges the shared cache, so there are no links to deleted resources.
+    symlinks:
+        - Recreate the symlinks
+        - Recreates the symlinks in the public folder (document root).

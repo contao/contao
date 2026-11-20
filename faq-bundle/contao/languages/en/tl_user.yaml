@@ -1,0 +1,5 @@
+tl_user:
+    faqs:
+        - Allowed FAQ categories
+        - Here you can grant access to one or more FAQ categories.
+    faq_legend: FAQ permissions

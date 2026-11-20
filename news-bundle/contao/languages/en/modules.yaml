@@ -1,0 +1,19 @@
+MOD:
+    news:
+        - News
+        - Manage news
+    tl_news: Items
+FMD:
+    news: News
+    newslist:
+        - Newslist
+        - Adds a list of news items to the page
+    newsreader:
+        - Newsreader
+        - Shows the details of a news item
+    newsarchive:
+        - News archive
+        - Adds a news archive to the page
+    newsmenu:
+        - News archive menu
+        - Generates a navigation menu to browse the news archive

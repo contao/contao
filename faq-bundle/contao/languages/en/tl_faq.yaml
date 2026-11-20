@@ -1,0 +1,71 @@
+tl_faq:
+    question:
+        - Question
+        - Please enter the question.
+    alias:
+        - FAQ alias
+        - The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.
+    author:
+        - Author
+        - Here you can change the author of the FAQ.
+    answer:
+        - Answer
+        - Please enter the answer.
+    addImage:
+        - Add an image
+        - Add an image to the FAQ.
+    pageTitle:
+        - Meta title
+        - Here you can add a custom meta title to overwrite the default page title.
+    robots:
+        - Robots tag
+        - Here you can overwrite how search engines handle the FAQ.
+    description:
+        - Meta description
+        - Here you can add a custom meta description to overwrite the default page description.
+    addEnclosure:
+        - Add enclosures
+        - Add one or more downloadable files to the FAQ.
+    enclosure:
+        - Enclosures
+        - Please choose the files you want to attach.
+    published:
+        - Publish the FAQ
+        - Make the FAQ publicly visible on the website.
+    title_legend: Title and author
+    answer_legend: Answer
+    meta_legend: Metadata
+    image_legend: Image settings
+    enclosure_legend: Enclosures
+    publish_legend: Publish settings
+    new:
+        1: Create a new question
+    show:
+        1: Show the details of question ID %s
+    versions:
+        1: Show the versions of question ID %s
+    edit:
+        1: Edit question ID %s
+    copy:
+        1: Duplicate question ID %s
+    cut:
+        1: Move question ID %s
+    delete:
+        1: Delete question ID %s
+    toggle:
+        - Publish/unpublish question
+        - Unpublish question ID %s
+        - Publish question ID %s
+        - Unpublish
+        - Publish
+    pasteafter:
+        - Paste at the top
+        - Paste after question ID %s
+    pastenew:
+        - Create a new question at the top
+        - Create a new question after question ID %s
+    pastenewtop:
+        1: Add a new question at the top
+    pastenewafter:
+        1: Add a new question after question ID %s
+    tableLabel: Question

@@ -1,0 +1,106 @@
+tl_files:
+    preview:
+        - Image preview
+        - Mark the important part of the image with your mouse cursor.
+    name:
+        - Name
+        - The file or folder name (without extension).
+    path:
+        - Path
+        - The relative path to the file or folder.
+    extension:
+        - Extension
+        - The file extension
+    protected:
+        - Public
+        - Make the folder and its sub-folders accessible via HTTP.
+    syncExclude:
+        - Do not synchronize
+        - Do not synchronize the folder and its subfolders with the database.
+    importantPartX:
+        - Important part x coordinate
+        - Here you can enter the x coordinate of the important part.
+    importantPartY:
+        - Important part y coordinate
+        - Here you can enter the y coordinate of the important part.
+    importantPartWidth:
+        - Important part width
+        - Here you can enter the width of the important part.
+    importantPartHeight:
+        - Important part height
+        - Here you can enter the height of the important part.
+    meta:
+        - Metadata
+        - Here you can enter the file metadata. To add a language, create a matching website root page.
+    metaRgxpError: Field "%s" for language "%s" must match "%s".
+    licenseRgxpError: Field "%s" for language "%s" must contain a valid URL.
+    fileupload:
+        - File upload
+        - Select the files you want to upload to the server (maximum %s and %s pixels).
+    editor:
+        - Source editor
+        - Here you can edit the file source (press F11 to toggle fullscreen mode).
+    uploadNback: Upload files and go back
+    editFF: Edit a file or folder
+    uploadFF: Upload files to folder "%s"
+    editFile: Edit file "%s"
+    browseFiles: Browse files
+    clearList: Clear list
+    startUpload: Start upload
+    dropzone: Click or drop files here to upload
+    dropzoneFileTooBig: The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.
+    dropzoneInvalidType: Files of this type cannot be uploaded.
+    fileLocation: 'Path: %s'
+    syncAdded: Added the file or folder "%s"
+    syncChanged: Updated the hash of the file or folder "%s"
+    syncUnchanged: Found the file or folder "%s"
+    syncMoved: Found the file or folder "%s" at "%s"
+    syncDeleted: Removed the file or folder "%s"
+    syncComplete: The synchronization has been completed
+    syncResult: <strong>Result:</strong> %s added | %s modified | %4$s moved | %5$s deleted
+    syncShowUnchanged: Show unchanged
+    new:
+        - New folder
+        - Create a new folder
+    move:
+        - Upload files
+        - Upload files to the server
+    sync:
+        - Synchronize
+        - Synchronize the file system and the database
+    textTrackLanguage:
+        - Language
+        - Please select the language of the file.
+    textTrackType:
+        - Track type
+        - Here you can select the type of text track.
+    captions: Closed captions
+    descriptions: Audio descriptions
+    subtitles: Subtitles
+    chapters: Chapters
+    metadata: Metadata
+    show:
+        1: Show the details of file or folder "%s"
+    cut:
+        1: Move file or folder "%s"
+    copy:
+        1: Copy file or folder "%s"
+    edit:
+        1: Edit file or folder "%s"
+    delete:
+        1: Delete file or folder "%s"
+    dragFolder:
+        1: Drag folder "%s"
+    dragFile:
+        1: Drag file "%s"
+    source:
+        - Edit source
+        - Edit the source text of file "%s"
+    upload:
+        - Upload files
+        - Upload files to folder "%s"
+    protect: Protect folder "%s"
+    unlock: Unprotect folder "%s"
+    pasteinto:
+        - Paste into the root folder
+        - Paste into folder "%s"

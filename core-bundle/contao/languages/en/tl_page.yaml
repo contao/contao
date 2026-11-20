@@ -1,0 +1,294 @@
+tl_page:
+    title:
+        - Page name
+        - Please enter the page name.
+    type:
+        - Page type
+        - Please choose the page type.
+    alias:
+        - Page alias
+        - The page alias is a unique reference to the page which can be called instead of its numeric ID.
+    requireItem:
+        - Require an item
+        - Trigger a 404 error if the page URL does not contain an item alias.
+    routePath:
+        - Route path
+        - A preview of the final path (possibly with placeholders) to match this page.
+    routePriority:
+        - Route priority
+        - 'Optionally configure the priority to affect the order of routes. Default: 0'
+    pageTitle:
+        - Page title
+        - Please enter the page title.
+    language:
+        - Language
+        - Please enter the page language according to the ISO-639 standard (e.g. "en" for English or "en_US" for American English).
+    robots:
+        - Robots tag
+        - Here you can define how search engines handle the page. The setting also determines whether the page appears in the <code>sitemap.xml</code> file or not.
+    maintenanceMode:
+        - Maintenance mode
+        - Show visitors a page that this website is currently being maintained.
+    description:
+        - Page description
+        - Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.
+    redirect:
+        - Redirect type
+        - Please choose the redirect type.
+    alwaysForward:
+        - Always redirect
+        - Redirect to the target page even if there are query or path parameters.
+    jumpTo:
+        - Redirect page
+        - Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.
+    redirectBack:
+        - Redirect to last page visited
+        - Redirect the member back to the last page visited instead of the redirect page.
+    fallback:
+        - Language fallback
+        - Show this page if there is none that matches the visitor's language.
+    disableLanguageRedirect:
+        - Disable language redirect
+        - Do not redirect visitors to this website root based on their preferred browser language.
+    favicon:
+        - Favicon
+        - Here you can select a favicon for the website.
+    robotsTxt:
+        - Custom robots.txt content
+        - Here you can enter custom robots.txt content. It may be extended automatically by extensions.
+    dns:
+        - Domain name
+        - Here you can restrict the access to the website to a certain domain name.
+    staticFiles:
+        - Files URL
+        - The files URL applies to the <em>files</em> directory (page speed optimization).
+    staticPlugins:
+        - Assets URL
+        - The assets URL applies to the <em>assets</em> directory (page speed optimization).
+    mailerTransport:
+        - Mailer transport
+        - Here you can override the mailer transport used to send e-mails on this website.
+    enableCanonical:
+        - Enable rel="canonical"
+        - Add rel="canonical" tags to the website.
+    canonicalLink:
+        - Custom URL
+        - Here you can set a custom canonical URL like https://example.com/.
+    canonicalKeepParams:
+        - Query parameters
+        - By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.
+    adminEmail:
+        - E-mail address of the website administrator
+        - This e-mail address will be used to send and receive system messages.
+    dateFormat:
+        - Date format
+        - The date format string will be parsed with the PHP date() function.
+    timeFormat:
+        - Time format
+        - The time format string will be parsed with the PHP date() function.
+    datimFormat:
+        - Date and time format
+        - The date and time format string will be parsed with the PHP date() function.
+    validAliasCharacters:
+        - Valid alias characters
+        - Here you can select a custom character set for auto-generated aliases.
+    useFolderUrl:
+        - Enable folder URLs
+        - Generate folder-style page aliases like <em>docs/install/download.html</em> instead of <em>docs-install-download.html</em>.
+    urlPrefix:
+        - URL prefix
+        - Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.
+    urlSuffix:
+        - URL suffix
+        - The URL suffix will be added to the URI string to simulate static documents.
+    useSSL:
+        - Protocol
+        - Here you can select which protocol to use for the website.
+    autoforward:
+        - Forward to another page
+        - Redirect visitors to another page (e.g. a login page).
+    protected:
+        - Protect page
+        - Restrict page access to certain member groups.
+    groups:
+        - Allowed member groups
+        - These groups will be able to access the page.
+    includeLayout:
+        - Assign a layout
+        - Assign a page layout to the page and its subpages.
+    layout:
+        - Page layout
+        - You can manage page layouts with the "themes" module.
+    subpageLayout:
+        - Subpage layout
+        - Here you can select a different layout for subpages.
+    includeCache:
+        - Set cache timeouts
+        - Set cache timeout values for the page and its subpages.
+    cache:
+        - Shared cache timeout
+        - The period after which the page should no longer be considered fresh by a shared cache.
+    alwaysLoadFromCache:
+        - Always load from shared cache
+        - Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!
+    clientCache:
+        - Private cache timeout
+        - The period after which the page should no longer be considered fresh by a private cache.
+    includeChmod:
+        - Assign access rights
+        - Access rights determine what back end users can do with the page.
+    cuser:
+        - Owner
+        - Please select a user as the owner of the page.
+    cgroup:
+        - Group
+        - Please select a user group as the owner of the page.
+    chmod:
+        - Access rights
+        - Please assign the access rights for the page and its subpages.
+    cssClass:
+        - CSS class
+        - The class(es) will be used in the navigation menu and the &lt;body&gt; tag.
+    sitemap:
+        - Show in HTML sitemap
+        - Here you can define whether the page is shown in the HTML sitemap.
+    hide:
+        - Hide in navigation
+        - Hide the page in the navigation menu.
+    guests:
+        - Hide if logged in
+        - Hide the page in the navigation menu if a member is logged in.
+    accesskey:
+        - Access key
+        - A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.
+    published:
+        - Publish page
+        - Make the page publicly visible on the website.
+    start:
+        - Show from
+        - If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        - Show until
+        - If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    enforceTwoFactor:
+        - Enforce two-factor authentication
+        - Enforce two-factor authentication for all members.
+    twoFactorJumpTo:
+        - Two-factor redirect page
+        - Please choose the page to which members will be redirected to set up two-factor authentication.
+    enableCsp:
+        - Enable CSP
+        - Enable Content Security Policy for this website.
+    csp:
+        - Content Security Policy
+        - Here you can enter custom Content Security Policy directives.
+    cspReportOnly:
+        - Reporting only
+        - Only report policy violations without enforcing them.
+    cspReportLog:
+        - Enable report logging
+        - Log CSP violations to the Contao system log.
+    feedFormat:
+        - Feed format
+        - Please choose a feed format.
+    maxFeedItems:
+        - Maximum number of items
+        - Here you can limit the number of feed items. Set to 0 to export all.
+    feedBase:
+        - Base URL
+        - Please enter the base URL with protocol (e.g. <em>http://</em>).
+    feedDescription:
+        - Feed description
+        - Here you can enter a short description of the feed.
+    title_legend: Name and type
+    routing_legend: Routing
+    meta_legend: Metadata
+    canonical_legend: Canonical URL
+    system_legend: System settings
+    redirect_legend: Redirect settings
+    url_legend: URL settings
+    language_legend: Language settings
+    website_legend: Website settings
+    global_legend: Global settings
+    sitemap_legend: XML sitemap
+    forward_legend: Auto-forward
+    protected_legend: Access protection
+    layout_legend: Layout settings
+    cache_legend: Cache settings
+    chmod_legend: Access rights
+    expert_legend: Expert settings
+    tabnav_legend: Keyboard navigation
+    publish_legend: Publish settings
+    twoFactor_legend: Two-factor authentication
+    csp_legend: Content Security Policy
+    feed_legend: Feed settings
+    image_legend: Image settings
+    permanent: 301 Permanent redirect
+    temporary: 302 Temporary redirect
+    map_default: Default
+    map_always: Show always
+    map_never: Show never
+    layout_inherit: Inherit page layout
+    new:
+        1: Create a new page
+    show:
+        1: Show the details of page ID %s
+    versions:
+        1: Show the versions of page ID %s
+    edit:
+        1: Edit page ID %s
+    cut:
+        1: Move page ID %s
+    copy:
+        1: Copy page ID %s
+    copyChildren:
+        1: Copy page ID %s with its subpages
+    delete:
+        1: Delete page ID %s
+    toggle:
+        - Publish/unpublish page
+        - Unpublish page ID %s
+        - Publish page ID %s
+        - Unpublish
+        - Publish
+    pasteinto:
+        1: Paste into page ID %s
+    pasteafter:
+        1: Paste after page ID %s
+    pastenewtop:
+        1: Add a new page at the top
+    pastenewafter:
+        1: Add a new page after page ID %s
+    pastenewinto:
+        1: Add a new page inside page ID %s
+    articles:
+        - Articles
+        - Edit the articles of page ID %s
+    routeConflicts:
+        - Route conflicts
+        - The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.
+    relCanonical: Enable canonical URLs in the website root page to enable this configuration.
+    primaryImage:
+        - Page image
+        - Here you can select an image for the page.
+    tableLabel: Page
+CACHE:
+    0: 0 (do not cache)
+    5: 5 seconds
+    15: 15 seconds
+    30: 30 seconds
+    60: 60 seconds
+    300: 5 minutes
+    900: 15 minutes
+    1800: 30 minutes
+    3600: 60 minutes
+    10800: 3 hours
+    21600: 6 hours
+    43200: 12 hours
+    86400: 24 hours
+    259200: 3 days
+    604800: 7 days
+    2592000: 30 days
+    7776000: 3 months
+    15552000: 6 months
+    31536000: 1 year

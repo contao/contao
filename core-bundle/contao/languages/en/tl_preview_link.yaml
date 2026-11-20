@@ -1,0 +1,53 @@
+tl_preview_link:
+    url:
+        - Target URL
+        - The front end URL to be shared.
+    showUnpublished:
+        - Show unpublished
+        - Show unpublished pages and elements when sharing this link.
+    previewTime:
+        - Preview time
+        - Show the preview at a specific date and time.
+    restrictToUrl:
+        - Restrict access to specified URL
+        - Allow access only to the specified URL instead of the entire website.
+    createdAt:
+        - Created at
+        - Date and time when the preview link was created.
+    createdBy:
+        - Created by
+        - The user who created the preview link.
+    expiresAt:
+        - Valid until
+        - Preview of the final date until which the link is available.
+    published:
+        - Enable
+        - Activate the link for sharing.
+    share:
+        - Copy to clipboard
+        - Copy the preview link ID %s to your clipboard
+    url_legend: Target URL
+    config_legend: Configuration
+    publishing_legend: Publish settings
+    expire_options:
+        1: 1 day
+        7: 7 days
+        30: 30 days
+    hintNew: To add a preview link, use the "Share URL" button in the front end preview toolbar.
+    hintSave: Please save this record to generate the preview link.
+    hintEdit: Preview link
+    hintExpired: This preview link has expired and can no longer be shared.
+    show:
+        1: Show the details of preview link ID %s
+    versions:
+        1: Show the versions of preview link ID %s
+    edit:
+        1: Edit preview link ID %s
+    delete:
+        1: Delete preview link ID %s
+    toggle:
+        - Enable/disable preview link
+        - Disable preview link ID %s
+        - Enable preview link ID %s
+        - Disable
+        - Enable

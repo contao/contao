@@ -1,0 +1,5 @@
+tl_user:
+    newsletters:
+        - Allowed channels
+        - Here you can grant access to one or more channels.
+    newsletter_legend: Newsletter permissions

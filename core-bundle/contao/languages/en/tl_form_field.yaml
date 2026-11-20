@@ -1,0 +1,204 @@
+tl_form_field:
+    type:
+        - Field type
+        - Please choose the type of field.
+    name:
+        - Field name
+        - The field name is a unique name to identify the field.
+    label:
+        - Field label
+        - The field label will be visible on the website, typically in front of or above the field.
+    text:
+        - Text
+        - You can use HTML tags to format the text.
+    html:
+        - HTML
+        - You can modify the list of allowed HTML tags in the back end settings.
+    options:
+        - Options
+        - If JavaScript is disabled, make sure to save your changes before modifying the order.
+    mandatory:
+        - Mandatory field
+        - The form will not submit if the field is empty.
+    rgxp:
+        - Input validation
+        - Validate the input against a regular expression.
+    digit:
+        - Numeric characters
+        - Allows numeric characters, minus (-) and full stop (.).
+    alpha:
+        - Alphabetic characters
+        - Allows alphabetic characters, minus (-), full stop (.) and space ( ).
+    alnum:
+        - Alphanumeric characters
+        - Allows alphabetic and numeric characters, minus (-), full stop (.), underscore (_) and space ( ).
+    extnd:
+        - Extended alphanumeric characters
+        - 'Allows everything except special characters which are usually encoded for security reasons: #<>()\='
+    date:
+        - Date
+        - Checks whether the input matches the global date format.
+    time:
+        - Time
+        - Checks whether the input matches the global time format.
+    datim:
+        - Date and time
+        - Checks whether the input matches the global date and time format.
+    phone:
+        - Phone number
+        - Allows numeric characters, plus (+), minus (-), slash (/), parentheses () and space ( ).
+    email:
+        - E-mail address
+        - Checks whether the input is a valid e-mail address.
+    url:
+        - URL format
+        - Checks whether the input is a valid URL.
+    httpurl:
+        - Absolute URL
+        - Checks whether the input is a valid absolute URL.
+    custom:
+        - Custom
+        - Checks against a custom regular expression.
+    placeholder:
+        - Placeholder
+        - Show this text as long as the field is empty (requires HTML5).
+    help:
+        - Help text
+        - Here you can enter a help text that is associated with the field.
+    customRgxp:
+        - Custom regular expression
+        - The custom regular expression including delimiters and modifiers.
+    errorMsg:
+        - Error message
+        - Show this error message in the front end if the user input is invalid.
+    minlength:
+        - Minimum length
+        - Require the field value to be a certain number of characters long.
+    maxlength:
+        - Maximum length
+        - Limit the field length to a certain number of characters (text) or bytes (file uploads).
+    maxImageWidth:
+        - Maximum image width
+        - Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.
+    maxImageHeight:
+        - Maximum image height
+        - Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.
+    minval:
+        - Minimum value
+        - Here you can set the minimum value for numeric fields.
+    maxval:
+        - Maximum value
+        - Here you can set the maximum value for numeric fields.
+    step:
+        - Step
+        - Here you can set the discrete step size of the field.
+    size:
+        - Rows and columns
+        - The number of rows and columns of the textarea.
+    multiple:
+        - Multiple selection
+        - Allow visitors to select more than one option.
+    mSize:
+        - List size
+        - Here you can enter the size of the select box.
+    extensions:
+        - Allowed file types
+        - A comma separated list of valid file extensions.
+    storeFile:
+        - Store uploaded files
+        - Move the uploaded files to a folder on the server.
+    uploadFolder:
+        - Target folder
+        - Please select the target folder from the files directory.
+    useHomeDir:
+        - Use home directory
+        - Store the file in the home directory if there is an authenticated member.
+    doNotOverwrite:
+        - Preserve existing files
+        - Add a numeric suffix to the new file if the file name already exists.
+    multipleFiles:
+        - Allow multiple files
+        - Allow the user to upload multiple files.
+    value:
+        - Default value
+        - Here you can enter a default value for the field.
+    class:
+        - CSS class
+        - Here you can enter one or more classes.
+    accesskey:
+        - Access key
+        - A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.
+    fSize:
+        - Field size
+        - Here you can enter the size of the upload field (<em>size</em> attribute).
+    customTpl:
+        - Form field template
+        - Here you can select the form field template.
+    slabel:
+        - Submit button label
+        - Please enter the label of the submit button.
+    imageSubmit:
+        - Create an image button
+        - Use an image submit button instead of the default one.
+    singleSRC:
+        - Source file
+        - Please select an image from the files directory.
+    altchaAuto:
+        - Auto verification
+        - Automatically verify without user interaction.
+    altchaHideLogo:
+        - Hide logo
+        - Hide the ALTCHA logo.
+    altchaHideFooter:
+        - Hide footer
+        - Hide the footer (ALTCHA link).
+    altchaFloating:
+        - Floating mode
+        - Enable the floating UI.
+    autocomplete:
+        - Autocomplete attributes
+        - Here you can enter autocomplete attributes so that the browser knows how to pre-populate the form field with user-preferred values.
+    invisible:
+        - Invisible
+        - Hide the form field on the website.
+    type_legend: Field type and name
+    text_legend: Text/HTML
+    fconfig_legend: Field configuration
+    options_legend: Options
+    store_legend: Store file
+    expert_legend: Expert settings
+    size_legend: Rows and columns
+    rgxp_legend: Validation settings
+    template_legend: Template settings
+    submit_legend: Submit button
+    image_legend: Image button
+    invisible_legend: Visibility
+    new:
+        1: Create a new form field
+    show:
+        1: Show the details of form field ID %s
+    versions:
+        1: Show the versions of form field ID %s
+    edit:
+        1: Edit form field ID %s
+    cut:
+        1: Move form field ID %s
+    copy:
+        1: Copy form field ID %s
+    delete:
+        1: Delete form field ID %s
+    toggle:
+        - Hide/unhide form field
+        - Hide form field ID %s
+        - Unhide form field ID %s
+        - Hide
+        - Unhide
+    pasteafter:
+        1: Paste after form field ID %s
+    pastenewtop:
+        1: Create a new form field at the top
+    pastenewafter:
+        1: Create a new form field after form field ID %s
+    option:
+        1: Import options from a CSV file
+    tableLabel: Form field

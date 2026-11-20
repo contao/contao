@@ -1,0 +1,26 @@
+XPT:
+    error: An error occurred
+    matter: What's the matter?
+    howToFix: How can I fix the issue?
+    more: Tell me more, please
+    hint: To customize this notice, create a custom Twig template overriding <em>%s</em>.
+    errorOccurred: An error occurred while executing this script. Something does not work properly.
+    errorFixOne: Open the current log file in the <code>var/log</code> directory and find the associated error message (usually the last one).
+    errorExplain: The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the <a href="%s" target="_blank" rel="noreferrer noopener">Contao support page</a>.
+    requestToken: Invalid request token
+    invalidToken: The request token could not be verified.
+    tokenReload: Reload the page
+    tokenRetry: Use the button above to reload the page and try again. Do not use the back button of your browser.
+    tokenExplainOne: This error occurs if there is a POST request without a valid request token. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.
+    tokenExplainTwo: For more information, visit the <a href="%s" target="_blank" rel="noreferrer noopener">Contao support page</a>.
+    unavailable: Service unavailable
+    maintenance: The website is currently not available. Please come back later.
+    missingRouteParameters:
+        title: Unable to generate front end URL
+        matter: The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.
+        explain: 'Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:'
+        path: Route path
+        parameterName: Name
+        parameterRequirement: Requirement (Regex)
+        parameterDefault: Default value
+        parameterEmpty: empty

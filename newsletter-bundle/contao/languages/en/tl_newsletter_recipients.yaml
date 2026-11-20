@@ -1,0 +1,49 @@
+tl_newsletter_recipients:
+    email:
+        - E-mail address
+        - Please enter the recipient's e-mail address.
+    active:
+        - Activate
+        - Recipients are usually activated automatically (double-opt-in).
+    addedOn:
+        - Subscription date
+        - The date of subscription.
+    ip:
+        - IP address
+        - The IP address of the subscriber.
+    token:
+        - Activation token
+        - The activation token of the subscription.
+    email_legend: E-mail address
+    confirm: '%s new recipients have been imported.'
+    invalid: '%s invalid entries have been skipped.'
+    subscribed: subscribed on %s
+    manually: added manually
+    import:
+        - CSV import
+        - Import recipients from a CSV file
+    new:
+        1: Create a new recipient
+    show:
+        1: Show the details of recipient ID %s
+    versions:
+        1: Show the versions of recipient ID %s
+    edit:
+        1: Edit recipient ID %s
+    cut:
+        1: Move recipient ID %s
+    copy:
+        1: Duplicate recipient ID %s
+    delete:
+        1: Delete recipient ID %s
+    toggle:
+        - Activate/deactivate recipient
+        - Deactivate recipient ID %s
+        - Activate recipient ID %s
+        - Deactivate
+        - Activate
+    tableLabel: Newsletter recipient
+    block:
+        - Block
+        - Block recipient ID %s
+    blockConfirm: Do you really want to block recipient ID %s?

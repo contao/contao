@@ -1,0 +1,4 @@
+tl_news:
+    noComments:
+        - Disable comments
+        - Do not allow comments for this particular news item.

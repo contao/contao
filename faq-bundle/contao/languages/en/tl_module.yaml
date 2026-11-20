@@ -1,0 +1,7 @@
+tl_module:
+    faq_categories:
+        - FAQ categories
+        - Please select one or more FAQ categories.
+    faq_readerModule:
+        - FAQ reader module
+        - Automatically switch to the FAQ reader if an item has been selected.

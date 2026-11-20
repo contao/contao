@@ -1,0 +1,388 @@
+tl_content:
+    type:
+        - Element type
+        - Please choose the type of content element.
+    title:
+        - Internal title
+        - An optional title used, for example, in the back end preview and the breadcrumb menu.
+    headline:
+        - Headline
+        - Here you can add a headline to the content element.
+    sectionHeadline:
+        - Section headline
+        - Here you can add a section headline, e.g. a tab title or accordion header.
+    text:
+        - Text
+        - You can use HTML tags to format the text.
+    addImage:
+        - Add an image
+        - Add an image to the content element.
+    showPreview:
+        - Show preview images
+        - Show preview images of the selected files.
+    inline:
+        - Show in browser
+        - Show the file in the browser instead of opening the download dialog.
+    overwriteMeta:
+        - Overwrite metadata
+        - Overwrite the metadata of the file.
+    singleSRC:
+        - Source file
+        - Please select a file or folder from the files directory.
+    alt:
+        - Alternate text
+        - Here you can enter an alternate text for the image (<em>alt</em> attribute).
+    imageTitle:
+        - Image title
+        - Here you can enter the image title (<em>title</em> attribute).
+    imageUrl:
+        - Image link target
+        - A custom image link target will override the lightbox link, so the image cannot be viewed fullsize anymore.
+    fullsize:
+        - Full-size view/new window
+        - Open the full-size image in a lightbox or the link in a new browser window.
+    floating:
+        - Image alignment
+        - Please specify how to align the image.
+    caption:
+        - Image caption
+        - Here you can enter a short text that will be displayed below the image.
+    html:
+        - HTML code
+        - You can modify the list of allowed HTML tags in the back end settings.
+    unfilteredHtml:
+        - HTML code
+        - Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.
+    listtype:
+        - List type
+        - Please choose the type of list.
+    listitems:
+        - List items
+        - If JavaScript is disabled, make sure to save your changes before modifying the order.
+    tableitems:
+        - Table items
+        - If JavaScript is disabled, make sure to save your changes before modifying the order.
+    summary:
+        - Table summary
+        - Please enter a short summary of the table and describe its purpose or structure.
+    thead:
+        - Add table header
+        - Make the first row the table header.
+    tfoot:
+        - Add table footer
+        - Make the last row the table footer.
+    tleft:
+        - Use row headers
+        - Define the left column as row header.
+    sortable:
+        - Sortable table
+        - Make the table sortable (requires JavaScript and a table header).
+    sortIndex:
+        - Sort index
+        - The number of the default sort column.
+    sortOrder:
+        - Sort order
+        - Please choose the sort order.
+    closeSections:
+        - Close all sections
+        - Do not open the first section by default.
+    mooType:
+        - Operation mode
+        - Please select the operation mode of the accordion element.
+    mooStart:
+        - Wrapper start
+        - Marks the beginning of an accordion pane that spans several content elements.
+    mooStop:
+        - Wrapper stop
+        - Marks the end of an accordion pane that spans several content elements.
+    mooSingle:
+        - Single element
+        - Behaves like a single text element that is inside an accordion pane.
+    mooHeadline:
+        - Section headline
+        - Please enter the headline of the content pane. HTML tags are allowed.
+    mooStyle:
+        - CSS format
+        - Here you can format the section headline using CSS code.
+    mooClasses:
+        - Element classes
+        - Leave blank to use the default classes or enter a custom toggler and accordion class.
+    shClass:
+        - Configuration
+        - 'Here you can configure the syntax highlighter (e.g. <em>gutter: false;</em>).'
+    highlight:
+        - Syntax highlighting
+        - Please choose a scripting language.
+    code:
+        - Code
+        - Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.
+    markdownSource:
+        0: Markdown source
+        1: Please choose the Markdown source.
+        sourceText: Text
+        sourceFile: File
+    data:
+        - Template data
+        - These values are available as <code>$this->keys</code> in the template.
+    linkTitle:
+        - Link text
+        - The link text will be displayed instead of the target URL.
+    overwriteLink:
+        - Overwrite link
+        - Set a custom link text and link title.
+    titleText:
+        - Link title
+        - The link title is added as <em>title</em> attribute in the HTML markup.
+    embed:
+        - Embed the link
+        - Use the wildcard "%s" to embed the link in a phrase (e.g. <em>For more information please visit %s</em>).
+    rel:
+        - Lightbox
+        - To trigger the lightbox, enter a <em>data-lightbox</em> attribute here.
+    useImage:
+        - Create an image link
+        - Use an image instead of the link title.
+    multiSRC:
+        - Source files
+        - Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.
+    useHomeDir:
+        - Use home directory
+        - Use the home directory as file source if there is an authenticated member.
+    perRow:
+        - Thumbnails per row
+        - The number of image thumbnails per row.
+    perPage:
+        - Items per page
+        - The number of items per page. Set to 0 to disable pagination.
+    serverPagination:
+        - Server-side pagination
+        - Split the images across multiple pages and render only a subset at a time.
+    sortBy:
+        - Order by
+        - Please choose the sort order.
+    metaIgnore:
+        - Ignore files without metadata
+        - Do not show files without metadata matching the page language.
+    galleryTpl:
+        - Gallery template
+        - Here you can select a gallery template.
+    customTpl:
+        - Content element template
+        - Here you can select the content element template.
+    playerSRC:
+        - Video/audio files
+        - Here you can add the video/audio file or multiple files if you are using different codecs.
+    textTrackSRC:
+        - Text track files
+        - The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.
+    youtube:
+        - YouTube ID
+        - Please enter the YouTube video ID (e.g. <em>j0sYj4wxyk0</em>).
+    vimeo:
+        - Vimeo ID
+        - Please enter the Vimeo video ID (e.g. <em>275028611</em>).
+    posterSRC:
+        - Preview image
+        - Show this image instead of the first frame of the video before playback.
+    playerSize:
+        - Player size
+        - Width and height of the media player in pixels (e.g. 640x360).
+    playerOptions:
+        - Player options
+        - Here you can select the player options.
+    playerPreload:
+        - Preloading
+        - Here you can suggest how the browser shall preload the video.
+    playerStart:
+        - Start at
+        - Start playing the video at the given number of seconds. Set to 0 to disable.
+    playerStop:
+        - Stop at
+        - Stop playing the video at the given number of seconds. Set to 0 to disable.
+    playerTitle:
+        - Title
+        - Here you can enter a title.
+    playerCaption:
+        - Caption
+        - Here you can enter a caption.
+    playerAspect:
+        - Aspect ratio
+        - Here you can select the aspect ratio of the video to make it responsive.
+    splashImage:
+        - Use a splash image
+        - Only load the video after the user has clicked on the splash image.
+    playerColor:
+        - Controls color
+        - Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.
+    sliderDelay:
+        - Sliding interval
+        - The time in milliseconds between slides (1000 = 1s). Set to 0 to disable auto sliding.
+    sliderSpeed:
+        - Transition speed
+        - The transition speed in milliseconds (1000 = 1s). Defaults to 300.
+    sliderStartSlide:
+        - Slide offset
+        - Here you can make the slider start with a particular slide (counting starts at 0).
+    sliderContinuous:
+        - Continuous
+        - Make the slider continuous (start all over when reaching the end).
+    cteAlias:
+        - Referenced element
+        - Please choose the content element you want to insert.
+    articleAlias:
+        - Referenced article
+        - Please choose the article you want to insert.
+    article:
+        - Article
+        - Please select an article.
+    form:
+        - Form
+        - Please select a form.
+    module:
+        - Module
+        - Please select a module.
+    protected:
+        - Protect element
+        - Show the content element to certain member groups only.
+    groups:
+        - Allowed member groups
+        - These groups will be able to see the content element.
+    cssID:
+        - CSS ID/class
+        - Here you can set an ID and one or more classes.
+    invisible:
+        - Invisible
+        - Hide the element on the website.
+    start:
+        - Show from
+        - If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        - Show until
+        - If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    tstamp:
+        - Revision date
+        - Date and time of the latest revision
+    rootPageDependentElements:
+        - Elements
+        - Please select an element for every website root page.
+    rootPageDependentElementsBlankOptionLabel: Choose element for "%s" [%s]
+    type_legend: Element type
+    section_legend: Section settings
+    text_legend: Text/HTML/Code
+    image_legend: Image settings
+    download_legend: Download settings
+    preview_legend: Preview settings
+    slider_legend: Slider settings
+    list_legend: List items
+    table_legend: Table items
+    tconfig_legend: Table configuration
+    sortable_legend: Sorting options
+    moo_legend: Accordion settings
+    accordion_legend: Accordion settings
+    link_legend: Hyperlink settings
+    imglink_legend: Image link settings
+    source_legend: Source
+    include_legend: Include settings
+    protected_legend: Access protection
+    splash_legend: Splash image
+    expert_legend: Expert settings
+    template_legend: Template settings
+    player_legend: Player settings
+    poster_legend: Preview image
+    texttrack_legend: Text tracks
+    invisible_legend: Visibility
+    ordered: ordered list
+    unordered: unordered list
+    name_asc: File name (ascending)
+    name_desc: File name (descending)
+    date_asc: Date (ascending)
+    date_desc: Date (descending)
+    custom: Custom order
+    random: Random order
+    includeTemplate: The <em>%s</em> template needs to be included in the page layout.
+    includeTemplates: The <em>%s</em> or <em>%s</em> template needs to be included in the page layout.
+    player_autoplay: Autoplay
+    player_nocontrols: Hide the controls
+    player_loop: Play in a loop
+    player_muted: Mute the audio output
+    player_playsinline: Play inline (no fullscreen mode)
+    player_preload:
+        auto: Auto (preload the entire video)
+        metadata: Metadata (preload the metadata only)
+        none: None (do not preload anything)
+    youtube_autoplay: Autoplay
+    youtube_controls: Hide the controls
+    youtube_cc_load_policy: Show captions by default
+    youtube_fs: Hide the fullscreen button
+    youtube_hl: Use the Contao page language
+    youtube_iv_load_policy: Hide annotations
+    youtube_modestbranding: Hide the YouTube logo
+    youtube_rel: Limit related videos to the same channel
+    youtube_nocookie: Use the youtube-nocookie.com domain
+    youtube_loop: Loop video
+    youtube_mute: Mute the audio output
+    vimeo_autoplay: Autoplay
+    vimeo_loop: Play in a loop
+    vimeo_portrait: Hide the profile image
+    vimeo_title: Hide the title
+    vimeo_byline: Hide the author
+    vimeo_dnt: Prevent session data tracking
+    new:
+        1: Add a new content element
+    show:
+        1: Show the details of content element ID %s
+    versions:
+        1: Show the versions of content element ID %s
+    cut:
+        1: Move content element ID %s
+    copy:
+        1: Copy content element ID %s
+    delete:
+        1: Delete content element ID %s
+    edit:
+        1: Edit content element ID %s
+    toggle:
+        - Hide/unhide content element
+        - Hide content element ID %s
+        - Unhide content element ID %s
+        - Hide
+        - Unhide
+    pasteafter:
+        1: Paste after content element ID %s
+    pastenewtop:
+        1: Create a new content element at the top
+    pastenewafter:
+        1: Create a new content element after content element ID %s
+    editalias: Edit the source element ID %s
+    list:
+        1: Import list items from a CSV file
+    table:
+        1: Import table items from a CSV file
+    dl_label:
+        - Description list items
+        - Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.
+    dl_key: Term
+    dl_value: Details
+    redirect_legend: Redirect settings
+    jumpTo:
+        - Redirect page
+        - Please choose the page to which visitors will be redirected when clicking a link or submitting a form.
+    redirectBack:
+        - Redirect to last page visited
+        - Redirect the member back to the last page visited instead of the redirect page.
+    config_legend: Element configuration
+    autologin:
+        - Allow auto login
+        - Allow members to log into the front end automatically.
+    pwResetPage:
+        - Reset password page
+        - Here you can choose a page to which visitors will be redirected when clicking the <em>Forgot your password?</em> link.
+    reg_close:
+        - Mode
+        - Here you can define how to handle the deletion.
+    reg_deleteDir:
+        - Delete home directory
+        - Delete the home directory when the account is deleted.
+    close_deactivate: Deactivate account
+    close_delete: Irrevocably delete account
+    tableLabel: Content element

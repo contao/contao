@@ -108,6 +108,11 @@ class SystemTest extends TestCase
         );
 
         new Filesystem()->dumpFile(
+            "$tmpDir/contao/languages/en/default.yaml",
+            "MSC.from_yaml: 'Test English YAML'\n",
+        );
+
+        new Filesystem()->dumpFile(
             "$tmpDir/contao/languages/de/default.php",
             '<?php $GLOBALS["TL_LANG"]["MSC"]["test"] = "Test deutsch";'
             .'$GLOBALS["TL_LANG"]["MSC"]["order_test"] .= "|de";',
@@ -128,6 +133,7 @@ class SystemTest extends TestCase
 
         $this->assertSame('Test English', $GLOBALS['TL_LANG']['MSC']['test']);
         $this->assertSame('en', $GLOBALS['TL_LANG']['MSC']['order_test']);
+        $this->assertSame('Test English YAML', $GLOBALS['TL_LANG']['MSC']['from_yaml']);
 
         System::loadLanguageFile('default', 'de');
 
