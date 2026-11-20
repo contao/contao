@@ -148,6 +148,10 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - !service { class: Symfony\Component\Clock\NativeClock }
+            - '%contao.retention.undo%'
+            - '%contao.retention.versions%'
+            - '%contao.retention.logs%'
 
     contao.cron.purge_jobs:
         class: Contao\CoreBundle\Cron\PurgeJobsCron

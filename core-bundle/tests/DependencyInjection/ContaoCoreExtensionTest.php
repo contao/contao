@@ -50,6 +50,22 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testConfiguresRetentionPeriods(): void
+    {
+        $periods = ['undo' => 0, 'versions' => 1234, 'logs' => 5678];
+        $container = $this->getContainerBuilder(['contao' => ['retention' => $periods]]);
+
+        foreach ($periods as $key => $period) {
+            $this->assertSame($period, $container->getParameter('contao.retention.'.$key));
+        }
+
+        $arguments = $container->getDefinition('contao.cron.purge_expired_data')->getArguments();
+
+        $this->assertSame('%contao.retention.undo%', $arguments[3]);
+        $this->assertSame('%contao.retention.versions%', $arguments[4]);
+        $this->assertSame('%contao.retention.logs%', $arguments[5]);
+    }
+
     public function testConfiguresTheMaximumFileUploadSize(): void
     {
         $container = $this->getContainerBuilder(['contao' => ['max_file_upload_size' => 1234]]);
