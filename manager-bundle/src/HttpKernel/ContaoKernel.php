@@ -50,6 +50,11 @@ class ContaoKernel extends Kernel implements HttpCacheProvider, WarmableInterfac
 
     private ContaoCache|null $httpCache = null;
 
+    final public function __construct(string $environment, bool $debug)
+    {
+        parent::__construct($environment, $debug);
+    }
+
     public function shutdown(): void
     {
         // Reset bundle loader to re-calculate bundle order after cache:clear
@@ -378,7 +383,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider, WarmableInterfac
             Debug::enable();
         }
 
-        return new self($env, 'dev' === $env);
+        return new static($env, 'dev' === $env);
     }
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
