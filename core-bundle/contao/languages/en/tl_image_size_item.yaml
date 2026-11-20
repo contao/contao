@@ -1,13 +1,13 @@
 tl_image_size_item:
     media:
-        - Media query
-        - 'Here you can define when to use the image size, e.g. <em>(max-width: 600px)</em>.'
+        0: Media query
+        1: 'Here you can define when to use the image size, e.g. <em>(max-width: 600px)</em>.'
     invisible:
-        - Invisible
-        - Do not use the image size definition.
+        0: Invisible
+        1: Do not use the image size definition.
     tstamp:
-        - Revision date
-        - Date and time of the latest revision
+        0: Revision date
+        1: Date and time of the latest revision
     title_legend: Image size settings
     source_legend: Image source settings
     visibility_legend: Visibility
@@ -26,11 +26,11 @@ tl_image_size_item:
     delete:
         1: Delete media query ID %s
     toggle:
-        - Activate/deactivate media query
-        - Deactivate media query ID %s
-        - Activate media query ID %s
-        - Deactivate
-        - Activate
+        0: Activate/deactivate media query
+        1: Deactivate media query ID %s
+        2: Activate media query ID %s
+        3: Deactivate
+        4: Activate
     pasteafter:
         1: Paste after media query ID %s
     pastenewtop:

@@ -1,71 +1,71 @@
 MOD:
     content: Content
     article:
-        - Articles
-        - Manage articles and content elements
+        0: Articles
+        1: Manage articles and content elements
     form:
-        - Forms
-        - Create custom forms and store or send the submitted data
+        0: Forms
+        1: Create custom forms and store or send the submitted data
     design: Layout
     themes:
-        - Themes
-        - Manage themes, front end modules, page layouts or image sizes
+        0: Themes
+        1: Manage themes, front end modules, page layouts or image sizes
     page:
-        - Pages
-        - Set up the pages of your website(s)
+        0: Pages
+        1: Set up the pages of your website(s)
     template_studio:
-        - Template Studio
-        - Add or edit Twig templates
+        0: Template Studio
+        1: Add or edit Twig templates
     tpl_editor:
-        - Templates
-        - Add or edit custom templates
+        0: Templates
+        1: Add or edit custom templates
     accounts: Accounts
     member:
-        - Members
-        - Manage member accounts (front end)
+        0: Members
+        1: Manage member accounts (front end)
     mgroup:
-        - Member groups
-        - Manage member groups (front end)
+        0: Member groups
+        1: Manage member groups (front end)
     user:
-        - Users
-        - Manage user accounts (back end)
+        0: Users
+        1: Manage user accounts (back end)
     group:
-        - User groups
-        - Manage user groups (back end)
+        0: User groups
+        1: Manage user groups (back end)
     opt_in:
-        - Double opt-in
-        - Manage double opt-in tokens
+        0: Double opt-in
+        1: Manage double opt-in tokens
     system: System
     files:
-        - Files
-        - Manage files and folders
+        0: Files
+        1: Manage files and folders
     log:
-        - System log
-        - Browse the system log
+        0: System log
+        1: Browse the system log
     settings:
-        - Settings
-        - Adjust the Contao configuration
+        0: Settings
+        1: Adjust the Contao configuration
     preview_link:
-        - Preview links
-        - Manage preview links for the front end.
+        0: Preview links
+        1: Manage preview links for the front end.
     maintenance:
-        - Maintenance
-        - Crawl the website or purge generated data
+        0: Maintenance
+        1: Crawl the website or purge generated data
     security:
-        - Security
-        - Secure your account
+        0: Security
+        1: Secure your account
     undo:
-        - Restore
-        - Restore deleted records
+        0: Restore
+        1: Restore deleted records
     jobs:
-        - Jobs
-        - Overview of the system jobs
+        0: Jobs
+        1: Overview of the system jobs
     login:
-        - User profile
-        - Change your personal data or set a new password
+        0: User profile
+        1: Change your personal data or set a new password
     favorites:
-        - Favorites
-        - Manage your back end menu favorites
+        0: Favorites
+        1: Manage your back end menu favorites
     tl_content: Content elements
     tl_form_field: Fields
     tl_image_size: Image sizes
@@ -81,80 +81,80 @@ MOD:
 FMD:
     navigationMenu: Navigation
     navigation:
-        - Navigation menu
-        - Generates a navigation menu from the pages
+        0: Navigation menu
+        1: Generates a navigation menu from the pages
     customnav:
-        - Custom navigation
-        - Generates a custom navigation menu
+        0: Custom navigation
+        1: Generates a custom navigation menu
     breadcrumb:
-        - Breadcrumb navigation
-        - Generates a breadcrumb navigation menu
+        0: Breadcrumb navigation
+        1: Generates a breadcrumb navigation menu
     quicknav:
-        - Quick navigation
-        - Generates a drop-down menu from the pages
+        0: Quick navigation
+        1: Generates a drop-down menu from the pages
     quicklink:
-        - Quick link
-        - Generates a custom drop-down menu
+        0: Quick link
+        1: Generates a custom drop-down menu
     booknav:
-        - Book navigation
-        - Generates a book navigation menu
+        0: Book navigation
+        1: Generates a book navigation menu
     articlenav:
-        - Article navigation
-        - Generates a pagination menu to navigate articles
+        0: Article navigation
+        1: Generates a pagination menu to navigate articles
     sitemap:
-        - HTML sitemap
-        - Generates a list of all pages
+        0: HTML sitemap
+        1: Generates a list of all pages
     user: User
     login:
-        - Login form
-        - Generates a login form
+        0: Login form
+        1: Generates a login form
     personalData:
-        - Personal data
-        - Generates a form to edit a member's personal data
+        0: Personal data
+        1: Generates a form to edit a member's personal data
     registration:
-        - Registration
-        - Generates a member registration form
+        0: Registration
+        1: Generates a member registration form
     changePassword:
-        - Change password
-        - Generates a form to change the password
+        0: Change password
+        1: Generates a form to change the password
     lostPassword:
-        - Lost password
-        - Generates a form to request a new password
+        0: Lost password
+        1: Generates a form to request a new password
     closeAccount:
-        - Close account
-        - Generates a form to delete a member account
+        0: Close account
+        1: Generates a form to delete a member account
     application: Applications
     form:
-        - Form
-        - Adds a form to the page
+        0: Form
+        1: Adds a form to the page
     search:
-        - Search engine
-        - Adds a search form to the page
+        0: Search engine
+        1: Adds a search form to the page
     articlelist:
-        - Article list
-        - Generates a list of articles of a column
+        0: Article list
+        1: Generates a list of articles of a column
     miscellaneous: Miscellaneous
     randomImage:
-        - Random image
-        - Adds a random image to the page
+        0: Random image
+        1: Adds a random image to the page
     html:
-        - Custom HTML
-        - Allows you to add custom HTML code
+        0: Custom HTML
+        1: Allows you to add custom HTML code
     unfiltered_html:
-        - Unfiltered HTML
-        - Allows you to add custom, unfiltered HTML code
+        0: Unfiltered HTML
+        1: Allows you to add custom, unfiltered HTML code
     template:
-        - Custom template
-        - Generates a module to insert a custom template.
+        0: Custom template
+        1: Generates a module to insert a custom template.
     rssReader:
-        - RSS reader (deprecated)
-        - Adds an RSS feed to the page
+        0: RSS reader (deprecated)
+        1: Adds an RSS feed to the page
     feed_reader:
-        - Feed reader
-        - Adds an RSS, Atom or JSON feed to the page
+        0: Feed reader
+        1: Adds an RSS, Atom or JSON feed to the page
     two_factor:
-        - Two-factor authentication
-        - Generates a form to set up or change two-factor authentication
+        0: Two-factor authentication
+        1: Generates a form to set up or change two-factor authentication
     root_page_dependent_modules:
-        - Root page dependent modules
-        - Generates different modules depending on the website root page
+        0: Root page dependent modules
+        1: Generates different modules depending on the website root page

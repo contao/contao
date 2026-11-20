@@ -1,76 +1,76 @@
 tl_member:
     firstname:
-        - First name
-        - Please enter the first name.
+        0: First name
+        1: Please enter the first name.
     lastname:
-        - Last name
-        - Please enter the last name.
+        0: Last name
+        1: Please enter the last name.
     dateOfBirth:
-        - Date of birth
-        - Please enter the date of birth.
+        0: Date of birth
+        1: Please enter the date of birth.
     gender:
-        - Gender
-        - Please choose the gender.
+        0: Gender
+        1: Please choose the gender.
     company:
-        - Company
-        - Here you can enter a company name.
+        0: Company
+        1: Here you can enter a company name.
     street:
-        - Street
-        - Please enter the street name and number.
+        0: Street
+        1: Please enter the street name and number.
     postal:
-        - Postal code
-        - Please enter the postal code.
+        0: Postal code
+        1: Please enter the postal code.
     city:
-        - City
-        - Please enter the name of the city.
+        0: City
+        1: Please enter the name of the city.
     state:
-        - State
-        - Please enter the name of the state.
+        0: State
+        1: Please enter the name of the state.
     country:
-        - Country
-        - Please select the country.
+        0: Country
+        1: Please select the country.
     phone:
-        - Phone number
-        - Please enter the phone number.
+        0: Phone number
+        1: Please enter the phone number.
     mobile:
-        - Cell phone number
-        - Please enter the cell phone number.
+        0: Cell phone number
+        1: Please enter the cell phone number.
     fax:
-        - Fax number
-        - Please enter the fax number.
+        0: Fax number
+        1: Please enter the fax number.
     email:
-        - E-mail address
-        - Please enter a valid e-mail address.
+        0: E-mail address
+        1: Please enter a valid e-mail address.
     website:
-        - Website
-        - Here you can enter a web address.
+        0: Website
+        1: Here you can enter a web address.
     language:
-        - Language
-        - Please select the language.
+        0: Language
+        1: Please select the language.
     groups:
-        - Member groups
-        - Here you can assign the member to one or more groups.
+        0: Member groups
+        1: Here you can assign the member to one or more groups.
     login:
-        - Allow login
-        - Allow the member to log into the front end.
+        0: Allow login
+        1: Allow the member to log into the front end.
     username:
-        - Username
-        - Please enter a unique username.
+        0: Username
+        1: Please enter a unique username.
     assignDir:
-        - Set home directory
-        - Define a home directory for the member.
+        0: Set home directory
+        1: Define a home directory for the member.
     homeDir:
-        - Home directory
-        - Please select a folder from the files directory.
+        0: Home directory
+        1: Please select a folder from the files directory.
     disable:
-        - Deactivate
-        - Temporarily disable the account.
+        0: Deactivate
+        1: Temporarily disable the account.
     start:
-        - Activate on
-        - If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Activate on
+        1: If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
     stop:
-        - Deactivate on
-        - If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Deactivate on
+        1: If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
     useTwoFactor: Use two-factor authentication
     personal_legend: Personal data
     address_legend: Address details
@@ -93,17 +93,17 @@ tl_member:
     edit:
         1: Edit member ID %s
     copy:
-        - Duplicate
-        - Duplicate member ID %s
+        0: Duplicate
+        1: Duplicate member ID %s
     delete:
         1: Delete member ID %s
     toggle:
-        - Activate/deactivate member
-        - Deactivate member ID %s
-        - Activate member ID %s
-        - Deactivate
-        - Activate
+        0: Activate/deactivate member
+        1: Deactivate member ID %s
+        2: Activate member ID %s
+        3: Deactivate
+        4: Activate
     su:
-        - Preview front end
-        - Preview the front end as member ID %s
+        0: Preview front end
+        1: Preview the front end as member ID %s
     tableLabel: Member

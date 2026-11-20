@@ -1,202 +1,202 @@
 tl_module:
     name:
-        - Internal title
-        - Please enter the module title.
+        0: Internal title
+        1: Please enter the module title.
     headline:
-        - Headline
-        - Here you can add a headline to the module.
+        0: Headline
+        1: Here you can add a headline to the module.
     type:
-        - Module type
-        - Please choose the type of module.
+        0: Module type
+        1: Please choose the type of module.
     ariaLabel:
-        - ARIA label
-        - If there is more than one navigation element on the page, each should have a unique label.
+        0: ARIA label
+        1: If there is more than one navigation element on the page, each should have a unique label.
     levelOffset:
-        - Start level
-        - Enter a value greater than 0 to show only submenu items.
+        0: Start level
+        1: Enter a value greater than 0 to show only submenu items.
     showLevel:
-        - Stop level
-        - Enter a value greater than 0 to limit the nesting level of the menu.
+        0: Stop level
+        1: Enter a value greater than 0 to limit the nesting level of the menu.
     hardLimit:
-        - Hard limit
-        - Never show any menu items beyond the stop level.
+        0: Hard limit
+        1: Never show any menu items beyond the stop level.
     showProtected:
-        - Show protected items
-        - Show items that are usually only visible to authenticated members.
+        0: Show protected items
+        1: Show items that are usually only visible to authenticated members.
     defineRoot:
-        - Set a reference page
-        - Define a custom source or target page for the module.
+        0: Set a reference page
+        1: Define a custom source or target page for the module.
     rootPage:
-        - Reference page
-        - Please choose the reference page.
+        0: Reference page
+        1: Please choose the reference page.
     navigationTpl:
-        - Navigation template
-        - Here you can select the navigation template.
+        0: Navigation template
+        1: Here you can select the navigation template.
     customTpl:
-        - Module template
-        - Here you can select the module template.
+        0: Module template
+        1: Here you can select the module template.
     pages:
-        - Pages
-        - Please choose one or more pages.
+        0: Pages
+        1: Please choose one or more pages.
     showHidden:
-        - Show hidden items
-        - Show items that are usually hidden in the navigation menu.
+        0: Show hidden items
+        1: Show items that are usually hidden in the navigation menu.
     customLabel:
-        - Custom label
-        - Here you can enter a custom label for the drop-down menu or the overview link.
+        0: Custom label
+        1: Here you can enter a custom label for the drop-down menu or the overview link.
     autologin:
-        - Allow auto login
-        - Allow members to log into the front end automatically.
+        0: Allow auto login
+        1: Allow members to log into the front end automatically.
     jumpTo:
-        - Redirect page
-        - Please choose the page to which visitors will be redirected when clicking a link or submitting a form.
+        0: Redirect page
+        1: Please choose the page to which visitors will be redirected when clicking a link or submitting a form.
     pwResetPage:
-        - Reset password page
-        - Here you can choose a page to which visitors will be redirected when clicking the <em>Forgot your password?</em> link.
+        0: Reset password page
+        1: Here you can choose a page to which visitors will be redirected when clicking the <em>Forgot your password?</em> link.
     overviewPage:
-        - Overview page
-        - Select an overview page to include a link to it in the template.
+        0: Overview page
+        1: Select an overview page to include a link to it in the template.
     redirectBack:
-        - Redirect to last page visited
-        - Redirect the member back to the last page visited instead of the redirect page.
+        0: Redirect to last page visited
+        1: Redirect the member back to the last page visited instead of the redirect page.
     1cl:
-        - One column
-        - Show the label above the input field.
+        0: One column
+        1: Show the label above the input field.
     2cl:
-        - Two columns
-        - Show the label on the left side of the input field.
+        0: Two columns
+        1: Show the label on the left side of the input field.
     editable:
-        - Editable fields
-        - Show these fields in the front end form.
+        0: Editable fields
+        1: Show these fields in the front end form.
     reqFullAuth:
-        - Require full authentication
-        - Users with only a "remember me" cookie must verify their identity in order to access the module.
+        0: Require full authentication
+        1: Users with only a "remember me" cookie must verify their identity in order to access the module.
     memberTpl:
-        - Form template
-        - Here you can select the form template.
+        0: Form template
+        1: Here you can select the form template.
     form:
-        - Form
-        - Please select a form.
+        0: Form
+        1: Please select a form.
     queryType:
-        - Default query type
-        - Please select the default query type.
+        0: Default query type
+        1: Please select the default query type.
     and:
-        - Find all words
-        - Returns only pages that contain all keywords.
+        0: Find all words
+        1: Returns only pages that contain all keywords.
     or:
-        - Find any word
-        - Returns all pages that contain any of the keywords.
+        0: Find any word
+        1: Returns all pages that contain any of the keywords.
     fuzzy:
-        - Fuzzy search
-        - Will find "Contao" if you search for "con" (equal to a wildcard search).
+        0: Fuzzy search
+        1: Will find "Contao" if you search for "con" (equal to a wildcard search).
     simple:
-        - Simple form
-        - Contains a single input field only.
+        0: Simple form
+        1: Contains a single input field only.
     advanced:
-        - Advanced form
-        - Contains an input field and a radio button menu to choose the query type.
+        0: Advanced form
+        1: Contains an input field and a radio button menu to choose the query type.
     contextLength:
-        - Context length
-        - The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.
+        0: Context length
+        1: The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.
     minKeywordLength:
-        - Minimum keyword length
-        - Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.
+        0: Minimum keyword length
+        1: Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.
     perPage:
-        - Items per page
-        - The number of items per page. Set to 0 to disable pagination.
+        0: Items per page
+        1: The number of items per page. Set to 0 to disable pagination.
     searchType:
-        - Search form layout
-        - Here you can select the search form layout.
+        0: Search form layout
+        1: Here you can select the search form layout.
     searchTpl:
-        - Search results template
-        - Here you can select the search results template.
+        0: Search results template
+        1: Here you can select the search results template.
     inColumn:
-        - Layout section
-        - Please choose the layout section whose articles you want to list.
+        0: Layout section
+        1: Please choose the layout section whose articles you want to list.
     skipFirst:
-        - Skip items
-        - Here you can define how many items will be skipped.
+        0: Skip items
+        1: Here you can define how many items will be skipped.
     loadFirst:
-        - Load the first item
-        - Automatically redirect to the first item if none is selected.
+        0: Load the first item
+        1: Automatically redirect to the first item if none is selected.
     singleSRC:
-        - Source file
-        - Please select a file from the files directory.
+        0: Source file
+        1: Please select a file from the files directory.
     fullsize:
-        - Full-size view/new window
-        - Open the full-size image in a lightbox or the link in a new browser window.
+        0: Full-size view/new window
+        1: Open the full-size image in a lightbox or the link in a new browser window.
     useCaption:
-        - Show caption
-        - Display the image name or caption below the image.
+        0: Show caption
+        1: Display the image name or caption below the image.
     multiSRC:
-        - Source files
-        - Please select one or more files from the files directory.
+        0: Source files
+        1: Please select one or more files from the files directory.
     html:
-        - HTML code
-        - You can modify the list of allowed HTML tags in the back end settings.
+        0: HTML code
+        1: You can modify the list of allowed HTML tags in the back end settings.
     unfilteredHtml:
-        - HTML code
-        - Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.
+        0: HTML code
+        1: Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.
     rss_cache:
-        - Cache timeout
-        - Here you can define how long the feed is being cached.
+        0: Cache timeout
+        1: Here you can define how long the feed is being cached.
     rss_feed:
-        - Feed URLs
-        - Please enter the URL of one or more feeds.
+        0: Feed URLs
+        1: Please enter the URL of one or more feeds.
     rss_template:
-        - Feed template
-        - Here you can select the feed template.
+        0: Feed template
+        1: Here you can select the feed template.
     protected:
-        - Protect module
-        - Show the module to certain member groups only.
+        0: Protect module
+        1: Show the module to certain member groups only.
     groups:
-        - Allowed member groups
-        - These groups will be able to see the module.
+        0: Allowed member groups
+        1: These groups will be able to see the module.
     cssID:
-        - CSS ID/class
-        - Here you can set an ID and one or more classes.
+        0: CSS ID/class
+        1: Here you can set an ID and one or more classes.
     disableCaptcha:
-        - Disable spam protection
-        - Here you can disable the spam protection (not recommended).
+        0: Disable spam protection
+        1: Here you can disable the spam protection (not recommended).
     reg_groups:
-        - Member groups
-        - Here you can assign the member to one or more groups.
+        0: Member groups
+        1: Here you can assign the member to one or more groups.
     reg_allowLogin:
-        - Allow login
-        - Allow the new member to log into the front end.
+        0: Allow login
+        1: Allow the new member to log into the front end.
     reg_skipName:
-        - Skip username
-        - Do not require the username to request a new password.
+        0: Skip username
+        1: Do not require the username to request a new password.
     reg_close:
-        - Mode
-        - Here you can define how to handle the deletion.
+        0: Mode
+        1: Here you can define how to handle the deletion.
     reg_deleteDir:
-        - Delete home directory
-        - Delete the home directory when the account is deleted.
+        0: Delete home directory
+        1: Delete the home directory when the account is deleted.
     reg_assignDir:
-        - Create a home directory
-        - Create a home directory from the registered username.
+        0: Create a home directory
+        1: Create a home directory from the registered username.
     reg_homeDir:
-        - Home directory path
-        - Please select the parent folder from the files directory.
+        0: Home directory path
+        1: Please select the parent folder from the files directory.
     reg_activate:
-        - Send activation e-mail
-        - Send an activation e-mail to the registered e-mail address.
+        0: Send activation e-mail
+        1: Send an activation e-mail to the registered e-mail address.
     reg_jumpTo:
-        - Confirmation page
-        - Please choose the page to which members will be redirected after the request has been completed.
+        0: Confirmation page
+        1: Please choose the page to which members will be redirected after the request has been completed.
     reg_text:
-        - Activation message
-        - You can use the wildcards <em>##domain##</em> (domain name), <em>##link##</em> (activation link) and any input field (e.g. <em>##lastname##</em>).
+        0: Activation message
+        1: You can use the wildcards <em>##domain##</em> (domain name), <em>##link##</em> (activation link) and any input field (e.g. <em>##lastname##</em>).
     reg_password:
-        - Password message
-        - You can use the wildcards <em>##domain##</em> (domain name), <em>##link##</em> (activation link) and any member property (e.g. <em>##lastname##</em>).
+        0: Password message
+        1: You can use the wildcards <em>##domain##</em> (domain name), <em>##link##</em> (activation link) and any member property (e.g. <em>##lastname##</em>).
     data:
-        - Template data
-        - These values are available as <code>$this->data</code> in the template.
+        0: Template data
+        1: These values are available as <code>$this->data</code> in the template.
     rootPageDependentModules:
-        - Modules
-        - Please select a module for every website root page.
+        0: Modules
+        1: Please select a module for every website root page.
     rootPageDependentModulesBlankOptionLabel: Choose module for "%s" [%s]
     title_legend: Title and type
     label_legend: Label
@@ -214,8 +214,8 @@ tl_module:
     email_legend: E-mail settings
     account_legend: Account settings
     emailText:
-        - Your registration on %s
-        - |
+        0: Your registration on %s
+        1: |
             Thank you for your registration on ##domain##.
 
             Click here to complete your registration and to activate your account:
@@ -226,8 +226,8 @@ tl_module:
 
             If you did not request an account, please ignore this e-mail.
     passwordText:
-        - Your password request on %s
-        - |
+        0: Your password request on %s
+        1: |
             You have requested a new password for ##domain##.
 
             Click here to set the new password:

@@ -1,85 +1,85 @@
 tl_form:
     title:
-        - Title
-        - Please enter the form title.
+        0: Title
+        1: Please enter the form title.
     alias:
-        - Form alias
-        - The form alias is a unique reference to the form which can be called instead of its numeric ID.
+        0: Form alias
+        1: The form alias is a unique reference to the form which can be called instead of its numeric ID.
     jumpTo:
-        - Redirect page
-        - Please choose the page to which visitors will be redirected after submitting the form.
+        0: Redirect page
+        1: Please choose the page to which visitors will be redirected after submitting the form.
     confirmation:
-        - Confirmation message
-        - Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. <code>##field_name##</code>. The confirmation message is also available as <code>{{form_confirmation}}</code> insert tag.
+        0: Confirmation message
+        1: Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. <code>##field_name##</code>. The confirmation message is also available as <code>{{form_confirmation}}</code> insert tag.
     sendViaEmail:
-        - Send form data via e-mail
-        - Send the submitted data to an e-mail address.
+        0: Send form data via e-mail
+        1: Send the submitted data to an e-mail address.
     mailerTransport:
-        - Mailer transport
-        - Here you can override the mailer transport used to send the form via e-mail.
+        0: Mailer transport
+        1: Here you can override the mailer transport used to send the form via e-mail.
     recipient:
-        - Recipient address
-        - Separate multiple e-mail addresses with comma.
+        0: Recipient address
+        1: Separate multiple e-mail addresses with comma.
     subject:
-        - Subject
-        - Please enter the e-mail subject.
+        0: Subject
+        1: Please enter the e-mail subject.
     format:
-        - Data format
-        - Defines how the form data will be forwarded.
+        0: Data format
+        1: Defines how the form data will be forwarded.
     raw:
-        - Raw data
-        - The form data will be sent as plain text message with each field in a new line.
+        0: Raw data
+        1: The form data will be sent as plain text message with each field in a new line.
     xml:
-        - XML file
-        - The form data will be attached to the e-mail as an XML file.
+        0: XML file
+        1: The form data will be attached to the e-mail as an XML file.
     csv:
-        - CSV file
-        - The form data will be attached to the e-mail as a CSV file.
+        0: CSV file
+        1: The form data will be attached to the e-mail as a CSV file.
     csv_excel:
-        - CSV file (Microsoft Excel)
-        - The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.
+        0: CSV file (Microsoft Excel)
+        1: The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.
     skipEmpty:
-        - Skip empty fields
-        - Do not include empty fields in the form data.
+        0: Skip empty fields
+        1: Do not include empty fields in the form data.
     email:
-        - E-mail
-        - Ignores all fields except <em>name</em>, <em>email</em>, <em>subject</em>, <em>message</em> and <em>cc</em> (carbon copy) and sends the form data as if it had been sent from a mail client. File uploads are allowed.
+        0: E-mail
+        1: Ignores all fields except <em>name</em>, <em>email</em>, <em>subject</em>, <em>message</em> and <em>cc</em> (carbon copy) and sends the form data as if it had been sent from a mail client. File uploads are allowed.
     skipEmtpy:
-        - Skip empty fields
-        - Hide empty fields in the e-mail.
+        0: Skip empty fields
+        1: Hide empty fields in the e-mail.
     storeValues:
-        - Store data
-        - Store the submitted data in the database.
+        0: Store data
+        1: Store the submitted data in the database.
     customTpl:
-        - Form template
-        - Here you can select the form template.
+        0: Form template
+        1: Here you can select the form template.
     targetTable:
-        - Target table
-        - The target table must contain a column for every form field.
+        0: Target table
+        1: The target table must contain a column for every form field.
     method:
-        - Submission method
-        - The default form submission method is POST.
+        0: Submission method
+        1: The default form submission method is POST.
     novalidate:
-        - Disable HTML5 validation
-        - Add the <em>novalidate</em> attribute to the form tag.
+        0: Disable HTML5 validation
+        1: Add the <em>novalidate</em> attribute to the form tag.
     attributes:
-        - CSS ID/class
-        - Here you can set an ID and one or more classes.
+        0: CSS ID/class
+        1: Here you can set an ID and one or more classes.
     formID:
-        - Form ID
-        - The form ID is required to trigger a Contao module.
+        0: Form ID
+        1: The form ID is required to trigger a Contao module.
     allowTags:
-        - Allow HTML tags
-        - Allow HTML tags in form fields.
+        0: Allow HTML tags
+        1: Allow HTML tags in form fields.
     ajax:
-        - Submit via Ajax
-        - Submit the form via Ajax instead of reloading the page.
+        0: Submit via Ajax
+        1: Submit the form via Ajax instead of reloading the page.
     storeSession:
-        - Store data in the session
-        - Store the submitted data in the session so that it can be retrieved via the <code>{{form_session_data::*}}</code> insert tag.
+        0: Store data in the session
+        1: Store the submitted data in the session so that it can be retrieved via the <code>{{form_session_data::*}}</code> insert tag.
     tstamp:
-        - Revision date
-        - Date and time of the latest revision
+        0: Revision date
+        1: Date and time of the latest revision
     title_legend: Title and redirect page
     email_legend: Send form data
     store_legend: Store form data
@@ -96,11 +96,11 @@ tl_form:
     edit:
         1: Edit form ID %s
     children:
-        - Form fields
-        - Edit the form fields of form ID %s
+        0: Form fields
+        1: Edit the form fields of form ID %s
     copy:
-        - Duplicate
-        - Duplicate form ID %s
+        0: Duplicate
+        1: Duplicate form ID %s
     delete:
         1: Delete form ID %s
     targetTableMissingAllowlist: 'Define the available tables in the following DCA configuration: <code>%s</code>.'

@@ -1,16 +1,16 @@
 tl_page:
     eventCalendars:
-        - Calendars
-        - Here you can choose the calendars to be included in the feed.
+        0: Calendars
+        1: Here you can choose the calendars to be included in the feed.
     feedSource:
-        - Export settings
-        - Here you can choose what will be exported.
+        0: Export settings
+        1: Here you can choose what will be exported.
     feedFeatured:
-        - Featured items
-        - Here you can choose how featured items are handled.
+        0: Featured items
+        1: Here you can choose how featured items are handled.
     feedRecurrenceLimit:
-        - Maximum number of recurrences
-        - Define the maximum number of recurrences for repeated events.
+        0: Maximum number of recurrences
+        1: Define the maximum number of recurrences for repeated events.
     archives_legend: Calendars
     source_teaser: Teasers only
     source_text: Full stories

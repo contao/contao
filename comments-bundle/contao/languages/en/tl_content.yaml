@@ -1,20 +1,20 @@
 tl_content:
     com_order:
-        - Sort order
-        - Please choose the sort order.
+        0: Sort order
+        1: Please choose the sort order.
     com_perPage:
-        - Items per page
-        - The number of comments per page. Set to 0 to disable pagination.
+        0: Items per page
+        1: The number of comments per page. Set to 0 to disable pagination.
     com_moderate:
-        - Moderate
-        - Approve comments before they are published on the website.
+        0: Moderate
+        1: Approve comments before they are published on the website.
     com_requireLogin:
-        - Require login to comment
-        - Allow only authenticated members to create comments.
+        0: Require login to comment
+        1: Allow only authenticated members to create comments.
     com_disableCaptcha:
-        - Disable spam protection
-        - Here you can disable the spam protection (not recommended).
+        0: Disable spam protection
+        1: Here you can disable the spam protection (not recommended).
     com_template:
-        - Comments template
-        - Here you can select a comments template.
+        0: Comments template
+        1: Here you can select a comments template.
     comment_legend: Comment settings

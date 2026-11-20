@@ -1,7 +1,7 @@
 MSC:
     first: This is the first source
     second:
-        - This is the second source
+        0: This is the second source
     third:
         with:
             1: This is the third source

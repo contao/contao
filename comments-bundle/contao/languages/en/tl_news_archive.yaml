@@ -1,25 +1,25 @@
 tl_news_archive:
     allowComments:
-        - Enable comments
-        - Allow visitors to comment news items.
+        0: Enable comments
+        1: Allow visitors to comment news items.
     notify:
-        - Notify
-        - Please choose who to notify when comments are added.
+        0: Notify
+        1: Please choose who to notify when comments are added.
     sortOrder:
-        - Sort order
-        - By default, comments are sorted ascending, starting with the oldest one.
+        0: Sort order
+        1: By default, comments are sorted ascending, starting with the oldest one.
     perPage:
-        - Comments per page
-        - Number of comments per page. Set to 0 to disable pagination.
+        0: Comments per page
+        1: Number of comments per page. Set to 0 to disable pagination.
     moderate:
-        - Moderate comments
-        - Approve comments before they are published on the website.
+        0: Moderate comments
+        1: Approve comments before they are published on the website.
     requireLogin:
-        - Require login to comment
-        - Allow only authenticated members to create comments.
+        0: Require login to comment
+        1: Allow only authenticated members to create comments.
     disableCaptcha:
-        - Disable spam protection
-        - Use this option only if you have limited comments to authenticated users.
+        0: Disable spam protection
+        1: Use this option only if you have limited comments to authenticated users.
     comments_legend: Comments
     notify_admin: System administrator
     notify_author: Author of the news item

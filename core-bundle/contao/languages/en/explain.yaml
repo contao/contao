@@ -1,50 +1,50 @@
 XPL:
     insertTags:
         -
-            - Rich text editor
-            - For more information about HugeRTE, see <a href="https://hugerte.org/" target="_blank" rel="noreferrer noopener">https://hugerte.org/</a>.
+            0: Rich text editor
+            1: For more information about HugeRTE, see <a href="https://hugerte.org/" target="_blank" rel="noreferrer noopener">https://hugerte.org/</a>.
         -
-            - Insert tags
-            - For more information about insert tags, see the <a href="https://to.contao.org/docs/insert-tags?lang=en" target="_blank" rel="noreferrer noopener">Contao manual</a>.
+            0: Insert tags
+            1: For more information about insert tags, see the <a href="https://to.contao.org/docs/insert-tags?lang=en" target="_blank" rel="noreferrer noopener">Contao manual</a>.
         -
-            - Code editor
-            - For more information about Ace, see <a href="https://ace.c9.io" target="_blank" rel="noreferrer noopener">https://ace.c9.io</a>.
+            0: Code editor
+            1: For more information about Ace, see <a href="https://ace.c9.io" target="_blank" rel="noreferrer noopener">https://ace.c9.io</a>.
         -
-            - Markdown
-            - To learn more about markdown, see the <a href="https://to.contao.org/docs/markdown?lang=en" target="_blank" rel="noreferrer noopener">Contao manual</a>.
+            0: Markdown
+            1: To learn more about markdown, see the <a href="https://to.contao.org/docs/markdown?lang=en" target="_blank" rel="noreferrer noopener">Contao manual</a>.
     dateFormat:
         -
-            - colspan
-            - 'Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.<br><br><strong>You can enter different front end formats in the website root pages.</strong><br><br><em>Here are some examples of valid date and time formats</em>:'
+            0: colspan
+            1: 'Contao supports all date and time formats that can be parsed with the PHP date() function. However, to ensure that any input can be transformed into a UNIX timestamp, you can only use numeric date and time formats (j, d, m, n, y, Y, g, G, h, H, i, s) in the back end.<br><br><strong>You can enter different front end formats in the website root pages.</strong><br><br><em>Here are some examples of valid date and time formats</em>:'
         -
-            - Y-m-d
-            - YYYY-MM-DD, international ISO-8601, e.g. 2005-01-28
+            0: Y-m-d
+            1: YYYY-MM-DD, international ISO-8601, e.g. 2005-01-28
         -
-            - m/d/Y
-            - MM/DD/YYYY, English format, e.g. 01/28/2005
+            0: m/d/Y
+            1: MM/DD/YYYY, English format, e.g. 01/28/2005
         -
-            - d.m.Y
-            - DD.MM.YYYY, German format, e.g. 28.01.2005
+            0: d.m.Y
+            1: DD.MM.YYYY, German format, e.g. 28.01.2005
         -
-            - y-n-j
-            - YY-M-D, without leading zeros, e.g. 05-1-28
+            0: y-n-j
+            1: YY-M-D, without leading zeros, e.g. 05-1-28
         -
-            - Ymd
-            - YYYYMMDD, timestamp, e.g. 20050128
+            0: Ymd
+            1: YYYYMMDD, timestamp, e.g. 20050128
         -
-            - H:i:s
-            - 24 hours, minutes and seconds, e.g. 20:36:59
+            0: H:i:s
+            1: 24 hours, minutes and seconds, e.g. 20:36:59
         -
-            - g:i
-            - 12 hours without leading zeros and minutes, e.g. 8:36
+            0: g:i
+            1: 12 hours without leading zeros and minutes, e.g. 8:36
     imageSizeDensities:
         -
-            - Sizes attribute
-            - 'The sizes attribute defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.<br><br>E.g. <code>(max-width: 600px) 100vw, 50vw</code> means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.<br><br>And <code>(max-width: 600px) calc(100vw - 20px), 500px</code> means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.<br><br>If lazy loading is enabled, the sizes attribute can be prefixed with <code>auto,</code> to let <a href="https://caniuse.com/mdn-html_elements_img_sizes_auto" target="_blank" rel="noreferrer noopener">modern browsers</a> determine the dimensions automatically.<br><br>The sizes attribute shouldn‘t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.<br><br>For more information about the sizes attribute please visit <a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes" target="_blank" rel="noreferrer noopener">w3.org</a>.'
+            0: Sizes attribute
+            1: 'The sizes attribute defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.<br><br>E.g. <code>(max-width: 600px) 100vw, 50vw</code> means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.<br><br>And <code>(max-width: 600px) calc(100vw - 20px), 500px</code> means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.<br><br>If lazy loading is enabled, the sizes attribute can be prefixed with <code>auto,</code> to let <a href="https://caniuse.com/mdn-html_elements_img_sizes_auto" target="_blank" rel="noreferrer noopener">modern browsers</a> determine the dimensions automatically.<br><br>The sizes attribute shouldn‘t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.<br><br>For more information about the sizes attribute please visit <a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes" target="_blank" rel="noreferrer noopener">w3.org</a>.'
         -
-            - Pixel densities/<br>scale factors
-            - 'If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. <code>1x, 1.5x, 2x</code> creates the following HTML code: <code>&lt;img srcset="img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x"&gt;</code><br><br>If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities <code>1x, 1.5x, 2x</code> creates the following HTML code: <code>&lt;img srcset="img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w"&gt;</code><br><br>For more information about the srcset attribute please visit <a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset" target="_blank" rel="noreferrer noopener">w3.org</a>.'
+            0: Pixel densities/<br>scale factors
+            1: 'If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. <code>1x, 1.5x, 2x</code> creates the following HTML code: <code>&lt;img srcset="img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x"&gt;</code><br><br>If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities <code>1x, 1.5x, 2x</code> creates the following HTML code: <code>&lt;img srcset="img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w"&gt;</code><br><br>For more information about the srcset attribute please visit <a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset" target="_blank" rel="noreferrer noopener">w3.org</a>.'
     autocomplete:
         -
-            - Autocomplete attributes
-            - For more information about autocomplete attributes, see <a href="https://www.w3.org/TR/WCAG21/#input-purposes" target="_blank" rel="noreferrer noopener">https://www.w3.org/TR/WCAG21/#input-purposes</a>.
+            0: Autocomplete attributes
+            1: For more information about autocomplete attributes, see <a href="https://www.w3.org/TR/WCAG21/#input-purposes" target="_blank" rel="noreferrer noopener">https://www.w3.org/TR/WCAG21/#input-purposes</a>.

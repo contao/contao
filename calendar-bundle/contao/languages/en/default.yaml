@@ -23,5 +23,5 @@ MSC:
     eventOverview: Back to the event overview
 PTY:
     calendar_feed:
-        - Calendar feed
-        - Create an RSS, Atom or JSON feed from your calendars.
+        0: Calendar feed
+        1: Create an RSS, Atom or JSON feed from your calendars.

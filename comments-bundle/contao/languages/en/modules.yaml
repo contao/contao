@@ -1,12 +1,12 @@
 CTE:
     comments:
-        - Comments
-        - Adds a comment form to the page
+        0: Comments
+        1: Adds a comment form to the page
 FMD:
     comments:
-        - Comments
-        - Manage comments or guestbook entries
+        0: Comments
+        1: Manage comments or guestbook entries
 MOD:
     comments:
-        - Comments
-        - Manage comments or guestbook entries
+        0: Comments
+        1: Manage comments or guestbook entries

@@ -1,205 +1,205 @@
 tl_page:
     title:
-        - Page name
-        - Please enter the page name.
+        0: Page name
+        1: Please enter the page name.
     type:
-        - Page type
-        - Please choose the page type.
+        0: Page type
+        1: Please choose the page type.
     alias:
-        - Page alias
-        - The page alias is a unique reference to the page which can be called instead of its numeric ID.
+        0: Page alias
+        1: The page alias is a unique reference to the page which can be called instead of its numeric ID.
     requireItem:
-        - Require an item
-        - Trigger a 404 error if the page URL does not contain an item alias.
+        0: Require an item
+        1: Trigger a 404 error if the page URL does not contain an item alias.
     routePath:
-        - Route path
-        - A preview of the final path (possibly with placeholders) to match this page.
+        0: Route path
+        1: A preview of the final path (possibly with placeholders) to match this page.
     routePriority:
-        - Route priority
-        - 'Optionally configure the priority to affect the order of routes. Default: 0'
+        0: Route priority
+        1: 'Optionally configure the priority to affect the order of routes. Default: 0'
     pageTitle:
-        - Page title
-        - Please enter the page title.
+        0: Page title
+        1: Please enter the page title.
     language:
-        - Language
-        - Please enter the page language according to the ISO-639 standard (e.g. "en" for English or "en_US" for American English).
+        0: Language
+        1: Please enter the page language according to the ISO-639 standard (e.g. "en" for English or "en_US" for American English).
     robots:
-        - Robots tag
-        - Here you can define how search engines handle the page. The setting also determines whether the page appears in the <code>sitemap.xml</code> file or not.
+        0: Robots tag
+        1: Here you can define how search engines handle the page. The setting also determines whether the page appears in the <code>sitemap.xml</code> file or not.
     maintenanceMode:
-        - Maintenance mode
-        - Show visitors a page that this website is currently being maintained.
+        0: Maintenance mode
+        1: Show visitors a page that this website is currently being maintained.
     description:
-        - Page description
-        - Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.
+        0: Page description
+        1: Here you can enter a short description of the page which will be evaluated by search engines like Google or Yahoo. Search engines usually indicate between 150 and 300 characters.
     redirect:
-        - Redirect type
-        - Please choose the redirect type.
+        0: Redirect type
+        1: Please choose the redirect type.
     alwaysForward:
-        - Always redirect
-        - Redirect to the target page even if there are query or path parameters.
+        0: Always redirect
+        1: Redirect to the target page even if there are query or path parameters.
     jumpTo:
-        - Redirect page
-        - Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.
+        0: Redirect page
+        1: Please choose the page to which visitors will be redirected. Leave blank to redirect to the first regular subpage.
     redirectBack:
-        - Redirect to last page visited
-        - Redirect the member back to the last page visited instead of the redirect page.
+        0: Redirect to last page visited
+        1: Redirect the member back to the last page visited instead of the redirect page.
     fallback:
-        - Language fallback
-        - Show this page if there is none that matches the visitor's language.
+        0: Language fallback
+        1: Show this page if there is none that matches the visitor's language.
     disableLanguageRedirect:
-        - Disable language redirect
-        - Do not redirect visitors to this website root based on their preferred browser language.
+        0: Disable language redirect
+        1: Do not redirect visitors to this website root based on their preferred browser language.
     favicon:
-        - Favicon
-        - Here you can select a favicon for the website.
+        0: Favicon
+        1: Here you can select a favicon for the website.
     robotsTxt:
-        - Custom robots.txt content
-        - Here you can enter custom robots.txt content. It may be extended automatically by extensions.
+        0: Custom robots.txt content
+        1: Here you can enter custom robots.txt content. It may be extended automatically by extensions.
     dns:
-        - Domain name
-        - Here you can restrict the access to the website to a certain domain name.
+        0: Domain name
+        1: Here you can restrict the access to the website to a certain domain name.
     staticFiles:
-        - Files URL
-        - The files URL applies to the <em>files</em> directory (page speed optimization).
+        0: Files URL
+        1: The files URL applies to the <em>files</em> directory (page speed optimization).
     staticPlugins:
-        - Assets URL
-        - The assets URL applies to the <em>assets</em> directory (page speed optimization).
+        0: Assets URL
+        1: The assets URL applies to the <em>assets</em> directory (page speed optimization).
     mailerTransport:
-        - Mailer transport
-        - Here you can override the mailer transport used to send e-mails on this website.
+        0: Mailer transport
+        1: Here you can override the mailer transport used to send e-mails on this website.
     enableCanonical:
-        - Enable rel="canonical"
-        - Add rel="canonical" tags to the website.
+        0: Enable rel="canonical"
+        1: Add rel="canonical" tags to the website.
     canonicalLink:
-        - Custom URL
-        - Here you can set a custom canonical URL like https://example.com/.
+        0: Custom URL
+        1: Here you can set a custom canonical URL like https://example.com/.
     canonicalKeepParams:
-        - Query parameters
-        - By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.
+        0: Query parameters
+        1: By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.
     adminEmail:
-        - E-mail address of the website administrator
-        - This e-mail address will be used to send and receive system messages.
+        0: E-mail address of the website administrator
+        1: This e-mail address will be used to send and receive system messages.
     dateFormat:
-        - Date format
-        - The date format string will be parsed with the PHP date() function.
+        0: Date format
+        1: The date format string will be parsed with the PHP date() function.
     timeFormat:
-        - Time format
-        - The time format string will be parsed with the PHP date() function.
+        0: Time format
+        1: The time format string will be parsed with the PHP date() function.
     datimFormat:
-        - Date and time format
-        - The date and time format string will be parsed with the PHP date() function.
+        0: Date and time format
+        1: The date and time format string will be parsed with the PHP date() function.
     validAliasCharacters:
-        - Valid alias characters
-        - Here you can select a custom character set for auto-generated aliases.
+        0: Valid alias characters
+        1: Here you can select a custom character set for auto-generated aliases.
     useFolderUrl:
-        - Enable folder URLs
-        - Generate folder-style page aliases like <em>docs/install/download.html</em> instead of <em>docs-install-download.html</em>.
+        0: Enable folder URLs
+        1: Generate folder-style page aliases like <em>docs/install/download.html</em> instead of <em>docs-install-download.html</em>.
     urlPrefix:
-        - URL prefix
-        - Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.
+        0: URL prefix
+        1: Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.
     urlSuffix:
-        - URL suffix
-        - The URL suffix will be added to the URI string to simulate static documents.
+        0: URL suffix
+        1: The URL suffix will be added to the URI string to simulate static documents.
     useSSL:
-        - Protocol
-        - Here you can select which protocol to use for the website.
+        0: Protocol
+        1: Here you can select which protocol to use for the website.
     autoforward:
-        - Forward to another page
-        - Redirect visitors to another page (e.g. a login page).
+        0: Forward to another page
+        1: Redirect visitors to another page (e.g. a login page).
     protected:
-        - Protect page
-        - Restrict page access to certain member groups.
+        0: Protect page
+        1: Restrict page access to certain member groups.
     groups:
-        - Allowed member groups
-        - These groups will be able to access the page.
+        0: Allowed member groups
+        1: These groups will be able to access the page.
     includeLayout:
-        - Assign a layout
-        - Assign a page layout to the page and its subpages.
+        0: Assign a layout
+        1: Assign a page layout to the page and its subpages.
     layout:
-        - Page layout
-        - You can manage page layouts with the "themes" module.
+        0: Page layout
+        1: You can manage page layouts with the "themes" module.
     subpageLayout:
-        - Subpage layout
-        - Here you can select a different layout for subpages.
+        0: Subpage layout
+        1: Here you can select a different layout for subpages.
     includeCache:
-        - Set cache timeouts
-        - Set cache timeout values for the page and its subpages.
+        0: Set cache timeouts
+        1: Set cache timeout values for the page and its subpages.
     cache:
-        - Shared cache timeout
-        - The period after which the page should no longer be considered fresh by a shared cache.
+        0: Shared cache timeout
+        1: The period after which the page should no longer be considered fresh by a shared cache.
     alwaysLoadFromCache:
-        - Always load from shared cache
-        - Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!
+        0: Always load from shared cache
+        1: Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!
     clientCache:
-        - Private cache timeout
-        - The period after which the page should no longer be considered fresh by a private cache.
+        0: Private cache timeout
+        1: The period after which the page should no longer be considered fresh by a private cache.
     includeChmod:
-        - Assign access rights
-        - Access rights determine what back end users can do with the page.
+        0: Assign access rights
+        1: Access rights determine what back end users can do with the page.
     cuser:
-        - Owner
-        - Please select a user as the owner of the page.
+        0: Owner
+        1: Please select a user as the owner of the page.
     cgroup:
-        - Group
-        - Please select a user group as the owner of the page.
+        0: Group
+        1: Please select a user group as the owner of the page.
     chmod:
-        - Access rights
-        - Please assign the access rights for the page and its subpages.
+        0: Access rights
+        1: Please assign the access rights for the page and its subpages.
     cssClass:
-        - CSS class
-        - The class(es) will be used in the navigation menu and the &lt;body&gt; tag.
+        0: CSS class
+        1: The class(es) will be used in the navigation menu and the &lt;body&gt; tag.
     sitemap:
-        - Show in HTML sitemap
-        - Here you can define whether the page is shown in the HTML sitemap.
+        0: Show in HTML sitemap
+        1: Here you can define whether the page is shown in the HTML sitemap.
     hide:
-        - Hide in navigation
-        - Hide the page in the navigation menu.
+        0: Hide in navigation
+        1: Hide the page in the navigation menu.
     guests:
-        - Hide if logged in
-        - Hide the page in the navigation menu if a member is logged in.
+        0: Hide if logged in
+        1: Hide the page in the navigation menu if a member is logged in.
     accesskey:
-        - Access key
-        - A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.
+        0: Access key
+        1: A navigation item can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.
     published:
-        - Publish page
-        - Make the page publicly visible on the website.
+        0: Publish page
+        1: Make the page publicly visible on the website.
     start:
-        - Show from
-        - If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Show from
+        1: If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
     stop:
-        - Show until
-        - If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Show until
+        1: If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
     enforceTwoFactor:
-        - Enforce two-factor authentication
-        - Enforce two-factor authentication for all members.
+        0: Enforce two-factor authentication
+        1: Enforce two-factor authentication for all members.
     twoFactorJumpTo:
-        - Two-factor redirect page
-        - Please choose the page to which members will be redirected to set up two-factor authentication.
+        0: Two-factor redirect page
+        1: Please choose the page to which members will be redirected to set up two-factor authentication.
     enableCsp:
-        - Enable CSP
-        - Enable Content Security Policy for this website.
+        0: Enable CSP
+        1: Enable Content Security Policy for this website.
     csp:
-        - Content Security Policy
-        - Here you can enter custom Content Security Policy directives.
+        0: Content Security Policy
+        1: Here you can enter custom Content Security Policy directives.
     cspReportOnly:
-        - Reporting only
-        - Only report policy violations without enforcing them.
+        0: Reporting only
+        1: Only report policy violations without enforcing them.
     cspReportLog:
-        - Enable report logging
-        - Log CSP violations to the Contao system log.
+        0: Enable report logging
+        1: Log CSP violations to the Contao system log.
     feedFormat:
-        - Feed format
-        - Please choose a feed format.
+        0: Feed format
+        1: Please choose a feed format.
     maxFeedItems:
-        - Maximum number of items
-        - Here you can limit the number of feed items. Set to 0 to export all.
+        0: Maximum number of items
+        1: Here you can limit the number of feed items. Set to 0 to export all.
     feedBase:
-        - Base URL
-        - Please enter the base URL with protocol (e.g. <em>http://</em>).
+        0: Base URL
+        1: Please enter the base URL with protocol (e.g. <em>http://</em>).
     feedDescription:
-        - Feed description
-        - Here you can enter a short description of the feed.
+        0: Feed description
+        1: Here you can enter a short description of the feed.
     title_legend: Name and type
     routing_legend: Routing
     meta_legend: Metadata
@@ -246,11 +246,11 @@ tl_page:
     delete:
         1: Delete page ID %s
     toggle:
-        - Publish/unpublish page
-        - Unpublish page ID %s
-        - Publish page ID %s
-        - Unpublish
-        - Publish
+        0: Publish/unpublish page
+        1: Unpublish page ID %s
+        2: Publish page ID %s
+        3: Unpublish
+        4: Publish
     pasteinto:
         1: Paste into page ID %s
     pasteafter:
@@ -262,15 +262,15 @@ tl_page:
     pastenewinto:
         1: Add a new page inside page ID %s
     articles:
-        - Articles
-        - Edit the articles of page ID %s
+        0: Articles
+        1: Edit the articles of page ID %s
     routeConflicts:
-        - Route conflicts
-        - The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.
+        0: Route conflicts
+        1: The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.
     relCanonical: Enable canonical URLs in the website root page to enable this configuration.
     primaryImage:
-        - Page image
-        - Here you can select an image for the page.
+        0: Page image
+        1: Here you can select an image for the page.
     tableLabel: Page
 CACHE:
     0: 0 (do not cache)

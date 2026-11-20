@@ -1,34 +1,34 @@
 tl_module:
     news_archives:
-        - News archives
-        - Please select one or more news archives.
+        0: News archives
+        1: Please select one or more news archives.
     news_featured:
-        - Featured items
-        - Here you can choose how featured items are handled.
+        0: Featured items
+        1: Here you can choose how featured items are handled.
     news_jumpToCurrent:
-        - No period selected
-        - Here you can define what to display if no period is selected.
+        0: No period selected
+        1: Here you can define what to display if no period is selected.
     news_readerModule:
-        - News reader module
-        - Automatically switch to the newsreader if an item has been selected.
+        0: News reader module
+        1: Automatically switch to the newsreader if an item has been selected.
     news_template:
-        - News template
-        - Here you can select a news template.
+        0: News template
+        1: Here you can select a news template.
     news_format:
-        - Archive format
-        - Here you can choose the news archive format.
+        0: Archive format
+        1: Here you can choose the news archive format.
     news_startDay:
-        - Week start day
-        - Here you can choose the week start day.
+        0: Week start day
+        1: Here you can choose the week start day.
     news_order:
-        - Sort order
-        - Here you can choose the sort order.
+        0: Sort order
+        1: Here you can choose the sort order.
     news_showQuantity:
-        - Show number of items
-        - Show the number of news items of each month.
+        0: Show number of items
+        1: Show the number of news items of each month.
     news_keepCanonical:
-        - Use the current URL for canonical links
-        - Keep the current URL instead of the configured reader page for canonical links.
+        0: Use the current URL for canonical links
+        1: Keep the current URL instead of the configured reader page for canonical links.
     news_overview_legend: Overview page
     news_day: Day
     news_month: Month

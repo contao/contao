@@ -1,16 +1,16 @@
 jobs:
     created_at:
-        - Created at
+        0: Created at
     progress:
-        - Progress
+        0: Progress
     status:
-        - Status
+        0: Status
     owner:
-        - Initiated by
+        0: Initiated by
     attachments:
-        - Attachments
+        0: Attachments
     type:
-        - Type
+        0: Type
     statusLabel:
         new: New
         pending: Pending

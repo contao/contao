@@ -1,31 +1,31 @@
 tl_preview_link:
     url:
-        - Target URL
-        - The front end URL to be shared.
+        0: Target URL
+        1: The front end URL to be shared.
     showUnpublished:
-        - Show unpublished
-        - Show unpublished pages and elements when sharing this link.
+        0: Show unpublished
+        1: Show unpublished pages and elements when sharing this link.
     previewTime:
-        - Preview time
-        - Show the preview at a specific date and time.
+        0: Preview time
+        1: Show the preview at a specific date and time.
     restrictToUrl:
-        - Restrict access to specified URL
-        - Allow access only to the specified URL instead of the entire website.
+        0: Restrict access to specified URL
+        1: Allow access only to the specified URL instead of the entire website.
     createdAt:
-        - Created at
-        - Date and time when the preview link was created.
+        0: Created at
+        1: Date and time when the preview link was created.
     createdBy:
-        - Created by
-        - The user who created the preview link.
+        0: Created by
+        1: The user who created the preview link.
     expiresAt:
-        - Valid until
-        - Preview of the final date until which the link is available.
+        0: Valid until
+        1: Preview of the final date until which the link is available.
     published:
-        - Enable
-        - Activate the link for sharing.
+        0: Enable
+        1: Activate the link for sharing.
     share:
-        - Copy to clipboard
-        - Copy the preview link ID %s to your clipboard
+        0: Copy to clipboard
+        1: Copy the preview link ID %s to your clipboard
     url_legend: Target URL
     config_legend: Configuration
     publishing_legend: Publish settings
@@ -46,8 +46,8 @@ tl_preview_link:
     delete:
         1: Delete preview link ID %s
     toggle:
-        - Enable/disable preview link
-        - Disable preview link ID %s
-        - Enable preview link ID %s
-        - Disable
-        - Enable
+        0: Enable/disable preview link
+        1: Disable preview link ID %s
+        2: Enable preview link ID %s
+        3: Disable
+        4: Enable

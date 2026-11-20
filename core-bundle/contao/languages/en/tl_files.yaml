@@ -1,45 +1,45 @@
 tl_files:
     preview:
-        - Image preview
-        - Mark the important part of the image with your mouse cursor.
+        0: Image preview
+        1: Mark the important part of the image with your mouse cursor.
     name:
-        - Name
-        - The file or folder name (without extension).
+        0: Name
+        1: The file or folder name (without extension).
     path:
-        - Path
-        - The relative path to the file or folder.
+        0: Path
+        1: The relative path to the file or folder.
     extension:
-        - Extension
-        - The file extension
+        0: Extension
+        1: The file extension
     protected:
-        - Public
-        - Make the folder and its sub-folders accessible via HTTP.
+        0: Public
+        1: Make the folder and its sub-folders accessible via HTTP.
     syncExclude:
-        - Do not synchronize
-        - Do not synchronize the folder and its subfolders with the database.
+        0: Do not synchronize
+        1: Do not synchronize the folder and its subfolders with the database.
     importantPartX:
-        - Important part x coordinate
-        - Here you can enter the x coordinate of the important part.
+        0: Important part x coordinate
+        1: Here you can enter the x coordinate of the important part.
     importantPartY:
-        - Important part y coordinate
-        - Here you can enter the y coordinate of the important part.
+        0: Important part y coordinate
+        1: Here you can enter the y coordinate of the important part.
     importantPartWidth:
-        - Important part width
-        - Here you can enter the width of the important part.
+        0: Important part width
+        1: Here you can enter the width of the important part.
     importantPartHeight:
-        - Important part height
-        - Here you can enter the height of the important part.
+        0: Important part height
+        1: Here you can enter the height of the important part.
     meta:
-        - Metadata
-        - Here you can enter the file metadata. To add a language, create a matching website root page.
+        0: Metadata
+        1: Here you can enter the file metadata. To add a language, create a matching website root page.
     metaRgxpError: Field "%s" for language "%s" must match "%s".
     licenseRgxpError: Field "%s" for language "%s" must contain a valid URL.
     fileupload:
-        - File upload
-        - Select the files you want to upload to the server (maximum %s and %s pixels).
+        0: File upload
+        1: Select the files you want to upload to the server (maximum %s and %s pixels).
     editor:
-        - Source editor
-        - Here you can edit the file source (press F11 to toggle fullscreen mode).
+        0: Source editor
+        1: Here you can edit the file source (press F11 to toggle fullscreen mode).
     uploadNback: Upload files and go back
     editFF: Edit a file or folder
     uploadFF: Upload files to folder "%s"
@@ -60,20 +60,20 @@ tl_files:
     syncResult: <strong>Result:</strong> %s added | %s modified | %4$s moved | %5$s deleted
     syncShowUnchanged: Show unchanged
     new:
-        - New folder
-        - Create a new folder
+        0: New folder
+        1: Create a new folder
     move:
-        - Upload files
-        - Upload files to the server
+        0: Upload files
+        1: Upload files to the server
     sync:
-        - Synchronize
-        - Synchronize the file system and the database
+        0: Synchronize
+        1: Synchronize the file system and the database
     textTrackLanguage:
-        - Language
-        - Please select the language of the file.
+        0: Language
+        1: Please select the language of the file.
     textTrackType:
-        - Track type
-        - Here you can select the type of text track.
+        0: Track type
+        1: Here you can select the type of text track.
     captions: Closed captions
     descriptions: Audio descriptions
     subtitles: Subtitles
@@ -94,13 +94,13 @@ tl_files:
     dragFile:
         1: Drag file "%s"
     source:
-        - Edit source
-        - Edit the source text of file "%s"
+        0: Edit source
+        1: Edit the source text of file "%s"
     upload:
-        - Upload files
-        - Upload files to folder "%s"
+        0: Upload files
+        1: Upload files to folder "%s"
     protect: Protect folder "%s"
     unlock: Unprotect folder "%s"
     pasteinto:
-        - Paste into the root folder
-        - Paste into folder "%s"
+        0: Paste into the root folder
+        1: Paste into folder "%s"

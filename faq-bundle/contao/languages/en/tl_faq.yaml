@@ -1,37 +1,37 @@
 tl_faq:
     question:
-        - Question
-        - Please enter the question.
+        0: Question
+        1: Please enter the question.
     alias:
-        - FAQ alias
-        - The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.
+        0: FAQ alias
+        1: The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.
     author:
-        - Author
-        - Here you can change the author of the FAQ.
+        0: Author
+        1: Here you can change the author of the FAQ.
     answer:
-        - Answer
-        - Please enter the answer.
+        0: Answer
+        1: Please enter the answer.
     addImage:
-        - Add an image
-        - Add an image to the FAQ.
+        0: Add an image
+        1: Add an image to the FAQ.
     pageTitle:
-        - Meta title
-        - Here you can add a custom meta title to overwrite the default page title.
+        0: Meta title
+        1: Here you can add a custom meta title to overwrite the default page title.
     robots:
-        - Robots tag
-        - Here you can overwrite how search engines handle the FAQ.
+        0: Robots tag
+        1: Here you can overwrite how search engines handle the FAQ.
     description:
-        - Meta description
-        - Here you can add a custom meta description to overwrite the default page description.
+        0: Meta description
+        1: Here you can add a custom meta description to overwrite the default page description.
     addEnclosure:
-        - Add enclosures
-        - Add one or more downloadable files to the FAQ.
+        0: Add enclosures
+        1: Add one or more downloadable files to the FAQ.
     enclosure:
-        - Enclosures
-        - Please choose the files you want to attach.
+        0: Enclosures
+        1: Please choose the files you want to attach.
     published:
-        - Publish the FAQ
-        - Make the FAQ publicly visible on the website.
+        0: Publish the FAQ
+        1: Make the FAQ publicly visible on the website.
     title_legend: Title and author
     answer_legend: Answer
     meta_legend: Metadata
@@ -53,17 +53,17 @@ tl_faq:
     delete:
         1: Delete question ID %s
     toggle:
-        - Publish/unpublish question
-        - Unpublish question ID %s
-        - Publish question ID %s
-        - Unpublish
-        - Publish
+        0: Publish/unpublish question
+        1: Unpublish question ID %s
+        2: Publish question ID %s
+        3: Unpublish
+        4: Publish
     pasteafter:
-        - Paste at the top
-        - Paste after question ID %s
+        0: Paste at the top
+        1: Paste after question ID %s
     pastenew:
-        - Create a new question at the top
-        - Create a new question after question ID %s
+        0: Create a new question at the top
+        1: Create a new question after question ID %s
     pastenewtop:
         1: Add a new question at the top
     pastenewafter:

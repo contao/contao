@@ -1,19 +1,19 @@
 tl_user_group:
     name:
-        - Title
-        - Please enter the group title.
+        0: Title
+        1: Please enter the group title.
     alexf:
-        - Allowed fields
-        - Here you can choose which fields will be editable.
+        0: Allowed fields
+        1: Here you can choose which fields will be editable.
     disable:
-        - Deactivate
-        - Temporarily disable the group.
+        0: Deactivate
+        1: Temporarily disable the group.
     start:
-        - Activate on
-        - If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Activate on
+        1: If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
     stop:
-        - Deactivate on
-        - If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Deactivate on
+        1: If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
     title_legend: Title
     modules_legend: Allowed modules
     elements_legend: Allowed elements
@@ -34,14 +34,14 @@ tl_user_group:
     edit:
         1: Edit user group ID %s
     copy:
-        - Duplicate
-        - Duplicate user group ID %s
+        0: Duplicate
+        1: Duplicate user group ID %s
     delete:
         1: Delete user group ID %s
     toggle:
-        - Activate/deactivate user group
-        - Deactivate user group ID %s
-        - Activate user group ID %s
-        - Deactivate
-        - Activate
+        0: Activate/deactivate user group
+        1: Deactivate user group ID %s
+        2: Activate user group ID %s
+        3: Deactivate
+        4: Activate
     tableLabel: User group

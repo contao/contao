@@ -1,6 +1,6 @@
 tl_member:
     newsletter:
-        - Newsletters
-        - Here you can manage the member's subscriptions.
+        0: Newsletters
+        1: Here you can manage the member's subscriptions.
     newsletter_legend: Subscriptions
     newsletterDetails: Subscriptions

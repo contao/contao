@@ -1,7 +1,7 @@
 tl_maintenance:
     cacheTables:
-        - Purge data
-        - Please select the data you want to purge or rebuild.
+        0: Purge data
+        1: Please select the data you want to purge or rebuild.
     job: Job
     description: Description
     clearCache: Purge data
@@ -10,14 +10,14 @@ tl_maintenance:
     crawler: Crawler
     startCrawling: Start crawling
     crawlSubscribers:
-        - Enabled features
-        - The crawler crawls all URLs it finds. Here you can decide what to do with these results.
+        0: Enabled features
+        1: The crawler crawls all URLs it finds. Here you can decide what to do with these results.
     crawlDepth:
-        - Maximum depth
-        - The maximum depth to crawl.
+        0: Maximum depth
+        1: The maximum depth to crawl.
     crawlMember:
-        - Front end member
-        - Automatically log in a front end member to index protected pages.
+        0: Front end member
+        1: Automatically log in a front end member to index protected pages.
     crawlHint: Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the <code>%s</code> setting in the system configuration to speed up the crawling process. Refer to the <a href="%s" target="_blank" rel="noreferrer noopener">Contao manual</a> for more information.
     crawlWaitToBeFinished: The crawler is currently working. Please wait for it to finish to see the results.
     crawlDebugLog: Debug log
@@ -32,38 +32,38 @@ tl_maintenance:
         button: Rebuild index
 tl_maintenance_jobs:
     index:
-        - Purge the search index
-        - Truncates the tables <code>tl_search</code>, <code>tl_search_index</code> and <code>tl_search_term</code>. Afterwards, you have to rebuild the search index (see above).
+        0: Purge the search index
+        1: Truncates the tables <code>tl_search</code>, <code>tl_search_index</code> and <code>tl_search_term</code>. Afterwards, you have to rebuild the search index (see above).
     undo:
-        - Purge the undo table
-        - Truncates the <code>tl_undo</code> table which stores the deleted records. This job permanently deletes these records.
+        0: Purge the undo table
+        1: Truncates the <code>tl_undo</code> table which stores the deleted records. This job permanently deletes these records.
     versions:
-        - Purge the version table
-        - Truncates the <code>tl_version</code> table which stores the previous versions of a record. This job permanently deletes these records.
+        0: Purge the version table
+        1: Truncates the <code>tl_version</code> table which stores the previous versions of a record. This job permanently deletes these records.
     log:
-        - Purge the system log
-        - Truncates the <code>tl_log</code> table which stores all the system log entries. This job permanently deletes these records.
+        0: Purge the system log
+        1: Truncates the <code>tl_log</code> table which stores all the system log entries. This job permanently deletes these records.
     crawl_queue:
-        - Purge the crawl queue
-        - Truncates the <code>tl_crawl_queue</code> table which stores all the queue information from crawl processes.
+        0: Purge the crawl queue
+        1: Truncates the <code>tl_crawl_queue</code> table which stores all the queue information from crawl processes.
     images:
-        - Purge the image cache
-        - Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.
+        0: Purge the image cache
+        1: Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.
     previews:
-        - Purge the preview cache
-        - Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.
+        0: Purge the preview cache
+        1: Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.
     scripts:
-        - Purge the script cache
-        - Removes the automatically generated <code>.css</code> and <code>.js</code> files and then purges the shared cache, so there are no links to deleted resources.
+        0: Purge the script cache
+        1: Removes the automatically generated <code>.css</code> and <code>.js</code> files and then purges the shared cache, so there are no links to deleted resources.
     pages:
-        - Purge the shared cache
-        - Removes the cached versions of the front end pages.
+        0: Purge the shared cache
+        1: Removes the cached versions of the front end pages.
     temp:
-        - Purge the temp folder
-        - Removes the temporary files.
+        0: Purge the temp folder
+        1: Removes the temporary files.
     xml:
-        - Recreate the XML files
-        - Recreates the XML files in the <code>share</code> folder and then purges the shared cache, so there are no links to deleted resources.
+        0: Recreate the XML files
+        1: Recreates the XML files in the <code>share</code> folder and then purges the shared cache, so there are no links to deleted resources.
     symlinks:
-        - Recreate the symlinks
-        - Recreates the symlinks in the public folder (document root).
+        0: Recreate the symlinks
+        1: Recreates the symlinks in the public folder (document root).

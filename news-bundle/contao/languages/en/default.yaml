@@ -11,5 +11,5 @@ MSC:
     newsOverview: Back to the news overview
 PTY:
     news_feed:
-        - News feed
-        - Create an RSS, Atom or JSON feed from your news archives.
+        0: News feed
+        1: Create an RSS, Atom or JSON feed from your news archives.

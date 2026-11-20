@@ -1,7 +1,7 @@
 template_studio:
     getting-started:
-        - Getting started
-        - Select a template from the browser. You can then inspect all its representations and create your own versions and variants.
+        0: Getting started
+        1: Select a template from the browser. You can then inspect all its representations and create your own versions and variants.
     theme-selector: Theme context
     no_theme_context: Default/None
     not_prefixed: without prefix
@@ -9,38 +9,38 @@ template_studio:
     user_filter: Show only my templates
     operation:
         save:
-            - Save
-            - Save your template for %s
+            0: Save
+            1: Save your template for %s
         delete:
-            - Delete
-            - Delete your template for %s
+            0: Delete
+            1: Delete your template for %s
         create:
-            - Create your template
-            - Modify %s by creating your own template
+            0: Create your template
+            1: Modify %s by creating your own template
         create_content_element_variant:
-            - Create variant
-            - Create a new variant template for the %s content element
+            0: Create variant
+            1: Create a new variant template for the %s content element
         rename_content_element_variant:
-            - Rename variant
-            - Rename the %s variant template
+            0: Rename variant
+            1: Rename the %s variant template
         create_frontend_module_variant:
-            - Create variant
-            - Create a new variant template for the %s front end module
+            0: Create variant
+            1: Create a new variant template for the %s front end module
         rename_frontend_module_variant:
-            - Rename variant
-            - Rename the %s variant template
+            0: Rename variant
+            1: Rename the %s variant template
         rename_legacy_variant:
-            - Rename variant
-            - Rename the %s variant template
+            0: Rename variant
+            1: Rename the %s variant template
         create_page_variant:
-            - Create variant
-            - Create a new variant template for the %s layout
+            0: Create variant
+            1: Create a new variant template for the %s layout
         rename_page_variant:
-            - Rename variant
-            - Rename the %s variant template
+            0: Rename variant
+            1: Rename the %s variant template
         create_legacy_variant:
-            - Create variant
-            - Create a new variant template for the %s legacy template
+            0: Create variant
+            1: Create a new variant template for the %s legacy template
     message:
         create:
             success: Your template for %s was created.

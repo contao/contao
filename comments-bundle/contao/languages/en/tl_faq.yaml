@@ -1,5 +1,5 @@
 tl_faq:
     noComments:
-        - Disable comments
-        - Do not allow comments for this particular FAQ.
+        0: Disable comments
+        1: Do not allow comments for this particular FAQ.
     expert_legend: Expert settings

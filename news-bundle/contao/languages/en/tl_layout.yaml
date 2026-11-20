@@ -1,4 +1,4 @@
 tl_layout:
     newsfeeds:
-        - News feeds
-        - Please select the news feeds you want to add to the layout.
+        0: News feeds
+        1: Please select the news feeds you want to add to the layout.

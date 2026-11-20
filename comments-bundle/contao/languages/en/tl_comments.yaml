@@ -1,49 +1,49 @@
 tl_comments:
     source:
-        - Origin
-        - The associated table.
+        0: Origin
+        1: The associated table.
     parent:
-        - Parent ID
-        - The associated record.
+        0: Parent ID
+        1: The associated record.
     date:
-        - Date
-        - Please enter the comment date.
+        0: Date
+        1: Please enter the comment date.
     name:
-        - Author
-        - Please enter the author's name.
+        0: Author
+        1: Please enter the author's name.
     email:
-        - E-mail address
-        - The e-mail address will not be published.
+        0: E-mail address
+        1: The e-mail address will not be published.
     website:
-        - Website
-        - Here you can enter a website address.
+        0: Website
+        1: Here you can enter a website address.
     member:
-        - Member
-        - Here you can associate the comment with a member.
+        0: Member
+        1: Here you can associate the comment with a member.
     comment:
-        - Comment
-        - Please enter the comment.
+        0: Comment
+        1: Please enter the comment.
     addReply:
-        - Add a reply
-        - Here you can reply to the comment.
+        0: Add a reply
+        1: Here you can reply to the comment.
     author:
-        - Author
-        - Here you can change the author of the reply.
+        0: Author
+        1: Here you can change the author of the reply.
     reply:
-        - Reply
-        - Here you can enter the reply.
+        0: Reply
+        1: Here you can enter the reply.
     published:
-        - Published
-        - Make the comment publicly visible on the website.
+        0: Published
+        1: Make the comment publicly visible on the website.
     ip:
-        - IP address
-        - The IP address of the author.
+        0: IP address
+        1: The IP address of the author.
     notified:
-        - Notified (comment)
-        - The notification of this comment has been sent.
+        0: Notified (comment)
+        1: The notification of this comment has been sent.
     notifiedReply:
-        - Notified (reply)
-        - The notification of the reply to this comment has been sent.
+        0: Notified (reply)
+        1: The notification of the reply to this comment has been sent.
     author_legend: Author
     comment_legend: Comment
     reply_legend: Reply
@@ -64,9 +64,9 @@ tl_comments:
     delete:
         1: Delete comment ID %s
     toggle:
-        - Publish/unpublish comment
-        - Unpublish comment ID %s
-        - Publish comment ID %s
-        - Unpublish
-        - Publish
+        0: Publish/unpublish comment
+        1: Unpublish comment ID %s
+        2: Publish comment ID %s
+        3: Unpublish
+        4: Publish
     tableLabel: Comment

@@ -1,145 +1,145 @@
 tl_layout:
     name:
-        - Title
-        - Please enter the layout title.
+        0: Title
+        1: Please enter the layout title.
     type:
-        - Layout type
-        - Here you can select the layout type.
+        0: Layout type
+        1: Here you can select the layout type.
     rows:
-        - Rows
-        - Please choose the number of rows.
+        0: Rows
+        1: Please choose the number of rows.
     1rw:
-        - Main row only
-        - Show only one row.
+        0: Main row only
+        1: Show only one row.
     2rwh:
-        - Header and main row
-        - Show a header above the main row.
+        0: Header and main row
+        1: Show a header above the main row.
     2rwf:
-        - Main row and footer
-        - Show a footer below the main row.
+        0: Main row and footer
+        1: Show a footer below the main row.
     3rw:
-        - Header, main row and footer
-        - Show a header above and a footer below the main row.
+        0: Header, main row and footer
+        1: Show a header above and a footer below the main row.
     headerHeight:
-        - Header height
-        - Please enter the height of the page header.
+        0: Header height
+        1: Please enter the height of the page header.
     footerHeight:
-        - Footer height
-        - Please enter the height of the page footer.
+        0: Footer height
+        1: Please enter the height of the page footer.
     cols:
-        - Columns
-        - Please choose the number of columns.
+        0: Columns
+        1: Please choose the number of columns.
     1cl:
-        - Main column only
-        - Show only one column.
+        0: Main column only
+        1: Show only one column.
     2cll:
-        - Left and main column
-        - Show two columns with the main column on the right side.
+        0: Left and main column
+        1: Show two columns with the main column on the right side.
     2clr:
-        - Main and right column
-        - Show two columns with the main column on the left side.
+        0: Main and right column
+        1: Show two columns with the main column on the left side.
     3cl:
-        - Main, left and right column
-        - Show three columns with the main column in the middle.
+        0: Main, left and right column
+        1: Show three columns with the main column in the middle.
     widthLeft:
-        - Left column width
-        - Please enter the width of the left column.
+        0: Left column width
+        1: Please enter the width of the left column.
     widthRight:
-        - Right column width
-        - Please enter the width of the right column.
+        0: Right column width
+        1: Please enter the width of the right column.
     sections:
-        - Custom layout sections
-        - Here you can define custom layout sections.
+        0: Custom layout sections
+        1: Here you can define custom layout sections.
     framework:
-        - CSS framework
-        - Here you can activate the components of the Contao CSS framework.
+        0: CSS framework
+        1: Here you can activate the components of the Contao CSS framework.
     layout\.css:
-        - Layout builder
-        - Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!
+        0: Layout builder
+        1: Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!
     responsive\.css:
-        - Responsive layout
-        - Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.
+        0: Responsive layout
+        1: Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.
     grid\.css:
-        - 12-column grid
-        - Adds a responsive 12-column grid that is triggered by the CSS classes "grid1" to "grid12" and "offset1" to "offset12".
+        0: 12-column grid
+        1: Adds a responsive 12-column grid that is triggered by the CSS classes "grid1" to "grid12" and "offset1" to "offset12".
     reset\.css:
-        - CSS reset
-        - Removes the inconsistent default styling of HTML elements in different browsers.
+        0: CSS reset
+        1: Removes the inconsistent default styling of HTML elements in different browsers.
     form\.css:
-        - Basic forms
-        - Adds basic form elements and buttons formatting.
+        0: Basic forms
+        1: Adds basic form elements and buttons formatting.
     icons\.css:
-        - Basic icons
-        - Adds basic mime icons for downloads and enclosures.
+        0: Basic icons
+        1: Adds basic mime icons for downloads and enclosures.
     external:
-        - External style sheets
-        - Here you can add external CSS, SCSS or LESS files from the file system.
+        0: External style sheets
+        1: Here you can add external CSS, SCSS or LESS files from the file system.
     combineScripts:
-        - Combine scripts
-        - Combine the .css and .js files (recommended).
+        0: Combine scripts
+        1: Combine the .css and .js files (recommended).
     lightboxSize:
-        - Lightbox image size
-        - Here you can select an image size for the images shown in the lightbox.
+        0: Lightbox image size
+        1: Here you can select an image size for the images shown in the lightbox.
     defaultImageDensities:
-        - Default image pixel densities
-        - Here you can define the default pixel densities, e.g. <em>1x, 1.5x, 2x</em>.
+        0: Default image pixel densities
+        1: Here you can define the default pixel densities, e.g. <em>1x, 1.5x, 2x</em>.
     modules:
-        - Included elements
-        - Here you can assign front end modules and content elements to the layout.
+        0: Included elements
+        1: Here you can assign front end modules and content elements to the layout.
     template:
-        - Page template
-        - Here you can select the page template.
+        0: Page template
+        1: Here you can select the page template.
     minifyMarkup:
-        - Minify the markup
-        - Minify the HTML markup before it is sent to the browser.
+        0: Minify the markup
+        1: Minify the HTML markup before it is sent to the browser.
     cssClass:
-        - Body class
-        - Here you can add custom classes to the &lt;body&gt; tag.
+        0: Body class
+        1: Here you can add custom classes to the &lt;body&gt; tag.
     viewport:
-        - Viewport tag
-        - Here you can set a custom viewport tag.
+        0: Viewport tag
+        1: Here you can set a custom viewport tag.
     titleTag:
-        - Title tag
-        - Here you can overwrite the title tag.
+        0: Title tag
+        1: Here you can overwrite the title tag.
     onload:
-        - Body onload
-        - Here you can add a body <em>onload</em> attribute.
+        0: Body onload
+        1: Here you can add a body <em>onload</em> attribute.
     head:
-        - Additional &lt;head&gt; tags
-        - Here you can add individual tags to the &lt;head&gt; section of the page.
+        0: Additional &lt;head&gt; tags
+        1: Here you can add individual tags to the &lt;head&gt; section of the page.
     addJQuery:
-        - Include jQuery
-        - Include the jQuery library in the layout.
+        0: Include jQuery
+        1: Include the jQuery library in the layout.
     jquery:
-        - jQuery templates
-        - Here you can select one or more jQuery templates.
+        0: jQuery templates
+        1: Here you can select one or more jQuery templates.
     addMooTools:
-        - Include MooTools
-        - Include the MooTools library in the layout.
+        0: Include MooTools
+        1: Include the MooTools library in the layout.
     mootools:
-        - MooTools templates
-        - Here you can select one or more MooTools templates.
+        0: MooTools templates
+        1: Here you can select one or more MooTools templates.
     scripts:
-        - JavaScript templates
-        - Here you can select one or more JavaScript templates.
+        0: JavaScript templates
+        1: Here you can select one or more JavaScript templates.
     analytics:
-        - Analytics templates
-        - Here you can select one or more analytics templates.
+        0: Analytics templates
+        1: Here you can select one or more analytics templates.
     externalJs:
-        - External JavaScripts
-        - Here you can add external JS files from the file system.
+        0: External JavaScripts
+        1: Here you can add external JS files from the file system.
     script:
-        - Custom JavaScript code
-        - The JavaScript code which will be inserted at the bottom of the page.
+        0: Custom JavaScript code
+        1: The JavaScript code which will be inserted at the bottom of the page.
     static:
-        - Static layout
-        - Create a static layout with a fixed width and alignment.
+        0: Static layout
+        1: Create a static layout with a fixed width and alignment.
     width:
-        - Overall width
-        - The overall width will be applied to the wrapper element.
+        0: Overall width
+        1: The overall width will be applied to the wrapper element.
     align:
-        - Alignment
-        - Please select the alignment of the page.
+        0: Alignment
+        1: Please select the alignment of the page.
     title_legend: Title and type
     header_legend: Rows
     column_legend: Columns

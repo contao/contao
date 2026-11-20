@@ -1,70 +1,70 @@
 tl_image_size:
     name:
-        - Name
-        - Please enter the image size name.
+        0: Name
+        1: Please enter the image size name.
     width:
-        - Width
-        - Here you can enter the width in pixels.
+        0: Width
+        1: Here you can enter the width in pixels.
     height:
-        - Height
-        - Here you can enter the height in pixels.
+        0: Height
+        1: Here you can enter the height in pixels.
     resizeMode:
-        - Resize mode
-        - Only applicable if width and height are specified.
+        0: Resize mode
+        1: Only applicable if width and height are specified.
     zoom:
-        - Zoom
-        - 0 = the whole image is visible, 100 = only the important part of the image is visible.
+        0: Zoom
+        1: 0 = the whole image is visible, 100 = only the important part of the image is visible.
     sizes:
-        - Sizes attribute
-        - 'Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: <em>auto, (max-width: 600px) 100vw, 50vw</em>.'
+        0: Sizes attribute
+        1: 'Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: <em>auto, (max-width: 600px) 100vw, 50vw</em>.'
     densities:
-        - Pixel densities/scale factors
-        - Here you can define the pixel densities (e.g. <em>1x, 1.5x, 2x</em>) or width descriptors (e.g. <em>100w, 200w</em>).
+        0: Pixel densities/scale factors
+        1: Here you can define the pixel densities (e.g. <em>1x, 1.5x, 2x</em>) or width descriptors (e.g. <em>100w, 200w</em>).
     cssClass:
-        - CSS classes
-        - The CSS classes will be added to the image tag.
+        0: CSS classes
+        1: The CSS classes will be added to the image tag.
     formats:
-        - Convert image formats
-        - Here you can select which image formats shall be converted.
+        0: Convert image formats
+        1: Here you can select which image formats shall be converted.
     formatsNotSupported: 'The following formats are not supported on your server: %s'
     preserveMetadata:
-        - Preserve copyright metadata
-        - Preserve copyright-related metadata fields (EXIF, IPTC, XMP).
+        0: Preserve copyright metadata
+        1: Preserve copyright-related metadata fields (EXIF, IPTC, XMP).
     preserveMetadataFields:
-        - Metadata fields
-        - Please select the metadata fields to preserve.
+        0: Metadata fields
+        1: Please select the metadata fields to preserve.
     skipIfDimensionsMatch:
-        - Use original image if dimensions match
-        - Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.
+        0: Use original image if dimensions match
+        1: Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.
     imageQuality:
-        - Image quality
-        - Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.
+        0: Image quality
+        1: Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.
     lazyLoading:
-        - Enable lazy loading
-        - Defer loading the image until it is scrolled into the viewport.
+        0: Enable lazy loading
+        1: Defer loading the image until it is scrolled into the viewport.
     fetchPriority:
-        - Fetch priority
-        - Suggest how the browser should prioritize fetching the image. Use sparingly, as incorrect priorities can reduce page performance.
+        0: Fetch priority
+        1: Suggest how the browser should prioritize fetching the image. Use sparingly, as incorrect priorities can reduce page performance.
     decoding:
-        - Decoding
-        - Suggest how the browser should decode the image.
+        0: Decoding
+        1: Suggest how the browser should decode the image.
     tstamp:
-        - Revision date
-        - Date and time of the latest revision
+        0: Revision date
+        1: Date and time of the latest revision
     title_legend: Image size settings
     source_legend: Image source settings
     loading_legend: Loading options
     metadata_legend: Metadata settings
     expert_legend: Expert settings
     proportional:
-        - Proportional
-        - The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
+        0: Proportional
+        1: The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
     box:
-        - Fit the box
-        - The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the <em>contain</em> value in CSS.
+        0: Fit the box
+        1: The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the <em>contain</em> value in CSS.
     crop:
-        - Crop
-        - The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the <em>cover</em> value in CSS.
+        0: Crop
+        1: The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the <em>cover</em> value in CSS.
     preserveMetadataOptions:
         default: Use default settings
         overwrite: Select custom metadata fields
@@ -78,8 +78,8 @@ tl_image_size:
     edit:
         1: Edit image size ID %s
     children:
-        - Media queries
-        - Edit the media queries of image size ID %s
+        0: Media queries
+        1: Edit the media queries of image size ID %s
     cut:
         1: Move image size ID %s
     copy:

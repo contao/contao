@@ -1,13 +1,13 @@
 tl_page:
     newsArchives:
-        - News archives
-        - Here you can choose the news archives to be included in the feed.
+        0: News archives
+        1: Here you can choose the news archives to be included in the feed.
     feedSource:
-        - Export settings
-        - Here you can choose what will be exported.
+        0: Export settings
+        1: Here you can choose what will be exported.
     feedFeatured:
-        - Featured items
-        - Here you can choose how featured items are handled.
+        0: Featured items
+        1: Here you can choose how featured items are handled.
     archives_legend: News archives
     source_teaser: Teasers only
     source_text: Full stories

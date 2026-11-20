@@ -1,19 +1,19 @@
 tl_calendar:
     title:
-        - Title
-        - Please enter the calendar title.
+        0: Title
+        1: Please enter the calendar title.
     jumpTo:
-        - Redirect page
-        - Please choose the event reader page to which visitors will be redirected when clicking an event.
+        0: Redirect page
+        1: Please choose the event reader page to which visitors will be redirected when clicking an event.
     protected:
-        - Protect calendar
-        - Show events to certain member groups only.
+        0: Protect calendar
+        1: Show events to certain member groups only.
     groups:
-        - Allowed member groups
-        - These groups will be able to see the events in this calendar.
+        0: Allowed member groups
+        1: These groups will be able to see the events in this calendar.
     tstamp:
-        - Revision date
-        - Date and time of the latest revision
+        0: Revision date
+        1: Date and time of the latest revision
     title_legend: Title and redirect page
     protected_legend: Access protection
     feed_legend: RSS/Atom feed
@@ -23,8 +23,8 @@ tl_calendar:
     source_teaser: Event teasers
     source_text: Full articles
     feeds:
-        - Calendar feeds
-        - Manage calendar feeds
+        0: Calendar feeds
+        1: Manage calendar feeds
     new:
         1: Create a new calendar
     show:
@@ -34,11 +34,11 @@ tl_calendar:
     edit:
         1: Edit calendar ID %s
     children:
-        - Events
-        - Edit the events of calendar ID %s
+        0: Events
+        1: Edit the events of calendar ID %s
     copy:
-        - Duplicate
-        - Duplicate calendar ID %s
+        0: Duplicate
+        1: Duplicate calendar ID %s
     delete:
         1: Delete calendar ID %s
     tableLabel: Calendar

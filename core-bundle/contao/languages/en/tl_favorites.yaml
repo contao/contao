@@ -1,10 +1,10 @@
 tl_favorites:
     title:
-        - Title
-        - The menu item title.
+        0: Title
+        1: The menu item title.
     url:
-        - URL
-        - The menu item URL.
+        0: URL
+        1: The menu item URL.
     url_legend: Title and URL
     new:
         1: Create a new favorite

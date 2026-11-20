@@ -1,4 +1,4 @@
 tl_news:
     noComments:
-        - Disable comments
-        - Do not allow comments for this particular news item.
+        0: Disable comments
+        1: Do not allow comments for this particular news item.

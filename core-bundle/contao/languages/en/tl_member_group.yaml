@@ -1,22 +1,22 @@
 tl_member_group:
     name:
-        - Title
-        - Please enter the group title.
+        0: Title
+        1: Please enter the group title.
     redirect:
-        - Redirect on login
-        - Redirect group members to a custom page when they log in.
+        0: Redirect on login
+        1: Redirect group members to a custom page when they log in.
     jumpTo:
-        - Redirect page
-        - Please choose the page to which the group members will be redirected.
+        0: Redirect page
+        1: Please choose the page to which the group members will be redirected.
     disable:
-        - Deactivate
-        - Temporarily disable the group.
+        0: Deactivate
+        1: Temporarily disable the group.
     start:
-        - Activate on
-        - If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Activate on
+        1: If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
     stop:
-        - Deactivate on
-        - If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+        0: Deactivate on
+        1: If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
     title_legend: Title
     redirect_legend: Auto-redirect
     account_legend: Group settings
@@ -29,14 +29,14 @@ tl_member_group:
     edit:
         1: Edit member group ID %s
     copy:
-        - Duplicate
-        - Duplicate member group ID %s
+        0: Duplicate
+        1: Duplicate member group ID %s
     delete:
         1: Delete member group ID %s
     toggle:
-        - Activate/deactivate member group
-        - Deactivate member group ID %s
-        - Activate member group ID %s
-        - Deactivate
-        - Activate
+        0: Activate/deactivate member group
+        1: Deactivate member group ID %s
+        2: Activate member group ID %s
+        3: Deactivate
+        4: Activate
     tableLabel: Member group

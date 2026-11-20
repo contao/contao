@@ -1,28 +1,28 @@
 tl_module:
     list_table:
-        - Table
-        - Please choose the source table.
+        0: Table
+        1: Please choose the source table.
     list_fields:
-        - Fields
-        - Please enter a comma separated list of the fields you want to list.
+        0: Fields
+        1: Please enter a comma separated list of the fields you want to list.
     list_where:
-        - Condition
-        - Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
+        0: Condition
+        1: Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
     list_search:
-        - Searchable fields
-        - Here you can enter a comma seperated list of fields that you want to be searchable.
+        0: Searchable fields
+        1: Here you can enter a comma seperated list of fields that you want to be searchable.
     list_sort:
-        - Order by
-        - Here you can enter a comma seperated list of fields to sort the results by.
+        0: Order by
+        1: Here you can enter a comma seperated list of fields to sort the results by.
     list_info:
-        - Details page fields
-        - Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.
+        0: Details page fields
+        1: Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.
     list_info_where:
-        - Details page condition
-        - Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
+        0: Details page condition
+        1: Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
     list_layout:
-        - List template
-        - Here you can select a list template.
+        0: List template
+        1: Here you can select a list template.
     list_info_layout:
-        - Details page template
-        - Here you can select a details page template.
+        0: Details page template
+        1: Here you can select a details page template.

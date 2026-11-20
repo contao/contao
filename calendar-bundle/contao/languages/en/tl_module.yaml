@@ -1,46 +1,46 @@
 tl_module:
     cal_calendar:
-        - Calendars
-        - Please select one or more calendars.
+        0: Calendars
+        1: Please select one or more calendars.
     cal_noSpan:
-        - Shortened view
-        - Show events only once even if they span multiple days.
+        0: Shortened view
+        1: Show events only once even if they span multiple days.
     cal_hideRunning:
-        - Hide running events
-        - Do not show running events in the list of upcoming events.
+        0: Hide running events
+        1: Do not show running events in the list of upcoming events.
     cal_startDay:
-        - Week start day
-        - Here you can choose the week start day.
+        0: Week start day
+        1: Here you can choose the week start day.
     cal_format:
-        - Event list format
-        - Here you can choose the event list format.
+        0: Event list format
+        1: Here you can choose the event list format.
     cal_ignoreDynamic:
-        - Ignore URL parameters
-        - Do not switch the time period based on the date/month/year URL parameters.
+        0: Ignore URL parameters
+        1: Do not switch the time period based on the date/month/year URL parameters.
     cal_order:
-        - Sort order
-        - Here you can choose the sort order.
+        0: Sort order
+        1: Here you can choose the sort order.
     cal_readerModule:
-        - Event reader module
-        - Automatically switch to the event reader if an event has been selected.
+        0: Event reader module
+        1: Automatically switch to the event reader if an event has been selected.
     cal_limit:
-        - Number of events
-        - Here you can limit the number of events. Enter 0 to show all.
+        0: Number of events
+        1: Here you can limit the number of events. Enter 0 to show all.
     cal_template:
-        - Event template
-        - Here you can select an event template.
+        0: Event template
+        1: Here you can select an event template.
     cal_ctemplate:
-        - Calendar template
-        - Here you can select a calendar template.
+        0: Calendar template
+        1: Here you can select a calendar template.
     cal_showQuantity:
-        - Show number of events
-        - Show the number of events of each month in the menu.
+        0: Show number of events
+        1: Show the number of events of each month in the menu.
     cal_featured:
-        - Featured events
-        - Here you can choose how featured events are handled.
+        0: Featured events
+        1: Here you can choose how featured events are handled.
     cal_keepCanonical:
-        - Use the current URL for canonical links
-        - Keep the current URL instead of the configured reader page for canonical links.
+        0: Use the current URL for canonical links
+        1: Keep the current URL instead of the configured reader page for canonical links.
     cal_overview_legend: Overview page
     cal_list: Event list
     cal_day: Day

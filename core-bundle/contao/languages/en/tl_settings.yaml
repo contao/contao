@@ -1,65 +1,65 @@
 tl_settings:
     adminEmail:
-        - E-mail address of the system administrator
-        - This e-mail address will be used to send and receive system messages.
+        0: E-mail address of the system administrator
+        1: This e-mail address will be used to send and receive system messages.
     dateFormat:
-        - Date format
-        - The date format string will be parsed with the PHP date() function.
+        0: Date format
+        1: The date format string will be parsed with the PHP date() function.
     timeFormat:
-        - Time format
-        - The time format string will be parsed with the PHP date() function.
+        0: Time format
+        1: The time format string will be parsed with the PHP date() function.
     datimFormat:
-        - Date and time format
-        - The date and time format string will be parsed with the PHP date() function.
+        0: Date and time format
+        1: The date and time format string will be parsed with the PHP date() function.
     timeZone:
-        - Time zone
-        - Please select the server time zone.
+        0: Time zone
+        1: Please select the server time zone.
     resultsPerPage:
-        - Items per page
-        - Here you can define the number of items per page in the back end.
+        0: Items per page
+        1: Here you can define the number of items per page in the back end.
     maxResultsPerPage:
-        - Maximum items per page
-        - This overall limit takes effect if a user chooses the "show all records" option.
+        0: Maximum items per page
+        1: This overall limit takes effect if a user chooses the "show all records" option.
     allowedTags:
-        - Allowed HTML tags
-        - Here you can enter a list of allowed HTML tags that will not be stripped.
+        0: Allowed HTML tags
+        1: Here you can enter a list of allowed HTML tags that will not be stripped.
     allowedAttributes:
-        - Allowed HTML attributes
-        - List of allowed HTML attributes that will not be stripped. The tag or attribute name <code>*</code> stands for all tags or attributes. Wildcards can be used for attributes with dashes like <code>data-*</code>.
+        0: Allowed HTML attributes
+        1: List of allowed HTML attributes that will not be stripped. The tag or attribute name <code>*</code> stands for all tags or attributes. Wildcards can be used for attributes with dashes like <code>data-*</code>.
     allowedAttributesWarning: Allowing <code>*</code> attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!
     allowedDownload:
-        - Download file types
-        - Here you can enter a comma separated list of downloadable file types.
+        0: Download file types
+        1: Here you can enter a comma separated list of downloadable file types.
     uploadTypes:
-        - Upload file types
-        - Here you can enter a comma separated list of uploadable file types.
+        0: Upload file types
+        1: Here you can enter a comma separated list of uploadable file types.
     maxFileSize:
-        - Maximum upload file size
-        - Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).
+        0: Maximum upload file size
+        1: Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).
     imageWidth:
-        - Maximum image width
-        - Here you can enter the maximum width for image uploads in pixels.
+        0: Maximum image width
+        1: Here you can enter the maximum width for image uploads in pixels.
     imageHeight:
-        - Maximum image height
-        - Here you can enter the maximum height for image uploads in pixels.
+        0: Maximum image height
+        1: Here you can enter the maximum height for image uploads in pixels.
     undoPeriod:
-        - Storage time for undo steps
-        - Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).
+        0: Storage time for undo steps
+        1: Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).
     versionPeriod:
-        - Storage time for versions
-        - Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).
+        0: Storage time for versions
+        1: Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).
     logPeriod:
-        - Storage time for log entries
-        - Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).
+        0: Storage time for log entries
+        1: Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).
     defaultUser:
-        - Default page owner
-        - Here you can select a user as the default owner of a page.
+        0: Default page owner
+        1: Here you can select a user as the default owner of a page.
     defaultGroup:
-        - Default page group
-        - Here you can select a user group as the default owner of a page.
+        0: Default page group
+        1: Here you can select a user group as the default owner of a page.
     defaultChmod:
-        - Default access rights
-        - Please assign the default access rights for pages and articles.
+        0: Default access rights
+        1: Please assign the default access rights for pages and articles.
     date_legend: Date and time
     global_legend: Global configuration
     backend_legend: Back end configuration

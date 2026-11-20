@@ -113,208 +113,208 @@ SEC:
 CTE:
     texts: Text elements
     change_password:
-        - Change password
-        - Generates a form to change the password.
+        0: Change password
+        1: Generates a form to change the password.
     close_account:
-        - Close account
-        - Generates a form to delete a member account.
+        0: Close account
+        1: Generates a form to delete a member account.
     headline:
-        - Headline
-        - Generates a headline (h1 - h6).
+        0: Headline
+        1: Generates a headline (h1 - h6).
     miscellaneous: Miscellaneous
     text:
-        - Text
-        - Generates a rich text element.
+        0: Text
+        1: Generates a rich text element.
     html:
-        - HTML
-        - Allows you to add custom HTML code.
+        0: HTML
+        1: Allows you to add custom HTML code.
     unfiltered_html:
-        - Unfiltered HTML
-        - Allows you to add custom, unfiltered HTML code.
+        0: Unfiltered HTML
+        1: Allows you to add custom, unfiltered HTML code.
     list:
-        - List
-        - Generates an ordered or unordered list.
+        0: List
+        1: Generates an ordered or unordered list.
     description_list:
-        - Description list
-        - Generates a description list with terms and details.
+        0: Description list
+        1: Generates a description list with terms and details.
     table:
-        - Table
-        - Generates an optionally sortable table.
+        0: Table
+        1: Generates an optionally sortable table.
     accordion:
-        - Accordion
-        - Generates an accordion.
+        0: Accordion
+        1: Generates an accordion.
     element_group:
-        - Element group
-        - Generates a group of nested elements.
+        0: Element group
+        1: Generates a group of nested elements.
     accordionStart:
-        - Accordion wrapper start
-        - Generates the opening part of the accordion wrapper.
+        0: Accordion wrapper start
+        1: Generates the opening part of the accordion wrapper.
     accordionStop:
-        - Accordion wrapper stop
-        - Generates the closing part of the accordion wrapper.
+        0: Accordion wrapper stop
+        1: Generates the closing part of the accordion wrapper.
     accordionSingle:
-        - Accordion single element
-        - Generates a single accordion element.
+        0: Accordion single element
+        1: Generates a single accordion element.
     code:
-        - Code
-        - Highlights code snippets and prints them to the screen.
+        0: Code
+        1: Highlights code snippets and prints them to the screen.
     markdown:
-        - Markdown
-        - Generates HTML code from a Markdown text.
+        0: Markdown
+        1: Generates HTML code from a Markdown text.
     template:
-        - Custom template
-        - Generates an element to insert a custom template.
+        0: Custom template
+        1: Generates an element to insert a custom template.
     swiper:
-        - Content slider
-        - Generates a content slider element.
+        0: Content slider
+        1: Generates a content slider element.
     slider: Content slider
     sliderStart:
-        - Slider wrapper start
-        - Generates the opening part of the slider wrapper.
+        0: Slider wrapper start
+        1: Generates the opening part of the slider wrapper.
     sliderStop:
-        - Slider wrapper stop
-        - Generates the closing part of the slider wrapper.
+        0: Slider wrapper stop
+        1: Generates the closing part of the slider wrapper.
     links: Link elements
     hyperlink:
-        - Hyperlink
-        - Generates a link to another website.
+        0: Hyperlink
+        1: Generates a link to another website.
     toplink:
-        - Top link
-        - Generates a link to jump to the top of the page.
+        0: Top link
+        1: Generates a link to jump to the top of the page.
     media: Media elements
     image:
-        - Image
-        - Generates a stand-alone image.
+        0: Image
+        1: Generates a stand-alone image.
     gallery:
-        - Gallery
-        - Generates a lightbox image gallery.
+        0: Gallery
+        1: Generates a lightbox image gallery.
     player:
-        - Video/audio
-        - Generates a video or audio player.
+        0: Video/audio
+        1: Generates a video or audio player.
     youtube:
-        - YouTube
-        - Adds a YouTube video.
+        0: YouTube
+        1: Adds a YouTube video.
     vimeo:
-        - Vimeo
-        - Adds a Vimeo video.
+        0: Vimeo
+        1: Adds a Vimeo video.
     files: File elements
     download:
-        - Download
-        - Generates a link to download a file.
+        0: Download
+        1: Generates a link to download a file.
     downloads:
-        - Downloads
-        - Generates multiple links to download files.
+        0: Downloads
+        1: Generates multiple links to download files.
     includes: Include elements
     article:
-        - Article
-        - Includes another article.
+        0: Article
+        1: Includes another article.
     alias:
-        - Content element
-        - Includes another content element.
+        0: Content element
+        1: Includes another content element.
     form:
-        - Form
-        - Includes a form.
+        0: Form
+        1: Includes a form.
     module:
-        - Module
-        - Includes a front end module.
+        0: Module
+        1: Includes a front end module.
     teaser:
-        - Article teaser
-        - Displays the teaser text of an article.
+        0: Article teaser
+        1: Displays the teaser text of an article.
     two_factor:
-        - Two-factor authentication
-        - Generates a form to set up or change two-factor authentication.
+        0: Two-factor authentication
+        1: Generates a form to set up or change two-factor authentication.
     legacy: Legacy elements
     user: User
     manage_passkeys:
-        - Manage passkeys
-        - Allows members to manage their passkeys.
+        0: Manage passkeys
+        1: Allows members to manage their passkeys.
     login:
-        - Login form
-        - Generates a login form.
+        0: Login form
+        1: Generates a login form.
     root_page_dependent_elements:
-        - Root page dependent elements
-        - Generates different elements depending on the website root page.
+        0: Root page dependent elements
+        1: Generates different elements depending on the website root page.
 FFL:
     explanation:
-        - Explanation
-        - A custom field to insert an explanation text.
+        0: Explanation
+        1: A custom field to insert an explanation text.
     html:
-        - HTML code
-        - A custom field to insert HTML code.
+        0: HTML code
+        1: A custom field to insert HTML code.
     fieldsetStart:
-        - Fieldset start
-        - The opening part of a fieldset with an optional legend.
+        0: Fieldset start
+        1: The opening part of a fieldset with an optional legend.
     fieldsetStop:
-        - Fieldset stop
-        - The closing part of a fieldset.
+        0: Fieldset stop
+        1: The closing part of a fieldset.
     text:
-        - Text field
-        - A single-line input field for a short or medium text.
+        0: Text field
+        1: A single-line input field for a short or medium text.
     password:
-        - Password field
-        - A single-line input field for a password. Contao automatically adds a confirmation field.
+        0: Password field
+        1: A single-line input field for a password. Contao automatically adds a confirmation field.
     textarea:
-        - Textarea
-        - A multi-line input field for a medium or long text.
+        0: Textarea
+        1: A multi-line input field for a medium or long text.
     select:
-        - Select menu
-        - A single- or multi-line drop-down menu.
+        0: Select menu
+        1: A single- or multi-line drop-down menu.
     radio:
-        - Radio button menu
-        - A list of multiple options from which one can be selected.
+        0: Radio button menu
+        1: A list of multiple options from which one can be selected.
     checkbox:
-        - Checkbox menu
-        - A list of multiple options from which any can be selected.
+        0: Checkbox menu
+        1: A list of multiple options from which any can be selected.
     upload:
-        - File upload
-        - A single-line input field to upload a local file to the server.
+        0: File upload
+        1: A single-line input field to upload a local file to the server.
     range:
-        - Range slider
-        - A range slider to select a value or range of values between a specified min and max.
+        0: Range slider
+        1: A range slider to select a value or range of values between a specified min and max.
     hidden:
-        - Hidden field
-        - A single-line input field that is not visible in the form.
+        0: Hidden field
+        1: A single-line input field that is not visible in the form.
     altcha:
-        - ALTCHA antispam
-        - Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).
+        0: ALTCHA antispam
+        1: Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).
     captcha:
-        - Security question
-        - A simple math question to verify that the form is being submitted by a human (CAPTCHA).
+        0: Security question
+        1: A simple math question to verify that the form is being submitted by a human (CAPTCHA).
     submit:
-        - Submit field
-        - A button to submit the form.
+        0: Submit field
+        1: A button to submit the form.
 PTY:
     regular:
-        - Regular page
-        - A regular page contains articles and content elements. It is the default page type.
+        0: Regular page
+        1: A regular page contains articles and content elements. It is the default page type.
     redirect:
-        - External redirect
-        - This type of page automatically redirects visitors to an external website. It works like a hyperlink.
+        0: External redirect
+        1: This type of page automatically redirects visitors to an external website. It works like a hyperlink.
     forward:
-        - Internal redirect
-        - This type of page automatically forwards visitors to another page.
+        0: Internal redirect
+        1: This type of page automatically forwards visitors to another page.
     root:
-        - Website root
-        - This type of page marks the starting point of a new website.
+        0: Website root
+        1: This type of page marks the starting point of a new website.
     logout:
-        - Logout
-        - This type of page automatically logs out the user.
+        0: Logout
+        1: This type of page automatically logs out the user.
     error_401:
-        - 401 Not authenticated
-        - If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.
+        0: 401 Not authenticated
+        1: If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.
     error_403:
-        - 403 Access denied
-        - If a member requests a protected page without permission, a 403 error page will be loaded instead.
+        0: 403 Access denied
+        1: If a member requests a protected page without permission, a 403 error page will be loaded instead.
     error_404:
-        - 404 Page not found
-        - If a visitor requests a non-existent page, a 404 error page will be loaded instead.
+        0: 404 Page not found
+        1: If a visitor requests a non-existent page, a 404 error page will be loaded instead.
     error_503:
-        - 503 Service unavailable
-        - When a website root page is in maintenance mode, all requests will show a 503 error page.
+        0: 503 Service unavailable
+        1: When a website root page is in maintenance mode, all requests will show a 503 error page.
 FOP:
     fop:
-        - File operation permissions
-        - Here you can select the file operations you want to allow.
+        0: File operation permissions
+        1: Here you can select the file operations you want to allow.
     f1: Upload files to the server
     f2: Edit, copy or move files and folders
     f3: Delete single files and empty folders
@@ -349,87 +349,87 @@ DATE:
     i: mm
     s: ss
 DAYS:
-    - Sunday
-    - Monday
-    - Tuesday
-    - Wednesday
-    - Thursday
-    - Friday
-    - Saturday
+    0: Sunday
+    1: Monday
+    2: Tuesday
+    3: Wednesday
+    4: Thursday
+    5: Friday
+    6: Saturday
 DAYS_SHORT:
-    - Sun
-    - Mon
-    - Tue
-    - Wed
-    - Thu
-    - Fri
-    - Sat
+    0: Sun
+    1: Mon
+    2: Tue
+    3: Wed
+    4: Thu
+    5: Fri
+    6: Sat
 MONTHS:
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
+    0: January
+    1: February
+    2: March
+    3: April
+    4: May
+    5: June
+    6: July
+    7: August
+    8: September
+    9: October
+    10: November
+    11: December
 MONTHS_SHORT:
-    - Jan
-    - Feb
-    - Mar
-    - Apr
-    - May
-    - Jun
-    - Jul
-    - Aug
-    - Sep
-    - Oct
-    - Nov
-    - Dec
+    0: Jan
+    1: Feb
+    2: Mar
+    3: Apr
+    4: May
+    5: Jun
+    6: Jul
+    7: Aug
+    8: Sep
+    9: Oct
+    10: Nov
+    11: Dec
 MSC:
     dayShortLength: '3'
     monthShortLength: '3'
     weekOffset: '0'
     titleFormat: '%B %d%o, %Y'
     url:
-        - Link target
-        - Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.
+        0: Link target
+        1: Please enter a web address (http://…), an e-mail address (mailto:…) or an insert tag.
     target:
-        - Open in new window
-        - Open the link in a new browser window.
+        0: Open in new window
+        1: Open the link in a new browser window.
     openTab: Open in a new tab
     decimalSeparator: .
     thousandsSeparator: ','
     separator:
-        - Separator
-        - Please choose a field delimiter.
+        0: Separator
+        1: Please choose a field delimiter.
     source:
-        - Source files
-        - Please upload the CSV files to be imported.
+        0: Source files
+        1: Please upload the CSV files to be imported.
     imgSize:
-        - Image size
-        - Here you can set the image dimensions and the resize mode.
+        0: Image size
+        1: Here you can set the image dimensions and the resize mode.
     comma: Comma
     semicolon: Semicolon
     tabulator: Tabulator
     linebreak: Line break
     lw_import:
-        - CSV import
-        - Import list items from a CSV file
+        0: CSV import
+        1: Import list items from a CSV file
     lw_copy: Duplicate the element
     lw_up: Move the element one position up
     lw_down: Move the element one position down
     lw_delete: Delete the element
     ow_import:
-        - CSV import
-        - Import options from a CSV file
+        0: CSV import
+        1: Import options from a CSV file
     tw_import:
-        - CSV import
-        - Import table items from a CSV file
+        0: CSV import
+        1: Import table items from a CSV file
     tw_expand: Increase the input field size
     tw_shrink: Decrease the input field size
     tw_rcopy: Duplicate the row
@@ -481,99 +481,99 @@ MSC:
     sw_position: Position
     image_sizes: Predefined dimensions
     custom:
-        - Custom dimensions
-        - The image will be resized to the given dimensions.
+        0: Custom dimensions
+        1: The image will be resized to the given dimensions.
     proportional:
-        - Proportional
-        - The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
+        0: Proportional
+        1: The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
     box:
-        - Fit the box
-        - The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.
+        0: Fit the box
+        1: The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.
     crop:
-        - Crop (important part)
-        - Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.
+        0: Crop (important part)
+        1: Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.
     left_top:
-        - Left | Top
-        - Preserves the left part of a landscape image and the top part of a portrait image.
+        0: Left | Top
+        1: Preserves the left part of a landscape image and the top part of a portrait image.
     center_top:
-        - Center | Top
-        - Preserves the center part of a landscape image and the top part of a portrait image.
+        0: Center | Top
+        1: Preserves the center part of a landscape image and the top part of a portrait image.
     right_top:
-        - Right | Top
-        - Preserves the right part of a landscape image and the top part of a portrait image.
+        0: Right | Top
+        1: Preserves the right part of a landscape image and the top part of a portrait image.
     left_center:
-        - Left | Center
-        - Preserves the left part of a landscape image and the center part of a portrait image.
+        0: Left | Center
+        1: Preserves the left part of a landscape image and the center part of a portrait image.
     center_center:
-        - Center | Center
-        - Preserves the center part of a landscape image and the center part of a portrait image.
+        0: Center | Center
+        1: Preserves the center part of a landscape image and the center part of a portrait image.
     right_center:
-        - Right | Center
-        - Preserves the right part of a landscape image and the center part of a portrait image.
+        0: Right | Center
+        1: Preserves the right part of a landscape image and the center part of a portrait image.
     left_bottom:
-        - Left | Bottom
-        - Preserves the left part of a landscape image and the bottom part of a portrait image.
+        0: Left | Bottom
+        1: Preserves the left part of a landscape image and the bottom part of a portrait image.
     center_bottom:
-        - Center | Bottom
-        - Preserves the center part of a landscape image and the bottom part of a portrait image.
+        0: Center | Bottom
+        1: Preserves the center part of a landscape image and the bottom part of a portrait image.
     right_bottom:
-        - Right | Bottom
-        - Preserves the right part of a landscape image and the bottom part of a portrait image.
+        0: Right | Bottom
+        1: Preserves the right part of a landscape image and the bottom part of a portrait image.
     id:
-        - ID
-        - Note that changing the ID can break data integrity!
+        0: ID
+        1: Note that changing the ID can break data integrity!
     pid:
-        - Parent ID
-        - Note that changing the parent ID can break data integrity!
+        0: Parent ID
+        1: Note that changing the parent ID can break data integrity!
     sorting:
-        - Sorting value
-        - The sorting value is usually assigned automatically.
+        0: Sorting value
+        1: The sorting value is usually assigned automatically.
     all:
-        - Edit multiple
-        - Edit multiple elements at once
+        0: Edit multiple
+        1: Edit multiple elements at once
     all_override:
-        - Override multiple
-        - Override multiple elements at once
+        0: Override multiple
+        1: Override multiple elements at once
     all_fields:
-        - Available fields
-        - Please select the fields you want to edit.
+        0: Available fields
+        1: Please select the fields you want to edit.
     password:
-        - Password
-        - Please enter a password.
+        0: Password
+        1: Please enter a password.
     confirm:
-        - Confirm password
-        - Please confirm the password.
+        0: Confirm password
+        1: Please confirm the password.
     showPassword: Show password
     hidePassword: Hide password
     dateAdded:
-        - Date added
-        - 'Date added: %s'
+        0: Date added
+        1: 'Date added: %s'
     lastLogin:
-        - Previous login
-        - Your previous login was %s. Welcome back!
+        0: Previous login
+        1: Your previous login was %s. Welcome back!
     currentLogin:
-        - Last login
-        - 'Last login: %s'
+        0: Last login
+        1: 'Last login: %s'
     firstLogin: This seems to be your first login. Welcome to Contao!
     move: Move the item via drag and drop
     move_up:
-        - Move up
-        - Move the item one position up
+        0: Move up
+        1: Move the item one position up
     move_down:
-        - Move down
-        - Move the item one position down
+        0: Move down
+        1: Move the item one position down
     shortcuts:
-        - Back end keyboard shortcuts
-        - Learn more about speeding up your workflow by using <a href="%s" target="_blank" rel="noreferrer noopener">keyboard shortcuts</a>.
+        0: Back end keyboard shortcuts
+        1: Learn more about speeding up your workflow by using <a href="%s" target="_blank" rel="noreferrer noopener">keyboard shortcuts</a>.
     toggleAll:
-        - Toggle all
-        - Expand or collapse all nodes
+        0: Toggle all
+        1: Expand or collapse all nodes
     toggleMobile:
-        - Mobile version
-        - Go to the mobile version
+        0: Mobile version
+        1: Go to the mobile version
     toggleDesktop:
-        - Desktop version
-        - Go to the desktop version
+        0: Desktop version
+        1: Go to the desktop version
     feLink: Go to front end
     fePreview: Preview
     fePreviewTitle: Front end preview
@@ -871,11 +871,11 @@ MSC:
     disable: Disable
     edit: Edit
     serpPreview:
-        - Google search results preview
-        - Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.
+        0: Google search results preview
+        1: Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.
     numberOfItems:
-        - Number of items
-        - Here you can limit the total number of items. Set to 0 to show all.
+        0: Number of items
+        1: Here you can limit the total number of items. Set to 0 to show all.
     clearTrustedDevices: Clear trusted devices
     trustedDevices: Trusted devices
     noTrustedDevices: Currently there are no trusted devices.
@@ -951,8 +951,8 @@ MSC:
     skipToContent: Skip to content
     clipboardCopy: Copied to clipboard.
     searchIndexer:
-        - Search indexer
-        - Here you can override the robots meta tag setting for the internal search index.
+        0: Search indexer
+        1: Here you can override the robots meta tag setting for the internal search index.
     always_index: Always index
     never_index: Never index
     field: Field
@@ -965,15 +965,15 @@ MSC:
     previewTime: Time
     clearPreviewTime: Clear preview time
 UNITS:
-    - Byte
-    - KiB
-    - MiB
-    - GiB
-    - TiB
-    - PiB
-    - EiB
-    - ZiB
-    - YiB
+    0: Byte
+    1: KiB
+    2: MiB
+    3: GiB
+    4: TiB
+    5: PiB
+    6: EiB
+    7: ZiB
+    8: YiB
 CONFIRM:
     do: Module
     table: Affected table
@@ -1001,74 +1001,74 @@ SECTIONS:
     manual: Manual output
 DCA:
     all:
-        - Edit multiple
-        - Edit multiple elements at once
+        0: Edit multiple
+        1: Edit multiple elements at once
     toggleNodes:
-        - Toggle all
-        - Expand or collapse all nodes
+        0: Toggle all
+        1: Expand or collapse all nodes
     expandNodes:
-        - Expand all
-        - Expand all nodes
+        0: Expand all
+        1: Expand all nodes
     collapseNodes:
-        - Collapse all
-        - Collapse all nodes
+        0: Collapse all
+        1: Collapse all nodes
     toggleFilter:
-        - Filter
-        - Show the filter panel
-        - Hide the filter panel
+        0: Filter
+        1: Show the filter panel
+        2: Hide the filter panel
     new:
-        - New
-        - Create a new element
+        0: New
+        1: Create a new element
     show:
-        - Details
-        - Show the details of element ID %s
+        0: Details
+        1: Show the details of element ID %s
     edit:
-        - Edit
-        - Edit element ID %s
+        0: Edit
+        1: Edit element ID %s
     cut:
-        - Move
-        - Move element ID %s
+        0: Move
+        1: Move element ID %s
     copy:
-        - Copy
-        - Copy element ID %s
+        0: Copy
+        1: Copy element ID %s
     copyChildren:
-        - Copy recursively
-        - Copy element ID %s with child nodes
+        0: Copy recursively
+        1: Copy element ID %s with child nodes
     delete:
-        - Delete
-        - Delete element ID %s
+        0: Delete
+        1: Delete element ID %s
     versions:
-        - Versions
-        - Show the versions of element ID %s
+        0: Versions
+        1: Show the versions of element ID %s
     drag: Drag element ID %s
     global_operations: Show all global operations
     operations: Show operations for element ID %s
     children:
-        - Child elements
-        - Edit the child elements of element ID %s
+        0: Child elements
+        1: Edit the child elements of element ID %s
     toggle:
-        - Publish/unpublish element
-        - Unpublish element ID %s
-        - Publish element ID %s
-        - Unpublish
-        - Publish
+        0: Publish/unpublish element
+        1: Unpublish element ID %s
+        2: Publish element ID %s
+        3: Unpublish
+        4: Publish
     pastetop: Paste at the top
     pasteroot: Paste at the top
     pasteinto:
-        - Paste into
-        - Paste into element ID %s
+        0: Paste into
+        1: Paste into element ID %s
     pasteafter:
-        - Paste after
-        - Paste after element ID %s
+        0: Paste after
+        1: Paste after element ID %s
     pastenewtop:
-        - New at the top
-        - Create a new element at the top
+        0: New at the top
+        1: Create a new element at the top
     pastenewafter:
-        - New after
-        - Create a new element after element ID %s
+        0: New after
+        1: Create a new element after element ID %s
     pastenewinto:
-        - New inside
-        - Create a new element inside element ID %s
+        0: New inside
+        1: Create a new element inside element ID %s
     permissions_legend: Permissions
     permissions:
         '0': Back end permissions
