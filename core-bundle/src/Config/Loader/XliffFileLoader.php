@@ -22,7 +22,8 @@ use Symfony\Component\Filesystem\Path;
 class XliffFileLoader extends Loader
 {
     public function __construct(
-        private readonly string $projectDir, // backwards compatibility
+        // @phpstan-ignore property.onlyWritten (backwards compatibility)
+        private readonly string $projectDir,
         private readonly bool $addToGlobals = false,
     ) {
         parent::__construct();
