@@ -19,14 +19,19 @@ use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
+use Contao\CoreBundle\Tests\Fixtures\Entity\Foo;
+use Contao\CoreBundle\Tests\Fixtures\Entity\FooTranslation;
 use Contao\PageModel;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\UnitOfWork;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class ContentUrlGeneratorTest extends TestCase
+class ContentUrlGeneratorTest extends DoctrineTestCase
 {
     public function testGeneratesPageUrlUsingUrlGenerator(): void
     {
@@ -67,6 +72,128 @@ class ContentUrlGeneratorTest extends TestCase
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
         $service->generate($pageModel1);
+    }
+
+    /**
+     * @dataProvider provideCircularRedirectModels
+     *
+     * @param class-string $modelClass
+     */
+    public function testRejectsCircularModelRedirects(string $modelClass, string $routeKey): void
+    {
+        $content = $this->createModel($modelClass, ['id' => 1]);
+        $target = $this->createModel($modelClass, ['id' => 2]);
+
+        $urlGenerator = $this->mockUrlGenerator(null);
+        $pageRegistry = $this->mockPageRegistry(null);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+
+        $resolver = $this->mockResolver(
+            [$content, ContentUrlResult::redirect($target)],
+            [$target, ContentUrlResult::redirect($this->createModel($modelClass, ['id' => 1]))],
+        );
+
+        $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
+
+        $this->expectException(RouteNotFoundException::class);
+        $this->expectExceptionMessage(\sprintf('Circular reference while generating the URL for "%s".', $routeKey));
+
+        $service->generate($content);
+    }
+
+    public static function provideCircularRedirectModels(): iterable
+    {
+        yield 'page' => [PageModel::class, 'tl_page.1'];
+        yield 'article' => [ArticleModel::class, 'tl_article.1'];
+    }
+
+    /**
+     * @dataProvider provideEntityIdentifiers
+     */
+    public function testRejectsCircularEntityRedirects(array $fields, array $identifiers, string|null $expectedKey): void
+    {
+        $content = new \stdClass();
+        $target = null === $expectedKey ? $content : clone $content;
+
+        $metadata = $this->createConfiguredMock(ClassMetadata::class, [
+            'getIdentifierFieldNames' => $fields,
+            'getIdentifierValues' => $identifiers,
+            'getTableName' => 'records',
+        ]);
+
+        $entityManager = $this->createConfiguredMock(EntityManagerInterface::class, [
+            'getClassMetadata' => $metadata,
+            'getUnitOfWork' => $this->createMock(UnitOfWork::class),
+        ]);
+
+        $resolver = $this->mockResolver([$content, ContentUrlResult::redirect($target)]);
+        $service = new ContentUrlGenerator($this->mockUrlGenerator(null), $this->mockPageRegistry(null), $entityManager, [$resolver]);
+
+        $this->expectException(RouteNotFoundException::class);
+        $this->expectExceptionMessage(\sprintf('Circular reference while generating the URL for "%s".', $expectedKey ?? 'stdClass->'.spl_object_id($content)));
+
+        $service->generate($content);
+    }
+
+    public static function provideEntityIdentifiers(): iterable
+    {
+        yield 'single' => [['id'], ['id' => 0], 'records.0'];
+        yield 'composite' => [['language', 'slug'], ['slug' => 'news&events', 'language' => 'en'], 'records.language=en&slug=news%26events'];
+        yield 'missing' => [['id'], [], null];
+        yield 'incomplete' => [['language', 'slug'], ['language' => 'en'], null];
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRejectsCircularRedirectsWithAnAssociationAsIdentifier(): void
+    {
+        $record = new Foo();
+        $record->id = 7;
+
+        $content = new FooTranslation($record, 'en');
+        $target = new FooTranslation(clone $record, 'en');
+        $resolver = $this->mockResolver([$content, ContentUrlResult::redirect($target)]);
+        $service = new ContentUrlGenerator($this->mockUrlGenerator(null), $this->mockPageRegistry(null), $this->getTestEntityManager(), [$resolver]);
+
+        $this->expectException(RouteNotFoundException::class);
+        $this->expectExceptionMessage('Circular reference while generating the URL for "foo_translation.record=7&locale=en".');
+
+        $service->generate($content);
+    }
+
+    /**
+     * @dataProvider provideDistinctEntityIdentifiers
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testResolvesDistinctEntitiesWithAnAssociationAsIdentifier(int|null $id, string $targetLocale): void
+    {
+        $record = new Foo();
+
+        if (null !== $id) {
+            $record->id = $id;
+        }
+
+        $content = new FooTranslation($record, 'en');
+        $target = new FooTranslation(clone $record, $targetLocale);
+
+        $resolver = $this->mockResolver(
+            [$content, ContentUrlResult::redirect($target)],
+            [$target, new ContentUrlResult('https://example.org/')],
+        );
+
+        $service = new ContentUrlGenerator($this->mockUrlGenerator(null), $this->mockPageRegistry(null), $this->getTestEntityManager(), [$resolver]);
+
+        $this->assertSame('https://example.org/', $service->generate($content));
+    }
+
+    public static function provideDistinctEntityIdentifiers(): iterable
+    {
+        yield 'same record with a different locale' => [7, 'de'];
+        yield 'records without an identifier' => [null, 'en'];
     }
 
     public function testGeneratesParametersForPageModel(): void
