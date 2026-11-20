@@ -1,0 +1,22 @@
+tl_undo:
+    pid:
+        0: User
+        1: Name of the associated user
+    fromTable:
+        0: Source
+        1: Name of the original table
+    affectedRows:
+        0: Affected rows
+        1: Number of records included in the undo step
+    query:
+        0: Details
+        1: Details of the undo step
+    data:
+        0: Data
+        1: Raw data of the undo step
+    undo:
+        0: Restore
+        1: Restore element ID %s
+    jumpToParent:
+        0: Show origin
+    parent_modal: Show origin of %s ID %s

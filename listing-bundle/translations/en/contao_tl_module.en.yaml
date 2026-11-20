@@ -1,0 +1,28 @@
+tl_module:
+    list_table:
+        0: Table
+        1: Please choose the source table.
+    list_fields:
+        0: Fields
+        1: Please enter a comma separated list of the fields you want to list.
+    list_where:
+        0: Condition
+        1: Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
+    list_search:
+        0: Searchable fields
+        1: Here you can enter a comma seperated list of fields that you want to be searchable.
+    list_sort:
+        0: Order by
+        1: Here you can enter a comma seperated list of fields to sort the results by.
+    list_info:
+        0: Details page fields
+        1: Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.
+    list_info_where:
+        0: Details page condition
+        1: Here you can enter a condition to filter the results (e.g. <em>published=1</em> or <em>type!="admin"</em>).
+    list_layout:
+        0: List template
+        1: Here you can select a list template.
+    list_info_layout:
+        0: Details page template
+        1: Here you can select a details page template.

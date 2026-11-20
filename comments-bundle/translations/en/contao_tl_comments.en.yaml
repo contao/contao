@@ -1,0 +1,72 @@
+tl_comments:
+    source:
+        0: Origin
+        1: The associated table.
+    parent:
+        0: Parent ID
+        1: The associated record.
+    date:
+        0: Date
+        1: Please enter the comment date.
+    name:
+        0: Author
+        1: Please enter the author's name.
+    email:
+        0: E-mail address
+        1: The e-mail address will not be published.
+    website:
+        0: Website
+        1: Here you can enter a website address.
+    member:
+        0: Member
+        1: Here you can associate the comment with a member.
+    comment:
+        0: Comment
+        1: Please enter the comment.
+    addReply:
+        0: Add a reply
+        1: Here you can reply to the comment.
+    author:
+        0: Author
+        1: Here you can change the author of the reply.
+    reply:
+        0: Reply
+        1: Here you can enter the reply.
+    published:
+        0: Published
+        1: Make the comment publicly visible on the website.
+    ip:
+        0: IP address
+        1: The IP address of the author.
+    notified:
+        0: Notified (comment)
+        1: The notification of this comment has been sent.
+    notifiedReply:
+        0: Notified (reply)
+        1: The notification of the reply to this comment has been sent.
+    author_legend: Author
+    comment_legend: Comment
+    reply_legend: Reply
+    publish_legend: Publish settings
+    approved: Approved
+    pending: Awaiting moderation
+    tl_content: Article
+    tl_page: Page
+    tl_news: News item
+    tl_faq: FAQ
+    tl_calendar_events: Event
+    show:
+        1: Show the details of comment ID %s
+    versions:
+        1: Show the versions of comment ID %s
+    edit:
+        1: Edit comment ID %s
+    delete:
+        1: Delete comment ID %s
+    toggle:
+        0: Publish/unpublish comment
+        1: Unpublish comment ID %s
+        2: Publish comment ID %s
+        3: Unpublish
+        4: Publish
+    tableLabel: Comment

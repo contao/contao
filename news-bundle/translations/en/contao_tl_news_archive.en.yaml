@@ -1,0 +1,42 @@
+tl_news_archive:
+    title:
+        0: Title
+        1: Please enter a news archive title.
+    jumpTo:
+        0: Redirect page
+        1: Please choose the newsreader page to which visitors will be redirected when clicking a news item.
+    protected:
+        0: Protect archive
+        1: Show news items to certain member groups only.
+    groups:
+        0: Allowed member groups
+        1: These groups will be able to see the news items in this archive.
+    jsonLdType:
+        0: JSON-LD type
+        1: Please choose the JSON-LD type for the news items in this archive.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Title and redirect page
+    protected_legend: Access protection
+    expert_legend: Expert settings
+    feeds:
+        0: News feeds
+        1: Manage news feeds
+    new:
+        1: Create a new news archive
+    show:
+        1: Show the details of news archive ID %s
+    versions:
+        1: Show the versions of news archive ID %s
+    edit:
+        1: Edit news archive ID %s
+    children:
+        0: News items
+        1: Edit the news items of news archive ID %s
+    copy:
+        0: Duplicate
+        1: Duplicate news archive ID %s
+    delete:
+        1: Delete news archive ID %s
+    tableLabel: News archive

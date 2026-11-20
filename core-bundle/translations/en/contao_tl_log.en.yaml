@@ -1,0 +1,34 @@
+tl_log:
+    tstamp:
+        0: Date
+        1: Date and time of the log entry
+    source:
+        0: Origin
+        1: Back end or front end
+    action:
+        0: Category
+        1: Category of the action
+    username:
+        0: User
+        1: Name of the authenticated user
+    text:
+        0: Details
+        1: Details of the log entry
+    func:
+        0: Function
+        1: Name of the initiating function
+    browser:
+        0: Browser
+        1: Name of the user agent
+    uri:
+        0: Request URI
+        1: The URI of the request
+    page:
+        0: Page ID
+        1: The ID of the page
+    BE: Back end
+    FE: Front end
+    show:
+        1: Show the details of log entry ID %s
+    delete:
+        1: Delete log entry ID %s

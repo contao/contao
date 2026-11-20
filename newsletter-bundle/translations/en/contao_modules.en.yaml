@@ -1,0 +1,20 @@
+MOD:
+    newsletter:
+        0: Newsletters
+        1: Manage subscriptions and send newsletters
+    tl_newsletter_recipients: Recipients
+    tl_newsletter: Newsletters
+FMD:
+    newsletter: Newsletter
+    subscribe:
+        0: Subscribe
+        1: Generates a form to subscribe to one or more channels
+    unsubscribe:
+        0: Unsubscribe
+        1: Generates a form to unsubscribe from one or more channels
+    newsletterlist:
+        0: Newsletter list
+        1: Adds a list of newsletters to the page
+    newsletterreader:
+        0: Newsletter reader
+        1: Shows the details of a newsletter

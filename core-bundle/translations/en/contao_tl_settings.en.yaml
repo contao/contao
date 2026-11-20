@@ -1,0 +1,71 @@
+tl_settings:
+    adminEmail:
+        0: E-mail address of the system administrator
+        1: This e-mail address will be used to send and receive system messages.
+    dateFormat:
+        0: Date format
+        1: The date format string will be parsed with the PHP date() function.
+    timeFormat:
+        0: Time format
+        1: The time format string will be parsed with the PHP date() function.
+    datimFormat:
+        0: Date and time format
+        1: The date and time format string will be parsed with the PHP date() function.
+    timeZone:
+        0: Time zone
+        1: Please select the server time zone.
+    resultsPerPage:
+        0: Items per page
+        1: Here you can define the number of items per page in the back end.
+    maxResultsPerPage:
+        0: Maximum items per page
+        1: This overall limit takes effect if a user chooses the "show all records" option.
+    allowedTags:
+        0: Allowed HTML tags
+        1: Here you can enter a list of allowed HTML tags that will not be stripped.
+    allowedAttributes:
+        0: Allowed HTML attributes
+        1: List of allowed HTML attributes that will not be stripped. The tag or attribute name <code>*</code> stands for all tags or attributes. Wildcards can be used for attributes with dashes like <code>data-*</code>.
+    allowedAttributesWarning: Allowing <code>*</code> attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!
+    allowedDownload:
+        0: Download file types
+        1: Here you can enter a comma separated list of downloadable file types.
+    uploadTypes:
+        0: Upload file types
+        1: Here you can enter a comma separated list of uploadable file types.
+    maxFileSize:
+        0: Maximum upload file size
+        1: Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).
+    imageWidth:
+        0: Maximum image width
+        1: Here you can enter the maximum width for image uploads in pixels.
+    imageHeight:
+        0: Maximum image height
+        1: Here you can enter the maximum height for image uploads in pixels.
+    undoPeriod:
+        0: Storage time for undo steps
+        1: Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).
+    versionPeriod:
+        0: Storage time for versions
+        1: Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).
+    logPeriod:
+        0: Storage time for log entries
+        1: Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).
+    defaultUser:
+        0: Default page owner
+        1: Here you can select a user as the default owner of a page.
+    defaultGroup:
+        0: Default page group
+        1: Here you can select a user group as the default owner of a page.
+    defaultChmod:
+        0: Default access rights
+        1: Please assign the default access rights for pages and articles.
+    date_legend: Date and time
+    global_legend: Global configuration
+    backend_legend: Back end configuration
+    security_legend: Security settings
+    files_legend: Files and images
+    uploads_legend: Upload settings
+    timeout_legend: Timeout values
+    chmod_legend: Default access rights
+    configuredInApp: This setting has been defined in the app configuration and cannot be changed here anymore.

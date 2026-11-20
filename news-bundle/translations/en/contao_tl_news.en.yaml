@@ -1,0 +1,130 @@
+tl_news:
+    headline:
+        0: Title
+        1: Please enter the news title.
+    alias:
+        0: News alias
+        1: The news alias is a unique reference to the news item which can be called instead of its numeric ID.
+    author:
+        0: Author
+        1: Here you can change the author of the news item.
+    date:
+        0: Date
+        1: Please enter the date according to the global date format.
+    time:
+        0: Time
+        1: Please enter the time according to the global time format.
+    pageTitle:
+        0: Meta title
+        1: Here you can add a custom meta title to overwrite the default page title.
+    robots:
+        0: Robots tag
+        1: Here you can overwrite how search engines handle the news item.
+    description:
+        0: Meta description
+        1: Here you can add a custom meta description to overwrite the default page description.
+    canonicalLink:
+        0: Canonical URL
+        1: Here you can set a custom canonical URL like https://example.com/.
+    subheadline:
+        0: Subheadline
+        1: Here you can enter a subheadline.
+    teaser:
+        0: News teaser
+        1: The news teaser can be shown in a news list instead of the full story. A "read more …" link will be added automatically.
+    text:
+        0: News text
+        1: Here you can enter the news text.
+    addImage:
+        0: Add an image
+        1: Add an image to the news item.
+    addEnclosure:
+        0: Add enclosures
+        1: Add one or more downloadable files to the news item.
+    enclosure:
+        0: Enclosures
+        1: Please choose the files you want to attach.
+    source:
+        0: Redirect target
+        1: Here you can override the default redirect target.
+    default:
+        0: Use default
+        1: By clicking the "read more …" button, visitors will be redirected to the default page of the news archive.
+    internal:
+        0: Page
+        1: By clicking the "read more …" button, visitors will be redirected to a page.
+    article:
+        0: Article
+        1: By clicking the "read more …" button, visitors will be redirected to an article.
+    external:
+        0: Custom URL
+        1: By clicking the "read more …" button, visitors will be redirected to a custom URL.
+    linkText:
+        0: Link text
+        1: Here you can override the default "read more…" link text.
+    jumpTo:
+        0: Redirect page
+        1: Please choose the page to which visitors will be redirected when clicking the news item.
+    articleId:
+        0: Article
+        1: Please choose the article to which visitors will be redirected when clicking the news item.
+    cssClass:
+        0: CSS class
+        1: Here you can enter one or more classes.
+    featured:
+        0: Feature item
+        1: Show the news item in a featured news list.
+    published:
+        0: Publish item
+        1: Make the news item publicly visible on the website.
+    start:
+        0: Show from
+        1: If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        0: Show until
+        1: If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Title and author
+    date_legend: Date and time
+    teaser_legend: Subheadline and teaser
+    text_legend: News text
+    image_legend: Image settings
+    enclosure_legend: Enclosures
+    source_legend: Redirect target
+    meta_legend: Metadata
+    expert_legend: Expert settings
+    publish_legend: Publish settings
+    new:
+        1: Create a new news item
+    show:
+        1: Show the details of news item ID %s
+    versions:
+        1: Show the versions of news item ID %s
+    edit:
+        1: Edit news item ID %s
+    children:
+        0: Content elements
+        1: Edit the content elements of news item ID %s
+    copy:
+        1: Duplicate news item ID %s
+    cut:
+        1: Move news item ID %s
+    delete:
+        1: Delete news item ID %s
+    toggle:
+        0: Publish/unpublish news item
+        1: Unpublish news item ID %s
+        2: Publish news item ID %s
+        3: Unpublish
+        4: Publish
+    feature:
+        0: Feature/unfeature news item ID %s
+        1: Unfeature news item ID %s
+        2: Feature news item ID %s
+        3: Unfeature
+        4: Feature
+    pasteafter:
+        0: Paste into this news archive
+    tableLabel: News

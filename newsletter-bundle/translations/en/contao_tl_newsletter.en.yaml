@@ -1,0 +1,91 @@
+tl_newsletter:
+    subject:
+        0: Subject
+        1: Please enter the newsletter subject.
+    alias:
+        0: Newsletter alias
+        1: The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.
+    preheader:
+        0: Preheader text
+        1: Here you can enter a preheader text. A preheader text should be between 40-130 characters long.
+    content:
+        0: HTML content
+        1: Here you can enter the HTML content of the newsletter. Use the wildcard <em>##email##</em> to insert the recipient's e-mail address.
+    text:
+        0: Text content
+        1: Here you can enter the text content of the newsletter. Use the wildcard <em>##email##</em> to insert the recipient's e-mail address.
+    addFile:
+        0: Add attachments
+        1: Attach one or more files to the newsletter.
+    files:
+        0: Attachments
+        1: Please choose the files to be attached from the files directory.
+    template:
+        0: E-mail template
+        1: Here you can override the e-mail template of the channel.
+    sendText:
+        0: Send as plain text
+        1: Send the newsletter as plain text e-mail without the HTML content.
+    externalImages:
+        0: External images
+        1: Do not embed images in HTML newsletters.
+    mailerTransport:
+        0: Mailer transport
+        1: Here you can override the default mailer transport of the channel.
+    sender:
+        0: Custom sender e-mail address
+        1: Here you can override the default sender e-mail address of the channel.
+    senderName:
+        0: Custom sender name
+        1: Here you can override the default sender name of the channel.
+    mailsPerCycle:
+        0: Mails per cycle
+        1: The sending process is split into several cycles to prevent the script from timing out.
+    timeout:
+        0: Timeout in seconds
+        1: Here you can modify the waiting time between each cycle to control the number of e-mails per minute.
+    start:
+        0: Offset
+        1: In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category <code>NEWSLETTER_%s</code> in the system log. If there are 120 entries, enter "120" to continue with the 121st recipient (counting starts at 0).
+    sendPreviewTo:
+        0: Send preview to
+        1: Send the preview of the newsletter to this e-mail address.
+    title_legend: Title and subject
+    html_legend: HTML content
+    text_legend: Text content
+    attachment_legend: Attachments
+    template_legend: Template settings
+    sender_legend: Sender settings
+    expert_legend: Expert settings
+    sent: Sent
+    sentOn: Sent at %s
+    notSent: Not sent yet
+    date: Mailing date
+    confirm: The newsletter has been sent to %s recipients.
+    rejected: 'Invalid e-mail addresses disabled: %s (see system log).'
+    skipped: 'E-mail addresses skipped: %s.'
+    error: There are no active subscribers to the channel.
+    from: From
+    attachments: Attachments
+    preview: Send preview
+    sendConfirm: Do you really want to send the newsletter?
+    send:
+        0: Send
+        1: Send newsletter ID %s
+    new:
+        1: Create a new newsletter
+    show:
+        1: Show the details of newsletter ID %s
+    versions:
+        1: Show the versions of newsletter ID %s
+    edit:
+        1: Edit newsletter ID %s
+    copy:
+        1: Duplicate newsletter ID %s
+    cut:
+        1: Move newsletter ID %s
+    delete:
+        1: Delete newsletter ID %s
+    pasteafter:
+        0: Paste into this channel
+    tableLabel: Newsletter

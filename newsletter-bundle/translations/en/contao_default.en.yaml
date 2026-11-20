@@ -1,0 +1,15 @@
+ERR:
+    subscribed: You are subscribed to the selected channels already.
+    unsubscribed: You are not subscribed to the selected channels.
+    invalidToken: The activation link is invalid or outdated.
+    noChannels: Please select at least one channel.
+    onDenyList: The e-mail address has been unsubscribed from the channel.
+MSC:
+    subscribe: Subscribe
+    unsubscribe: Unsubscribe
+    nl_subject: Your subscription on %s
+    nl_confirm: Thank you for your subscription. You will receive a confirmation e-mail.
+    nl_activate: Your subscription has been activated.
+    nl_removed: Your subscription has been cancelled.
+    nl_channels: Channels
+    nl_overview: Back to the newsletter overview

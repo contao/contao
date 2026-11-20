@@ -1,0 +1,11 @@
+tl_opt_in:
+    token: Token
+    confirmedOn: Confirmed at
+    removeOn: Remove at
+    invalidatedThrough: Invalidated through
+    emailSubject: E-mail subject
+    emailText: E-mail text
+    show:
+        1: Show the details of token ID %s
+    resend:
+        1: Resend token ID %s

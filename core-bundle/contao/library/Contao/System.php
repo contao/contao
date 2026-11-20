@@ -454,8 +454,15 @@ abstract class System
 			}
 			else
 			{
-				// Find the given filename either as .php or .xlf file
-				$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				try
+				{
+					// Find the given filename either as .php or .xlf file
+					$finder = $container->get('contao.resource_finder')->findIn('languages/' . $strCreateLang)->name('/^' . $strName . '\.(php|xlf)$/');
+				}
+				catch (\InvalidArgumentException)
+				{
+					$finder = array();
+				}
 
 				foreach ($finder as $file)
 				{
@@ -524,7 +531,11 @@ abstract class System
 
 			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
-			if (is_dir($projectDir . '/vendor/contao/core-bundle/contao/languages/' . $strLanguage))
+			if (is_dir($projectDir . '/vendor/contao/core-bundle/translations/' . $strLanguage))
+			{
+				static::$arrLanguages[$strLanguage] = true;
+			}
+			elseif (is_dir($projectDir . '/vendor/contao/core-bundle/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -534,7 +545,14 @@ abstract class System
 			}
 			else
 			{
-				static::$arrLanguages[$strLanguage] = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage)->hasResults();
+				try
+				{
+					static::$arrLanguages[$strLanguage] = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage)->hasResults();
+				}
+				catch (\InvalidArgumentException)
+				{
+					static::$arrLanguages[$strLanguage] = false;
+				}
 			}
 		}
 

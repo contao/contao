@@ -1,0 +1,21 @@
+jobs:
+    created_at:
+        0: Created at
+    progress:
+        0: Progress
+    status:
+        0: Status
+    owner:
+        0: Initiated by
+    attachments:
+        0: Attachments
+    type:
+        0: Type
+    statusLabel:
+        new: New
+        pending: Pending
+        completed: Completed
+    type_label:
+        contao_backend_search_reindex: Rebuild the back end search index
+        crawl: Crawling the website
+    all_jobs_processed: All jobs have been processed.

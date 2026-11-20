@@ -1,0 +1,107 @@
+tl_form:
+    title:
+        0: Title
+        1: Please enter the form title.
+    alias:
+        0: Form alias
+        1: The form alias is a unique reference to the form which can be called instead of its numeric ID.
+    jumpTo:
+        0: Redirect page
+        1: Please choose the page to which visitors will be redirected after submitting the form.
+    confirmation:
+        0: Confirmation message
+        1: Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. <code>##field_name##</code>. The confirmation message is also available as <code>{{form_confirmation}}</code> insert tag.
+    sendViaEmail:
+        0: Send form data via e-mail
+        1: Send the submitted data to an e-mail address.
+    mailerTransport:
+        0: Mailer transport
+        1: Here you can override the mailer transport used to send the form via e-mail.
+    recipient:
+        0: Recipient address
+        1: Separate multiple e-mail addresses with comma.
+    subject:
+        0: Subject
+        1: Please enter the e-mail subject.
+    format:
+        0: Data format
+        1: Defines how the form data will be forwarded.
+    raw:
+        0: Raw data
+        1: The form data will be sent as plain text message with each field in a new line.
+    xml:
+        0: XML file
+        1: The form data will be attached to the e-mail as an XML file.
+    csv:
+        0: CSV file
+        1: The form data will be attached to the e-mail as a CSV file.
+    csv_excel:
+        0: CSV file (Microsoft Excel)
+        1: The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.
+    skipEmpty:
+        0: Skip empty fields
+        1: Do not include empty fields in the form data.
+    email:
+        0: E-mail
+        1: Ignores all fields except <em>name</em>, <em>email</em>, <em>subject</em>, <em>message</em> and <em>cc</em> (carbon copy) and sends the form data as if it had been sent from a mail client. File uploads are allowed.
+    skipEmtpy:
+        0: Skip empty fields
+        1: Hide empty fields in the e-mail.
+    storeValues:
+        0: Store data
+        1: Store the submitted data in the database.
+    customTpl:
+        0: Form template
+        1: Here you can select the form template.
+    targetTable:
+        0: Target table
+        1: The target table must contain a column for every form field.
+    method:
+        0: Submission method
+        1: The default form submission method is POST.
+    novalidate:
+        0: Disable HTML5 validation
+        1: Add the <em>novalidate</em> attribute to the form tag.
+    attributes:
+        0: CSS ID/class
+        1: Here you can set an ID and one or more classes.
+    formID:
+        0: Form ID
+        1: The form ID is required to trigger a Contao module.
+    allowTags:
+        0: Allow HTML tags
+        1: Allow HTML tags in form fields.
+    ajax:
+        0: Submit via Ajax
+        1: Submit the form via Ajax instead of reloading the page.
+    storeSession:
+        0: Store data in the session
+        1: Store the submitted data in the session so that it can be retrieved via the <code>{{form_session_data::*}}</code> insert tag.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Title and redirect page
+    email_legend: Send form data
+    store_legend: Store form data
+    expert_legend: Expert settings
+    config_legend: Form configuration
+    confirm_legend: Confirmation
+    template_legend: Template settings
+    new:
+        1: Create a new form
+    show:
+        1: Show the details of form ID %s
+    versions:
+        1: Show the versions of form ID %s
+    edit:
+        1: Edit form ID %s
+    children:
+        0: Form fields
+        1: Edit the form fields of form ID %s
+    copy:
+        0: Duplicate
+        1: Duplicate form ID %s
+    delete:
+        1: Delete form ID %s
+    targetTableMissingAllowlist: 'Define the available tables in the following DCA configuration: <code>%s</code>.'
+    tableLabel: Form

@@ -1,0 +1,31 @@
+tl_faq_category:
+    title:
+        0: Title
+        1: Please enter the category title.
+    headline:
+        0: Headline
+        1: Please enter the category headline.
+    jumpTo:
+        0: Redirect page
+        1: Please choose the FAQ reader page to which visitors will be redirected when clicking a FAQ.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Title and redirect
+    new:
+        1: Create a new category
+    show:
+        1: Show the details of category ID %s
+    versions:
+        1: Show the versions of category ID %s
+    edit:
+        1: Edit category ID %s
+    children:
+        0: Questions
+        1: Edit the questions of category ID %s
+    copy:
+        0: Duplicate
+        1: Duplicate category ID %s
+    delete:
+        1: Delete category ID %s
+    tableLabel: FAQ category
