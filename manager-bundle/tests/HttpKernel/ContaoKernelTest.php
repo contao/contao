@@ -24,6 +24,8 @@ use Contao\ManagerBundle\ContaoManager\Plugin as ManagerPlugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\ManagerBundle\Tests\Fixtures\HttpKernel\BuildDirKernel;
+use Contao\ManagerBundle\Tests\Fixtures\HttpKernel\CacheWarmerBundle;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
@@ -161,6 +163,65 @@ class ContaoKernelTest extends ContaoTestCase
             Path::normalize($kernel->getProjectDir()).'/var/cache/prod',
             Path::normalize($kernel->getCacheDir()),
         );
+    }
+
+    public function testGetBuildDirDefaultsToTheCacheDir(): void
+    {
+        $kernel = $this->getKernel($this->getTempDir());
+
+        $this->assertSame($kernel->getCacheDir(), $kernel->getBuildDir());
+    }
+
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
+    public function testGetBuildDirFromRelativeEnvVar(): void
+    {
+        $_SERVER['APP_BUILD_DIR'] = 'var/build';
+
+        $kernel = $this->getKernel($this->getTempDir());
+
+        $this->assertSame(
+            Path::normalize($kernel->getProjectDir()).'/var/build/prod',
+            Path::normalize($kernel->getBuildDir()),
+        );
+    }
+
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
+    public function testGetBuildDirFromAbsoluteEnvVar(): void
+    {
+        $_SERVER['APP_BUILD_DIR'] = '/custom/build';
+
+        $kernel = $this->getKernel($this->getTempDir());
+
+        $this->assertSame('/custom/build/prod', Path::normalize($kernel->getBuildDir()));
+    }
+
+    public function testBootsWithACustomBuildDir(): void
+    {
+        $bundleLoader = $this->createStub(BundleLoader::class);
+        $bundleLoader
+            ->method('getBundleConfigs')
+            ->willReturn([new BundleConfig(CacheWarmerBundle::class)])
+        ;
+
+        $pluginLoader = $this->createStub(PluginLoader::class);
+
+        ContaoKernel::setProjectDir($this->getTempDir());
+
+        $kernel = new BuildDirKernel('prod', true);
+        $kernel->setPluginLoader($pluginLoader);
+        $kernel->setBundleLoader($bundleLoader);
+        $kernel->boot();
+
+        // The optional cache warmer must have been able to use the synthetic plugin
+        // loader service while the container was being initialized
+        $this->assertSame($pluginLoader, $kernel->getContainer()->get('contao_manager.plugin_loader'));
+
+        $warmerFile = Path::join($kernel->getCacheDir(), 'plugin-loader-warmer');
+
+        $this->assertFileExists($warmerFile);
+        $this->assertSame($pluginLoader::class, file_get_contents($warmerFile));
     }
 
     public function testGetLogDir(): void
@@ -536,6 +597,26 @@ class ContaoKernelTest extends ContaoTestCase
 
         $this->assertSame('prod', $kernel->getEnvironment());
         $this->assertFalse($kernel->isDebug());
+    }
+
+    public function testCreatesTheCalledKernelClassFromInput(): void
+    {
+        $kernel = BuildDirKernel::fromInput($this->getTempDir(), new ArgvInput(['help']));
+
+        $this->assertInstanceOf(BuildDirKernel::class, $kernel);
+        $this->assertSame(Path::join($kernel->getProjectDir(), 'var/build', 'prod'), $kernel->getBuildDir());
+    }
+
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
+    public function testCreatesTheCalledKernelClassFromRequest(): void
+    {
+        $_SERVER['APP_ENV'] = 'dev';
+
+        $kernel = BuildDirKernel::fromRequest($this->getTempDir(), Request::create('/'));
+
+        $this->assertInstanceOf(BuildDirKernel::class, $kernel);
+        $this->assertSame(Path::join($kernel->getProjectDir(), 'var/build', 'dev'), $kernel->getBuildDir());
     }
 
     /**

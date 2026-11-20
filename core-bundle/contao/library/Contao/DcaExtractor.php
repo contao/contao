@@ -16,7 +16,7 @@ use Contao\CoreBundle\DataContainer\InvalidConfigException;
  * Extracts DCA information and cache it
  *
  * The class parses the DCA files and stores various extracts like relations
- * in the cache directory. This metadata can then be loaded and used in the
+ * in the build directory. This metadata can then be loaded and used in the
  * application (e.g. the Model classes).
  *
  * Usage:
@@ -120,7 +120,7 @@ class DcaExtractor extends Controller
 
 		$this->strTable = $strTable;
 
-		$strFile = System::getContainer()->getParameter('kernel.cache_dir') . '/contao/sql/' . $strTable . '.php';
+		$strFile = System::getContainer()->getParameter('kernel.build_dir') . '/contao/sql/' . $strTable . '.php';
 
 		// Try to load from cache
 		if (file_exists($strFile))

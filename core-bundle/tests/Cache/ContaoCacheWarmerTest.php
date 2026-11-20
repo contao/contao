@@ -58,7 +58,10 @@ class ContaoCacheWarmerTest extends TestCase
 
     protected function tearDown(): void
     {
-        new Filesystem()->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
+        new Filesystem()->remove([
+            Path::join($this->getTempDir(), 'var/cache/contao'),
+            Path::join($this->getTempDir(), 'var/build/contao'),
+        ]);
 
         unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
@@ -138,6 +141,22 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertArrayHasKey('default', $langs['en']);
         $this->assertArrayHasKey('tl_test', $langs['en']);
         $this->assertArrayHasKey('tl_foobar', $langs['en']);
+    }
+
+    public function testWritesTheCacheIntoTheBuildDir(): void
+    {
+        $buildDir = Path::join($this->getTempDir(), 'var/build');
+
+        System::getContainer()->setParameter('kernel.build_dir', $buildDir);
+
+        $warmer = $this->getCacheWarmer();
+        $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'), $buildDir);
+
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/build/contao/config/config.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/build/contao/dca/tl_test.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/build/contao/languages/en/default.php'));
+        $this->assertFileExists(Path::join($this->getTempDir(), 'var/build/contao/sql/tl_test.php'));
+        $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
     public function testIsAnOptionalWarmer(): void
