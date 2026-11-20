@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Cache;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Config\Loader\YamlFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
@@ -114,7 +113,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
-            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new YamlFileLoader(), new XliffFileLoader($this->projectDir)])),
+            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
             Path::join($cacheDir, 'contao'),
         );
 
@@ -273,7 +272,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             return $this->finder
                 ->findIn(Path::join('languages', $language))
                 ->files()
-                ->name('/\.(php|xlf|yaml)$/')
+                ->name('/\.(php|xlf)$/')
             ;
         } catch (\InvalidArgumentException) {
             return [];
