@@ -114,7 +114,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
-            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir), new YamlFileLoader()])),
+            new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new YamlFileLoader(), new XliffFileLoader($this->projectDir)])),
             Path::join($cacheDir, 'contao'),
         );
 

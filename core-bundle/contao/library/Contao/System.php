@@ -428,7 +428,7 @@ abstract class System
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 
-		// Prepare the XLIFF loader
+		// Prepare the language file loaders
 		$container = static::getContainer();
 		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
 		$yamlLoader = new YamlFileLoader(true);
