@@ -138,8 +138,20 @@ final class DataContainerRecordMapper
             }
 
             // Never submit a stored secret as a new password or other write-only value
-            $value = $schema['writeOnly'] ?? false ? null : $converter->convertToApiValue($row[$field] ?? null, $config, $schema);
-            $form[$field] = $converter->convertToFormValue($value, $config, $schema);
+            if ($schema['writeOnly'] ?? false) {
+                $form[$field] = $converter->convertToFormValue(null, $config, $schema);
+
+                continue;
+            }
+
+            $value = $converter->convertToFormValue($converter->convertToApiValue($row[$field] ?? null, $config, $schema), $config, $schema);
+
+            // Keep an optional NULL or empty list as stored instead of submitting its API value
+            if (!($config['eval']['mandatory'] ?? false) && (null === ($row[$field] ?? null) || [] === $value)) {
+                continue;
+            }
+
+            $form[$field] = $value;
         }
 
         return $form;

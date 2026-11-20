@@ -22,6 +22,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
+use ApiPlatform\OpenApi\Model\Operation as OpenApiOperation;
 use Contao\ApiBundle\Dto\UserTemplate;
 use Contao\ApiBundle\Dto\UserTemplateOperation;
 use Contao\ApiBundle\Dto\UserTemplateUpdate;
@@ -109,6 +110,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
                 ->withDefaults(['_scope' => 'backend'])
                 ->withStateless(true)
                 ->withSecurity("is_granted('ROLE_ADMIN')")
+                ->withOpenapi(new OpenApiOperation(description: $operation->getDescription()))
             ;
         }
 
@@ -127,18 +129,17 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
     private function createOperation(object $operation): HttpOperation
     {
         $name = $operation->getName();
-        $description = $operation instanceof OperationDescriptionInterface ? $operation->getDescription() : 'Execute the "'.$name.'" template operation.';
 
         if ('delete' === $name) {
-            $description .= <<<'MARKDOWN'
-                When using the API, deletion is immediate: no confirmation parameter or request body is required. Pass
-                the optional "theme" query parameter to delete a template in a theme.
-                MARKDOWN;
-
             return new Delete(
                 uriTemplate: '/user_templates/{name}',
                 requirements: ['name' => '.+'],
-                description: $description,
+                description: <<<'MARKDOWN'
+                    Delete the user template. When using the API, deletion is immediate: no confirmation parameter or
+                    request body is required. For content element and frontend module variants, stored database
+                    selections are also reset. Pass the optional "theme" query parameter to delete the user template
+                    of a theme; omit it for a global user template.
+                    MARKDOWN,
                 input: false,
                 read: false,
                 name: 'contao_api_user_template_operation_delete',
@@ -147,7 +148,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
         }
 
         if ('save' === $name) {
-            $description .= <<<'MARKDOWN'
+            $note = <<<'MARKDOWN'
                 Send the complete template code as {"code": "..."}. Pass the optional "theme" query parameter for a
                 theme template.
                 MARKDOWN;
@@ -155,7 +156,7 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
             return new Patch(
                 uriTemplate: '/user_templates/{name}',
                 requirements: ['name' => '.+'],
-                description: $description,
+                description: $this->describe($operation, $note),
                 input: UserTemplateUpdate::class,
                 read: false,
                 name: 'contao_api_user_template_operation_save',
@@ -163,14 +164,14 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
             );
         }
 
-        $description .= <<<'MARKDOWN'
+        $note = <<<'MARKDOWN'
             Send the template name in "name" and any arguments in "parameters". Pass the optional "theme" query
             parameter for a theme template. Template names do not include the file extension.
             MARKDOWN;
 
         $arguments = [
             'uriTemplate' => '/user_template_operations/'.rawurlencode($name),
-            'description' => $description,
+            'description' => $this->describe($operation, $note),
             'input' => UserTemplateOperation::class,
             'read' => false,
             'name' => 'contao_api_user_template_operation_'.$name,
@@ -178,5 +179,12 @@ final class UserTemplateResourceMetadataCollectionFactory implements ResourceMet
         ];
 
         return new Post(...$arguments);
+    }
+
+    private function describe(object $operation, string $note): string
+    {
+        $text = $operation instanceof OperationDescriptionInterface ? $operation->getDescription() : 'Execute the "'.$operation->getName().'" template operation.';
+
+        return $text."\n\n".$note;
     }
 }

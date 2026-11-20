@@ -105,7 +105,7 @@ class TwigIntegrationTest extends TestCase
     {
         $environment = new Environment(
             new ArrayLoader([
-                'parent.html.twig' => '{% block attributes %}{% set attributes = attrs({class: "foo bar", title: "<safe>", "data-controller": "parent"}).mergeWith(attributes ?? null) %}<div{{ attributes }}></div>{% endblock %}',
+                'parent.html.twig' => '{% block attributes %}{% set attributes = attrs({class: "foo bar", title: "<safe>", "data-controller": "parent"}).mergeWith(attributes|default) %}<div{{ attributes }}></div>{% endblock %}',
                 'child.html.twig' => '{% extends "parent.html.twig" %}{% block attributes %}{% set attributes = attrs().removeClass("foo").add("data-controller", "contao--collection contao--fragment") %}{{ parent() }}{% endblock %}',
             ]),
             ['autoescape' => 'html'],
