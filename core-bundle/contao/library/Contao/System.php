@@ -545,7 +545,14 @@ abstract class System
 			}
 			else
 			{
-				static::$arrLanguages[$strLanguage] = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage)->hasResults();
+				try
+				{
+					static::$arrLanguages[$strLanguage] = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage)->hasResults();
+				}
+				catch (\InvalidArgumentException)
+				{
+					static::$arrLanguages[$strLanguage] = false;
+				}
 			}
 		}
 
