@@ -430,7 +430,7 @@ abstract class System
 		// Prepare the XLIFF loader
 		$container = static::getContainer();
 		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
-		$strCacheDir = $container->getParameter('kernel.cache_dir');
+		$strCacheDir = $container->getParameter('kernel.build_dir');
 
 		if (null === self::$arrAvailableLanguageFiles)
 		{
@@ -509,7 +509,7 @@ abstract class System
 	/**
 	 * Check whether a language is installed
 	 *
-	 * @param boolean $strLanguage The language code
+	 * @param string $strLanguage The language code
 	 *
 	 * @return boolean True if the language is installed
 	 */
@@ -528,7 +528,7 @@ abstract class System
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
-			elseif (is_dir(static::getContainer()->getParameter('kernel.cache_dir') . '/contao/languages/' . $strLanguage))
+			elseif (is_dir(static::getContainer()->getParameter('kernel.build_dir') . '/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}

@@ -32,10 +32,11 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
-class ContaoKernel extends Kernel implements HttpCacheProvider
+class ContaoKernel extends Kernel implements HttpCacheProvider, WarmableInterface
 {
     protected static string|null $projectDir = null;
 
@@ -80,6 +81,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     public function getCacheDir(): string
     {
         return Path::join($this->getProjectDir(), 'var/cache', $this->getEnvironment());
+    }
+
+    public function getBuildDir(): string
+    {
+        if (null !== $dir = $_SERVER['APP_BUILD_DIR'] ?? null) {
+            $dir = (string) $dir;
+
+            return Path::isAbsolute($dir)
+                ? Path::join($dir, $this->getEnvironment())
+                : Path::join($this->getProjectDir(), $dir, $this->getEnvironment());
+        }
+
+        return $this->getCacheDir();
     }
 
     public function getLogDir(): string
@@ -286,10 +300,25 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return $container;
     }
 
+    public function warmUp(string $cacheDir, string|null $buildDir = null): array
+    {
+        // If the cache and build directories differ, Symfony runs the cache warmers
+        // inside initializeContainer() before this kernel can set the synthetic
+        // services, so they need to be set here already
+        $this->setSyntheticServices();
+
+        return [];
+    }
+
     protected function initializeContainer(): void
     {
         parent::initializeContainer();
 
+        $this->setSyntheticServices();
+    }
+
+    private function setSyntheticServices(): void
+    {
         $container = $this->getContainer();
 
         // Set the plugin loader again, so it is available at runtime (synthetic service)

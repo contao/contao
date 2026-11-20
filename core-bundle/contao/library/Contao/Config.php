@@ -143,7 +143,7 @@ class Config
 			static::preload();
 		}
 
-		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.build_dir');
 
 		if (file_exists($strCacheDir . '/contao/config/config.php'))
 		{
