@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\HttpKernel;
 
 use AppBundle\AppBundle;
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\BundleLoader;
@@ -66,6 +67,14 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->addBundlesFromPlugins($bundles);
 
         return $bundles;
+    }
+
+    protected function initializeBundles(): void
+    {
+        parent::initializeBundles();
+
+        /** @phpstan-ignore-next-line bundleClasses is private in the trait, but setting it here seems to work anyway */
+        $this->bundleClasses = array_filter($this->bundleClasses ?? [], static fn (string $className) => ContaoModuleBundle::class !== $className);
     }
 
     public function getProjectDir(): string
