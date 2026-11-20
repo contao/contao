@@ -556,6 +556,24 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         $attributes->remove($name, 'value');
     }
 
+    public function testDoesNotOutputEmptyAttributes(): void
+    {
+        $attributes = $this->createAttributes();
+        $attributes->add('data-controller', '');
+        $attributes->add('srcset', []);
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->add('data-controller', 'foo');
+        $attributes->add('srcset', ['image.jpeg 1x']);
+        $attributes->remove('data-controller', ['foo']);
+        $attributes->remove('srcset', 'image.jpeg 1x');
+
+        $this->assertSame('', $attributes->toString());
+
+        $this->assertSameAttributes(['data-controller' => false, 'srcset' => false], $attributes);
+    }
+
     public function testAddsAttributesConditionally(): void
     {
         $attributes = $this->createAttributes(['data-controller' => 'first']);
