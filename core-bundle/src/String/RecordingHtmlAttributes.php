@@ -78,6 +78,28 @@ class RecordingHtmlAttributes extends HtmlAttributes
         return $this->record(__FUNCTION__, [$name, self::capture($value)]);
     }
 
+    public function add(string $name, \Stringable|array|float|int|string|null $values = null, mixed $condition = true, string|null $separator = null): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        $this->validateAttributeName($name);
+
+        return $this->record(__FUNCTION__, [$name, self::capture($values), true, $separator]);
+    }
+
+    public function remove(string $name, \Stringable|array|float|int|string|null $values = null, mixed $condition = true, string|null $separator = null): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        $this->validateAttributeName($name);
+
+        return $this->record(__FUNCTION__, [$name, self::capture($values), true, $separator]);
+    }
+
     public function setIfExists(string $name, \Stringable|bool|float|int|string|null $value): self
     {
         $value = $value instanceof \Stringable ? (string) $value : $value;

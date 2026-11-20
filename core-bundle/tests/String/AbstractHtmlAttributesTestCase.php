@@ -372,6 +372,243 @@ abstract class AbstractHtmlAttributesTestCase extends TestCase
         yield 'includes a space' => ['f oo'];
     }
 
+    public function testAddsAttributesUsingTheirSyntax(): void
+    {
+        $attributes = $this->createAttributes();
+
+        $this->assertSame($attributes, $attributes->add('DATA-CONTROLLER', 'contao--collection'));
+
+        $attributes->add('data-controller', 'contao--fragment');
+        $attributes->add('CLASS', 'foo bar')->add('class', 'bar baz');
+        $attributes->add('STYLE', 'color: red; display: block')->add('style', 'color: blue');
+        $attributes->add('ACCEPT', 'image/png')->add('accept', 'image/jpeg');
+        $attributes->add('EXPORTPARTS', 'part1')->add('exportparts', 'part2:exposed');
+        $attributes->add('IMAGESIZES', 'auto')->add('imagesizes', '100vw');
+        $attributes->add('IMAGESRCSET', 'image.png 100w')->add('imagesrcset', 'image.jpeg 1x');
+        $attributes->add('MEDIA', 'screen and (min-width: 30em)')->add('media', 'print');
+        $attributes->add('SIZES', 'auto')->add('sizes', '100vw');
+        $attributes->add('SRCSET', 'image.png 100w')->add('srcset', 'image.jpeg 1x');
+        $attributes->add('ALLOW', "geolocation 'self'")->add('allow', "fullscreen 'none'");
+        $attributes->add('CSP', "default-src 'self'")->add('csp', "img-src 'self' example.com");
+        $attributes->add('COORDS', '0,0')->add('coords', '100,100');
+        $attributes->add('data-foo', 'bar')->add('data-foo', 'baz', true, ' << >> ');
+        $attributes->add('data-bar', 'foo')->add('data-bar', 'baz', true, '');
+
+        $this->assertSame(
+            [
+                'data-controller' => 'contao--collection contao--fragment',
+                'class' => 'foo bar baz',
+                'style' => 'color: blue; display: block;',
+                'accept' => 'image/png, image/jpeg',
+                'exportparts' => 'part1, part2:exposed',
+                'imagesizes' => 'auto, 100vw',
+                'imagesrcset' => 'image.png 100w, image.jpeg 1x',
+                'media' => 'screen and (min-width: 30em), print',
+                'sizes' => 'auto, 100vw',
+                'srcset' => 'image.png 100w, image.jpeg 1x',
+                'allow' => 'geolocation \'self\'; fullscreen \'none\'',
+                'csp' => 'default-src \'self\'; img-src \'self\' example.com',
+                'coords' => '0,0,100,100',
+                'data-foo' => 'bar << >> baz',
+                'data-bar' => 'foobaz',
+            ],
+            iterator_to_array($attributes),
+        );
+    }
+
+    #[DataProvider('provideListAttributeValues')]
+    public function testAddsAttributeValues(mixed $value, string|null $expected): void
+    {
+        $attributes = $this->createAttributes();
+        $attributes->add('foo', $value);
+
+        $this->assertSame($expected, $attributes['foo'] ?? null);
+    }
+
+    public static function provideListAttributeValues(): iterable
+    {
+        yield 'array' => [['foo', 'bar'], 'foo bar'];
+        yield 'empty array' => [[], null];
+
+        foreach (self::provideAttributeValues() as [$value, $expected]) {
+            if (!\is_bool($value)) {
+                yield [$value, '' === $expected ? null : $expected];
+            }
+        }
+    }
+
+    public function testIgnoresEmptyAndNonFiniteListValues(): void
+    {
+        $attributes = $this->createAttributes(['existing' => 'value']);
+
+        foreach (['add', 'remove'] as $method) {
+            foreach (['', [], null, INF, -INF, NAN, $this->toStringable('')] as $value) {
+                $this->assertSame($attributes, $attributes->$method('existing', $value));
+
+                $attributes->$method('missing', $value);
+            }
+
+            $attributes->$method('existing');
+            $attributes->$method('missing');
+        }
+
+        $this->assertSameAttributes(['existing' => 'value', 'missing' => false], $attributes);
+    }
+
+    public function testAppendsAfterZero(): void
+    {
+        $attributes = $this->createAttributes(['data-value' => '0']);
+        $attributes->add('data-value', 'next');
+
+        $this->assertSame('0 next', $attributes['data-value']);
+    }
+
+    public function testAddsArraysUsingAttributeSyntax(): void
+    {
+        $attributes = $this->createAttributes(['data-controller' => 'first', 'class' => 'foo', 'style' => 'color: red;', 'media' => 'screen']);
+        $attributes->add('data-controller', ['second', 'third']);
+        $attributes->add('class', ['foo', 'bar baz']);
+        $attributes->add('style', ['color' => 'blue', 'display' => 'block']);
+        $attributes->add('style', ['margin: 0', 'padding: 0']);
+        $attributes->add('media', ['print', 'screen and (min-width: 30em)']);
+
+        $this->assertSame(
+            [
+                'data-controller' => 'first second third',
+                'class' => 'foo bar baz',
+                'style' => 'color: blue; display: block; margin: 0; padding: 0;',
+                'media' => 'screen, print, screen and (min-width: 30em)',
+            ],
+            iterator_to_array($attributes),
+        );
+    }
+
+    #[DataProvider('provideListAttributeRemovals')]
+    public function testRemovesAttributeValues(string $name, string|null $initial, mixed $value, string|null $expected, string|null $separator = null): void
+    {
+        $attributes = $this->createAttributes(null === $initial ? [] : [strtolower($name) => $initial]);
+
+        $this->assertSame($attributes, $attributes->remove($name, $value, separator: $separator));
+        $this->assertSame($expected, $attributes[strtolower($name)] ?? null);
+    }
+
+    public static function provideListAttributeRemovals(): iterable
+    {
+        yield 'array' => ['data-controller', 'foo bar baz', ['foo', 'baz'], 'bar'];
+        yield 'array removes all items' => ['data-controller', 'foo bar', ['foo', 'bar'], null];
+        yield 'array class' => ['class', 'foo bar baz', ['foo', 'baz'], 'bar'];
+        yield 'array style properties' => ['style', 'color:red;display:block;margin:0', ['color', 'margin'], 'display: block;'];
+        yield 'array style declarations' => ['style', 'color:red;display:block', ['color' => 'blue'], 'display: block;'];
+        yield 'array media' => ['media', 'screen and (min-width: 30em), print, speech', ['screen and (min-width: 30em)', 'speech'], 'print'];
+        yield 'first item' => ['DATA-CONTROLLER', 'foo bar baz', 'foo', 'bar baz'];
+        yield 'middle item' => ['data-controller', 'foo bar baz', 'bar', 'foo baz'];
+        yield 'last item' => ['data-controller', 'foo bar baz', 'baz', 'foo bar'];
+        yield 'multiple items' => ['data-controller', 'foo bar baz', 'foo baz', 'bar'];
+        yield 'all items' => ['data-controller', 'foo bar', 'foo bar', null];
+        yield 'absent item' => ['data-controller', 'foo bar', 'baz', 'foo bar'];
+        yield 'absent attribute' => ['data-controller', null, 'foo', null];
+        yield 'whole items only' => ['data-controller', 'foobar foo barfoo', 'foo', 'foobar barfoo'];
+        yield 'duplicate items' => ['data-controller', 'foo foo bar foo', 'foo', 'bar'];
+        yield 'regular expression characters' => ['data-value', 'a/b (foo) a.b a+b', 'a/b (foo) a.b', 'a+b'];
+        yield 'integer' => ['data-value', '0 1 2', 0, '1 2'];
+        yield 'float' => ['data-value', '0.0000000001 1', 0.0000000001, '1'];
+        yield 'stringable' => [
+            'data-value',
+            'foo bar',
+            new class implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'foo';
+                }
+            },
+            'bar',
+        ];
+        yield 'class' => ['CLASS', 'foo bar baz', 'foo baz', 'bar'];
+        yield 'style' => ['STYLE', 'color: red; display: block;', 'color', 'display: block;'];
+        yield 'media' => ['MEDIA', 'screen and (min-width: 30em), print, speech', 'screen and (min-width: 30em), speech', 'print'];
+        yield 'media comma whitespace' => ['media', 'screen,print,  speech', 'print', 'screen,  speech'];
+        yield 'whitespace-sensitive separator' => ['data-foo', '|a|b| b |b | b|c| c |c | c|d|', 'c| b |b | b', '|a|b| c |c | c|d|', '|'];
+        yield 'whitespace-insensitive separator' => ['data-foo', '|a|b| b |b | b|c| c |c | c|d|', 'c| b |b | b', '|a|d|', ' | '];
+        yield 'multi-character separator' => ['data-foo', 'a-b--c--a---b--a-c-', 'a--b--c', 'a-b---a-c-', '--'];
+    }
+
+    public function testRemovesAttributesConditionally(): void
+    {
+        $attributes = $this->createAttributes(['data-controller' => 'first second']);
+        $attributes->remove('data-controller', 'first', $this->toStringable(''));
+        $attributes->remove('invalid name', 'first', false);
+        $attributes->remove('data-controller', ['first', 'second'], false);
+
+        $this->assertSame('first second', $attributes['data-controller']);
+
+        $attributes->remove('data-controller', 'first', $this->toStringable('1'));
+
+        $this->assertSame('second', $attributes['data-controller']);
+    }
+
+    #[DataProvider('provideInvalidAttributeNames')]
+    public function testRejectsInvalidAttributeNamesWhenRemoving(string $name): void
+    {
+        $attributes = $this->createAttributes();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $attributes->remove($name, 'value');
+    }
+
+    public function testDoesNotOutputEmptyAttributes(): void
+    {
+        $attributes = $this->createAttributes();
+        $attributes->add('data-controller', '');
+        $attributes->add('srcset', []);
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->add('data-controller', 'foo');
+        $attributes->add('srcset', ['image.jpeg 1x']);
+        $attributes->remove('data-controller', ['foo']);
+        $attributes->remove('srcset', 'image.jpeg 1x');
+
+        $this->assertSame('', $attributes->toString());
+
+        $this->assertSameAttributes(['data-controller' => false, 'srcset' => false], $attributes);
+    }
+
+    public function testAddsAttributesConditionally(): void
+    {
+        $attributes = $this->createAttributes(['data-controller' => 'first']);
+        $attributes->add('data-controller', 'skipped', $this->toStringable(''));
+        $attributes->add('invalid name', 'skipped', false);
+        $attributes->add('data-controller', ['skipped', 'also-skipped'], false);
+        $attributes->add('data-controller', 'second', $this->toStringable('1'));
+
+        $this->assertSame('first second', $attributes['data-controller']);
+    }
+
+    public function testAppendsAttributeTextWithoutNormalizingIt(): void
+    {
+        $attributes = $this->createAttributes(['data-value' => 'first  second']);
+        $attributes->add('data-value', "second\tthird")->add('data-value', 0);
+
+        $this->assertSame("first  second second\tthird 0", $attributes['data-value']);
+
+        $attributes->add('data-value', '');
+        $attributes->add('data-value', null);
+        $attributes->add('data-value');
+
+        $this->assertSame("first  second second\tthird 0", $attributes['data-value']);
+    }
+
+    #[DataProvider('provideInvalidAttributeNames')]
+    public function testRejectsInvalidAttributeNamesWhenAdding(string $name): void
+    {
+        $attributes = $this->createAttributes();
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $attributes->add($name, 'value');
+    }
+
     public function testSetAndUnsetProperties(): void
     {
         $attributes = $this->createAttributes();
