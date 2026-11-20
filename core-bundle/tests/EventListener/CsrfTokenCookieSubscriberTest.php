@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use PHPUnit\Framework\TestCase;
@@ -102,6 +103,32 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertTrue($cookie->isSecure());
         $this->assertSame('lax', $cookie->getSameSite());
+    }
+
+    public function testDoesNotAddTheTokenCookiesToTheResponseIfSecFetchSiteHeaderIsPresent(): void
+    {
+        // Backwards compatibility: activate this once support for the rt= query
+        // parameter was removed
+        if (version_compare(ContaoCoreBundle::getVersion(), '7.0.0', '<')) {
+            $this->markTestSkipped();
+        }
+
+        $request = Request::create('https://foobar.com');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->headers->set('Sec-Fetch-Site', 'none');
+
+        $tokenStorage = $this->createMock(MemoryTokenStorage::class);
+        $tokenStorage
+            ->expects($this->never())
+            ->method('getUsedTokens')
+        ;
+
+        $response = new Response();
+
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertCount(0, $response->headers->getCookies());
     }
 
     public function testDoesNotAddTheTokenCookiesToTheResponseIfAllCookiesAreDeleted(): void

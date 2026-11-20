@@ -85,6 +85,10 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
             return true;
         }
 
+        if ($request && 'GET' === $request->getRealMethod()) {
+            trigger_deprecation('contao/core-bundle', '6.1', 'Validating CSRF tokens on GET requests is deprecated and will no longer work in Contao 7. Use a POST request instead.');
+        }
+
         return parent::isTokenValid($token);
     }
 
@@ -94,16 +98,18 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
      */
     public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
     {
+        // Modern browsers on HTTPS sites do not need a cookie for the CSRF check
+        if ('same-origin' === $request->headers->get('Sec-Fetch-Site')) {
+            return true;
+        }
+
         return
             !$request->getUserInfo()
             && (
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
             )
-            && (
-                'same-origin' === $request->headers->get('Sec-Fetch-Site')
-                || $request->getSchemeAndHttpHost() === $request->headers->get('Origin')
-            )
+            && str_starts_with($request->headers->get('Origin', $request->headers->get('Referer')).'/', $request->getSchemeAndHttpHost().'/')
             && $this->isSessionEmpty($request);
     }
 

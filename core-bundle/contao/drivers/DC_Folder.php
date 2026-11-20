@@ -152,6 +152,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSession = $container->get('request_stack')->getSession();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
+		if ((!$request || $request->isMethodSafe()) && !\in_array(Input::get('act'), array(null, 'edit', 'source', 'show', 'select'), true))
+		{
+			trigger_deprecation('contao/core-bundle', '6.1', 'Using act=%s on GET requests is deprecated and will no longer work in Contao 7. Use a POST request instead.', Input::get('act'));
+		}
+
 		// Check the request token (see #4007)
 		if ((!$request || $request->isMethodSafe()) && !\in_array(Input::get('act'), array(null, 'edit', 'source', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
 		{

@@ -97,6 +97,9 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
     private function requiresCsrf(Request $request, Response $response): bool
     {
+        // Backwards compatibility: activate this once support for the rt= query
+        // parameter was removed: if ($request->headers->has('Sec-Fetch-Site')) { return
+        // false; }
         $requestCookies = $request->cookies->all();
         $responseCookies = $response->headers->getCookies(ResponseHeaderBag::COOKIES_FLAT);
 
