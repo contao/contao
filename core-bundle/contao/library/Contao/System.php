@@ -461,7 +461,7 @@ abstract class System
 				}
 				catch (\InvalidArgumentException)
 				{
-					continue;
+					$finder = array();
 				}
 
 				foreach ($finder as $file)
