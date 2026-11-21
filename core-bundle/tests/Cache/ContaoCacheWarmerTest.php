@@ -215,9 +215,18 @@ class ContaoCacheWarmerTest extends TestCase
         $warmer = $this->getCacheWarmer(translator: $translator);
         $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
 
-        $this->assertStringContainsString(
-            "\n\$GLOBALS['TL_LANG']['MSC']['goBack'] = 'Foobar';",
-            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php')),
+        $buffer = "// START of translation domain \"contao_default\"\n";
+        $buffer .= "\$GLOBALS['TL_LANG']['MSC']['goBack'] = 'Foobar';\n";
+        $buffer .= "// END of translation domain \"contao_default\"\n";
+
+        $contents = file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en/default.php'));
+
+        $this->assertStringEndsWith("\n".$buffer, $contents);
+        $this->assertStringContainsString("\$GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first source';", $contents);
+
+        $this->assertSame(
+            "<?php\n\n".$buffer,
+            file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/languages/en-US/default.php')),
         );
     }
 
