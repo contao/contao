@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model;
 use Contao\PageModel;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\MappingException as OrmMappingException;
 use Doctrine\Persistence\Mapping\MappingException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -67,14 +68,15 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
         }
 
         try {
-            [$target, $targetContent] = $this->resolveContent($content) + [null, null];
+            $visited = [];
+            [$target, $targetContent] = $this->resolveContent($visited, $content) + [null, null];
 
             if (\is_string($target)) {
                 return $this->urlCache[$cacheKey] = $target;
             }
 
             if (!$target instanceof PageModel) {
-                $this->throwRouteNotFoundException($target);
+                $this->throwRouteNotFoundException($this->getRouteKey($target));
             }
 
             $route = $this->pageRegistry->getRoute($target);
@@ -142,12 +144,24 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     }
 
     /**
+     * @param array<string, object> $visited
+     *
      * @throws RouteNotFoundException
      */
-    private function resolveContent(object ...$contents): array
+    private function resolveContent(array &$visited, object ...$contents): array
     {
+        $content = $contents[0];
+        $key = $this->getRouteKey($content);
+
+        if (isset($visited[$key])) {
+            throw new RouteNotFoundException(\sprintf('Circular reference while generating the URL for "%s".', $key));
+        }
+
+        // Keep the object alive so that its object ID cannot be reused
+        $visited[$key] = $content;
+
         foreach ($this->urlResolvers as $resolver) {
-            $result = $resolver->resolve($contents[0]);
+            $result = $resolver->resolve($content);
 
             if (!$result) {
                 continue;
@@ -158,40 +172,70 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
             }
 
             if ($result->isRedirect()) {
-                return $this->resolveContent($result->content);
+                return $this->resolveContent($visited, $result->content);
             }
 
-            return $this->resolveContent($result->content, ...$contents);
+            return $this->resolveContent($visited, $result->content, ...$contents);
         }
 
-        if ($contents[0] instanceof PageModel) {
+        if ($content instanceof PageModel) {
             return $contents;
         }
 
-        $this->throwRouteNotFoundException($contents[0]);
+        $this->throwRouteNotFoundException($key);
     }
 
     private function getRouteKey(object $content): string
     {
-        if (is_subclass_of($content, Model::class)) {
-            return \sprintf('%s.%s', $content::getTable(), $content->{$content::getPk()});
+        if ($content instanceof Model) {
+            $identifier = $content->{$content::getPk()};
+            $key = null !== $identifier ? \sprintf('%s.%s', $content::getTable(), $identifier) : null;
+        } else {
+            // If the content is a Doctrine ORM entity, try using its identifier
+            $key = $this->getEntityRouteKey($content);
         }
 
-        // If the content is a Doctrine ORM entity, try using its identifier
+        return $key ?? $content::class.'->'.spl_object_id($content);
+    }
+
+    private function getEntityRouteKey(object $content): string|null
+    {
         try {
             $metadata = $this->entityManager->getClassMetadata($content::class);
-        } catch (MappingException) {
+        } catch (MappingException|OrmMappingException) {
             $metadata = null;
         }
 
-        if (null === $metadata) {
-            return $content::class.'->'.spl_object_id($content);
+        $fields = $metadata?->getIdentifierFieldNames();
+
+        if (!$fields) {
+            return null;
         }
 
-        $identifier = $this->entityManager
-            ->getUnitOfWork()
-            ->getSingleIdentifierValue($content)
-        ;
+        $unitOfWork = $this->entityManager->getUnitOfWork();
+        $identifiers = $unitOfWork->isInIdentityMap($content) ? $unitOfWork->getEntityIdentifier($content) : $metadata->getIdentifierValues($content);
+
+        $parts = [];
+
+        foreach ($fields as $field) {
+            $value = $identifiers[$field] ?? null;
+
+            if (\is_object($value) && $metadata->hasAssociation($field)) {
+                $value = $unitOfWork->getSingleIdentifierValue($value);
+            }
+
+            if (!\is_scalar($value) && !$value instanceof \Stringable) {
+                return null;
+            }
+
+            $parts[$field] = (string) $value;
+        }
+
+        // A key like "record=7&locale=en" shows which record caused the error, even if a
+        // value contains "&" or "=". Query encoding escapes those characters. A hash
+        // would hide the values, and serialize() would add PHP type information and thus
+        // make error messages less readable for humans
+        $identifier = 1 === \count($parts) ? reset($parts) : http_build_query($parts, '', '&', PHP_QUERY_RFC3986);
 
         return \sprintf('%s.%s', $metadata->getTableName(), $identifier);
     }
@@ -199,8 +243,8 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
     /**
      * @throws RouteNotFoundException
      */
-    private function throwRouteNotFoundException(object $content): never
+    private function throwRouteNotFoundException(string $key): never
     {
-        throw new RouteNotFoundException('No route for content: '.$this->getRouteKey($content));
+        throw new RouteNotFoundException('No route for content: '.$key);
     }
 }
