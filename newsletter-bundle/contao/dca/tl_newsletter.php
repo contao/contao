@@ -27,6 +27,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_newsletter_channel',
+		'ctable'                      => array('tl_newsletter_failures'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'subject',
 		'sql' => array
@@ -86,6 +87,11 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			(
 				'href'                => 'key=send',
 				'icon'                => 'bundles/contaonewsletter/send.svg'
+			),
+			'failures' => array
+			(
+				'href'                => 'table=tl_newsletter_failures',
+				'icon'                => 'bundles/contaonewsletter/failures.svg'
 			)
 		)
 	),

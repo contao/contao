@@ -13,6 +13,16 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_newsletter.listener.newsletter_failure:
+        class: Contao\NewsletterBundle\EventListener\NewsletterFailureListener
+        arguments:
+            - '@contao_newsletter.mailer.newsletter_failure_manager'
+
+    contao_newsletter.listener.newsletter_failures_operation:
+        class: Contao\NewsletterBundle\EventListener\NewsletterFailuresOperationListener
+        arguments:
+            - '@database_connection'
+
     contao_newsletter.listener.newsletter_recipients_edit_buttons:
         class: Contao\NewsletterBundle\EventListener\NewsletterRecipientsEditButtonsListener
 
@@ -22,6 +32,12 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_newsletter.mailer.newsletter_failure_manager:
+        class: Contao\NewsletterBundle\Mailer\NewsletterFailureManager
+        public: true
+        arguments:
+            - '@database_connection'
 
     contao_newsletter.routing.newsletter_resolver:
         class: Contao\NewsletterBundle\Routing\NewsletterResolver
@@ -37,6 +53,12 @@ services:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_failures_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterFailuresAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao_newsletter.security.newsletter_recipients_access_voter:
         class: Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter
