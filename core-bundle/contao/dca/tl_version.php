@@ -40,47 +40,47 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'version' => array
 		(
-			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>1)
+			'sql'                     => array('type' => 'smallint', 'unsigned' => true, 'default' => 1)
 		),
 		'fromTable' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'userid' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'username' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
+			'sql'                     => array('type' => 'string', 'length' => 64, 'notnull' => false)
 		),
 		'description' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'editUrl' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'active' => array
 		(
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
 		(
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		)
 	)
 );

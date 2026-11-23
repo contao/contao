@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\InsertTag;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\Flag\StringUtilFlag;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
@@ -268,7 +269,49 @@ class InsertTagParserTest extends TestCase
         yield [
             OutputType::url,
             '/foo?bar={{type::html::<b>baz&amp;foo</b>}}',
-            '/foo?bar=%3Cb%3Ebaz%26amp%3Bfoo%3C%2Fb%3E',
+            '/foo?bar=%3Cb%3Ebaz%26foo%3C%2Fb%3E',
+        ];
+
+        yield [
+            OutputType::url,
+            '{{type::html::/foo?bar=baz&amp;foo=bär€}}',
+            '/foo?bar=baz&foo=b%C3%A4r%E2%82%AC',
+        ];
+
+        yield [
+            OutputType::url,
+            'x={{type::html::/foo?bar=baz&amp;foo=bär€}}',
+            'x=%2Ffoo%3Fbar%3Dbaz%26foo%3Db%C3%A4r%E2%82%AC',
+        ];
+
+        yield [
+            OutputType::url,
+            '{{type::html::https&colon;//example.com/foo?bar=baz&amp;foo=bär€}}',
+            'https://example.com/foo?bar=baz&foo=b%C3%A4r%E2%82%AC',
+        ];
+
+        yield [
+            OutputType::url,
+            'mailto:foo?subject={{type::html::https&colon;//example.com/foo?bar=baz&amp;foo=bär€}}',
+            'mailto:foo?subject=https%3A%2F%2Fexample.com%2Ffoo%3Fbar%3Dbaz%26foo%3Db%C3%A4r%E2%82%AC',
+        ];
+
+        yield [
+            OutputType::url,
+            '{{type::html::javascript&colon;alert(1)}}',
+            'javascript%3Aalert%281%29',
+        ];
+
+        yield [
+            OutputType::url,
+            'mailto:{{type::html::test&#64;example.com}}',
+            'mailto:test@example.com',
+        ];
+
+        yield [
+            OutputType::url,
+            'https://trusted.example{{type::html::@evil.example.com/}}',
+            'https://trusted.example%40evil.example.com%2F',
         ];
 
         yield [
@@ -294,6 +337,27 @@ class InsertTagParserTest extends TestCase
             'content: "{{type::html::<div title="bar">baz</div>}}";',
             'content: "\3C div\20 title\3D \22 bar\22 \3E baz\3C \2F div\3E ";',
         ];
+    }
+
+    public function testAttributeFlagsPreserveEncodedEmailAddresses(): void
+    {
+        $parser = $this->getInsertTagParser();
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email_url', null, true, false));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'email', null, true, false));
+        $parser->addFlagCallback('attr', new StringUtilFlag(), 'attr');
+        $parser->addFlagCallback('urlattr', new StringUtilFlag(), 'urlattr');
+
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 6.0: Using the email_url insert tag to encode the email address is deprecated and will no longer work in Contao 7.');
+
+        $email = '&#105;&#x6E;&#102;&#x6F;&#64;&#x65;&#120;&#x61;&#109;&#x70;&#108;&#x65;&#46;&#x6F;&#114;&#x67;';
+
+        $this->assertSame($email, $parser->replaceInline('{{email_url::info@example.org|attr}}'));
+        $this->assertSame($email, $parser->replaceInline('{{email_url::info@example.org|urlattr}}'));
+
+        $this->assertSame(
+            '<iframe srcdoc="&lt;a href=&quot;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#116;&amp;#111;&amp;#58;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;&quot; class=&quot;email&quot;&gt;&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;&lt;/a&gt;">',
+            $parser->replaceInline('<iframe srcdoc="{{email::<script>alert(1)</script>|attr}}">'),
+        );
     }
 
     public function testNestedInsertTags(): void

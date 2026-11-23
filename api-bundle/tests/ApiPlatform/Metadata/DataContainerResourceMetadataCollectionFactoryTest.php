@@ -25,6 +25,9 @@ use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInter
 use ApiPlatform\Metadata\Resource\Factory\ResourceNameCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use ApiPlatform\Metadata\Resource\ResourceNameCollection;
+use ApiPlatform\State\Exception\ParameterNotSupportedException;
+use ApiPlatform\State\Pagination\PaginationOptions;
+use ApiPlatform\State\Provider\ParameterProvider;
 use ApiPlatform\Symfony\Routing\ApiLoader;
 use Contao\ApiBundle\ApiPlatform\Metadata\DataContainerResourceMetadataCollectionFactory;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
@@ -42,6 +45,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -261,6 +265,87 @@ final class DataContainerResourceMetadataCollectionFactoryTest extends ContaoTes
         $match = new UrlMatcher($routes, new RequestContext())->match('/dc/article/3/content/4/content/5/content');
         $this->assertSame('contao_api_dc_article_content_nested_get_collection', $match['_route']);
         $this->assertSame('4/content/5', $match['nested']);
+    }
+
+    public function testRejectsQueryParametersTheOperationsDoNotDeclare(): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table): void {
+                    $GLOBALS['TL_DCA'][$table] = [
+                        'config' => ['dataContainer' => DC_Table::class, 'ctable' => ['tl_content']],
+                        'fields' => ['id' => [], 'pid' => []],
+                    ];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_article', 'tl_content']),
+        );
+
+        $operations = [];
+
+        foreach ($factory->create(DataContainerRecord::class) as $resource) {
+            $operations += iterator_to_array($resource->getOperations());
+        }
+
+        $this->assertArrayHasKey('contao_api_dc_article_content_nested_move', $operations);
+
+        foreach ($operations as $name => $operation) {
+            $parameters = array_keys(iterator_to_array($operation->getParameters() ?? []));
+
+            $this->assertTrue($operation->getStrictQueryParameterValidation(), $name);
+            $this->assertSame($operation instanceof GetCollection ? ['sort'] : [], $parameters, $name);
+        }
+    }
+
+    public function testPassesTheParameterProviderWithoutQueryParameters(): void
+    {
+        $adapter = $this->createAdapterStub(['loadDataContainer']);
+        $adapter
+            ->method('loadDataContainer')
+            ->willReturnCallback(
+                static function (string $table): void {
+                    $GLOBALS['TL_DCA'][$table] = [
+                        'config' => ['dataContainer' => DC_Table::class],
+                        'fields' => ['id' => [], 'pid' => []],
+                    ];
+                },
+            )
+        ;
+
+        $factory = new DataContainerResourceMetadataCollectionFactory(
+            $this->createStub(ResourceMetadataCollectionFactoryInterface::class),
+            $this->createContaoFrameworkStub([Controller::class => $adapter, Config::class => $this->createConfigAdapter()]),
+            $this->createResourceFinder(['tl_content']),
+        );
+
+        $provider = new ParameterProvider(paginationOptions: new PaginationOptions(clientItemsPerPage: true));
+        $operations = iterator_to_array($factory->create(DataContainerRecord::class)[0]->getOperations());
+
+        set_error_handler(static fn (int $severity, string $message): never => throw new \ErrorException($message, 0, $severity));
+
+        try {
+            foreach ($operations as $name => $operation) {
+                $this->assertNull($provider->provide($operation, [], ['request' => Request::create('/')]), $name);
+
+                try {
+                    $provider->provide($operation, [], ['request' => Request::create('/?pid=1')]);
+
+                    $this->fail($name.' accepted an unknown query parameter.');
+                } catch (ParameterNotSupportedException) {
+                }
+            }
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertArrayHasKey('contao_api_dc_content_patch', $operations);
     }
 
     #[DataProvider('provideCreationConfigurations')]

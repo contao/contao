@@ -92,11 +92,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'firstname' => array
 		(
@@ -104,8 +104,8 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50', 'autocomplete'=>'given-name'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'feEditable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50', 'autocomplete' => 'given-name'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'lastname' => array
 		(
@@ -113,22 +113,22 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_BOTH,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50', 'autocomplete'=>'family-name'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'feEditable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50', 'autocomplete' => 'family-name'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'dateOfBirth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25 wizard', 'autocomplete'=>'bday'),
-			'sql'                     => array('type'=>'string', 'length'=>11, 'default'=>'')
+			'eval'                    => array('rgxp' => 'date', 'datepicker' => true, 'feEditable' => true, 'feGroup' => 'personal', 'tl_class' => 'w25 wizard', 'autocomplete' => 'bday'),
+			'sql'                     => array('type' => 'string', 'length' => 11, 'default' => '')
 		),
 		'gender' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('male', 'female', 'other'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('includeBlankOption'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w25', 'autocomplete'=>'sex'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('includeBlankOption' => true, 'feEditable' => true, 'feGroup' => 'personal', 'tl_class' => 'w25', 'autocomplete' => 'sex'),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'company' => array
 		(
@@ -136,105 +136,105 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'organization'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'organization'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'street' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'street-address'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'street-address'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'postal' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>32, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'postal-code'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('maxlength' => 32, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'postal-code'),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'city' => array
 		(
 			'search'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'address-level2'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'address-level2'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'state' => array
 		(
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'address-level1'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'address-level1'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'country' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50', 'autocomplete'=>'country'),
+			'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'feEditable' => true, 'feGroup' => 'address', 'tl_class' => 'w50', 'autocomplete' => 'country'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
-			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 6, 'default' => '')
 		),
 		'phone' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50', 'autocomplete'=>'tel'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'rgxp' => 'phone', 'feEditable' => true, 'feGroup' => 'contact', 'tl_class' => 'w50', 'autocomplete' => 'tel'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'mobile' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50', 'autocomplete'=>'mobile'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'rgxp' => 'phone', 'feEditable' => true, 'feGroup' => 'contact', 'tl_class' => 'w50', 'autocomplete' => 'mobile'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'fax' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50', 'autocomplete'=>'fax'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'rgxp' => 'phone', 'feEditable' => true, 'feGroup' => 'contact', 'tl_class' => 'w50', 'autocomplete' => 'fax'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'email' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'unique'=>true, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50', 'autocomplete'=>'email'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'rgxp' => 'email', 'unique' => true, 'feEditable' => true, 'feGroup' => 'contact', 'tl_class' => 'w50', 'autocomplete' => 'email'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>255, 'feEditable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50', 'autocomplete'=>'url'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('rgxp' => HttpUrlListener::RGXP_NAME, 'maxlength' => 255, 'feEditable' => true, 'feGroup' => 'contact', 'tl_class' => 'w50', 'autocomplete' => 'url'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'language' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50', 'autocomplete'=>'language'),
+			'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'feEditable' => true, 'feGroup' => 'personal', 'tl_class' => 'w50', 'autocomplete' => 'language'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLanguages(),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'groups' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('multiple'=>true, 'feEditable'=>true, 'feGroup'=>'login'),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'belongsToMany', 'load'=>'lazy')
+			'eval'                    => array('multiple' => true, 'feEditable' => true, 'feGroup' => 'login'),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'belongsToMany', 'load' => 'lazy')
 		),
 		'login' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'username' => array
 		(
@@ -242,50 +242,50 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false, 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'eval'                    => array('mandatory' => true, 'unique' => true, 'rgxp' => 'extnd', 'nospace' => true, 'maxlength' => 64, 'feEditable' => true, 'feGroup' => 'login', 'tl_class' => 'w50', 'autocapitalize' => 'off', 'autocomplete' => 'username'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'notnull' => false, 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'password' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory' => true, 'minlength' => Config::get('minPasswordLength'), 'feEditable' => true, 'feGroup' => 'login', 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_member', 'setNewPassword')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'assignDir' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'homeDir' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('fieldType' => 'radio', 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'disable' => array
 		(
 			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'dateAdded' => array
 		(
@@ -293,47 +293,47 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'default'                 => time(),
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'lastLogin' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['lastLogin'],
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'currentLogin' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['currentLogin'],
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'session' => array
 		(
-			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'secret' => array
 		(
-			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'binary', 'length'=>128, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'binary', 'length' => 128, 'fixed' => true, 'notnull' => false)
 		),
 		'useTwoFactor' => array
 		(
-			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('isBoolean' => true, 'doNotCopy' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'backupCodes' => array
 		(
-			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('doNotCopy' => true, 'doNotShow' => true),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'trustedTokenVersion' => array
 		(
-			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('doNotCopy' => true, 'doNotShow' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		)
 	)
 );
