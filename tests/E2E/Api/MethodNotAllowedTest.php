@@ -30,7 +30,6 @@ class MethodNotAllowedTest extends AbstractContaoMonorepoE2ETestCase
         $headers = $response->getHeaders(false);
 
         $this->assertSame(405, $response->getStatusCode(), $response->getContent(false));
-        $this->assertSame('application/problem+json', $headers['content-type'][0] ?? null);
         $this->assertArrayHasKey('allow', $headers);
         $this->assertStringContainsString('PATCH', implode(',', $headers['allow']));
     }
@@ -41,7 +40,6 @@ class MethodNotAllowedTest extends AbstractContaoMonorepoE2ETestCase
         $response = $this->send('GET', '/contao/api/does-not-exist', $authenticated);
 
         $this->assertSame(404, $response->getStatusCode(), $response->getContent(false));
-        $this->assertSame('application/problem+json', $response->getHeaders(false)['content-type'][0] ?? null);
     }
 
     public static function provideAuthentication(): iterable

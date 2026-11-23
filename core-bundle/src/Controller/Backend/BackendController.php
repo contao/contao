@@ -164,7 +164,7 @@ class BackendController extends AbstractController
         return new RedirectResponse($picker->getCurrentUrl());
     }
 
-    #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], priority: -1000)]
+    #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '(?!api(?:/|$)).*'], priority: -1000)]
     public function backendFallback(): Response
     {
         // Backwards compatibility: render the legacy bundle template if it exists

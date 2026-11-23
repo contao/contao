@@ -35,6 +35,7 @@ class Route404ProviderTest extends TestCase
             $this->createContaoFrameworkStub(),
             $this->createStub(Candidates::class),
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $this->expectException(RouteNotFoundException::class);
@@ -56,6 +57,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $this->createStub(Candidates::class),
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $result = $provider->getRoutesByNames(['foo']);
@@ -107,6 +109,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $pageRegistry,
+            '/contao',
         );
 
         $routes = $provider->getRoutesByNames();
@@ -146,6 +149,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
@@ -176,6 +180,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
@@ -208,6 +213,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -218,7 +224,7 @@ class Route404ProviderTest extends TestCase
         $route = $routes['tl_page.17.error_404'];
 
         $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('.*', $route->getRequirement('_url_fragment'));
+        $this->assertSame('(?!contao/api(?:/|$)).*', $route->getRequirement('_url_fragment'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame('example.com', $route->getHost());
         $this->assertSame(['https'], $route->getSchemes());
@@ -253,6 +259,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -263,7 +270,7 @@ class Route404ProviderTest extends TestCase
 
         $route = $routes['tl_page.17.error_404'];
         $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('.*', $route->getRequirement('_url_fragment'));
+        $this->assertSame('(?!contao/api(?:/|$)).*', $route->getRequirement('_url_fragment'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame('example.com', $route->getHost());
         $this->assertSame(['https'], $route->getSchemes());
@@ -311,6 +318,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $candidates,
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -384,6 +392,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $this->createStub(Candidates::class),
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
@@ -419,6 +428,7 @@ class Route404ProviderTest extends TestCase
             $framework,
             $this->createStub(Candidates::class),
             $this->createStub(PageRegistry::class),
+            '/contao',
         );
 
         $routes = $provider->getRouteCollectionForRequest($request)->all();
