@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'uploader' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array(DropZone::class=>'DropZone', FileUpload::class=>'FileUpload'),
+			'options'                 => array(DropZone::class => 'DropZone', FileUpload::class => 'FileUpload'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('tl_class' => 'w50 clr'),
 			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
