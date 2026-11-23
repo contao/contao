@@ -161,13 +161,19 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                         continue;
                     }
 
+                    $buffer = "// START of translation domain \"$domain\"\n";
+                    $buffer .= $php;
+                    $buffer .= "// END of translation domain \"$domain\"\n";
+
+                    unset($php);
+
                     $name = substr($domain, 7);
                     $path = Path::join($cacheDir, 'contao', 'languages', $language, $name.'.php');
 
                     if (isset($processed[$language][$name])) {
-                        $this->filesystem->appendToFile($path, "\n".$php);
+                        $this->filesystem->appendToFile($path, "\n".$buffer);
                     } else {
-                        $this->filesystem->dumpFile($path, "<?php\n\n".$php);
+                        $this->filesystem->dumpFile($path, "<?php\n\n".$buffer);
                     }
 
                     // Add Contao translations that only exist as Symfony translations for the

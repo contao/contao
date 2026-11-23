@@ -160,45 +160,45 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'uuid' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['fileUuid'],
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'type' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 16, 'default' => '')
 		),
 		'path' => array
 		(
-			'eval'                    => array('unique'=>true, 'versionize'=>false),
-			'sql'                     => array('type'=>'string', 'length'=>1022, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin')),
+			'eval'                    => array('unique' => true, 'versionize' => false),
+			'sql'                     => array('type' => 'string', 'length' => 1022, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin')),
 		),
 		'extension' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 16, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'hash' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'lastModified' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'notnull'=>false)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'notnull' => false)
 		),
 		'found' => array
 		(
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'preview' => array
 		(
@@ -208,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory' => true, 'versionize' => false, 'maxlength' => 255, 'tl_class' => 'w50'),
 			'load_callback' => array
 			(
 				array('tl_files', 'addFileLocation')
@@ -217,57 +217,57 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				array('tl_files', 'checkFilename')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'protected' => array
 		(
 			'input_field_callback'    => array('tl_files', 'protectFolder'),
-			'eval'                    => array('tl_class'=>'w50 clr')
+			'eval'                    => array('tl_class' => 'w50 clr')
 		),
 		'syncExclude' => array
 		(
 			'input_field_callback'    => array('tl_files', 'excludeFolder'),
-			'eval'                    => array('tl_class'=>'w50')
+			'eval'                    => array('tl_class' => 'w50')
 		),
 		'importantPartX' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-important-part-field'=>'x'),
-			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50 clr', 'data-controller' => 'contao--input', 'data-important-part-field' => 'x'),
+			'sql'                     => array('type' => 'float', 'unsigned' => true, 'default' => '0')
 		),
 		'importantPartY' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-important-part-field'=>'y'),
-			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50', 'data-controller' => 'contao--input', 'data-important-part-field' => 'y'),
+			'sql'                     => array('type' => 'float', 'unsigned' => true, 'default' => '0')
 		),
 		'importantPartWidth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr', 'data-controller'=>'contao--input', 'data-important-part-field'=>'width'),
-			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50 clr', 'data-controller' => 'contao--input', 'data-important-part-field' => 'width'),
+			'sql'                     => array('type' => 'float', 'unsigned' => true, 'default' => '0')
 		),
 		'importantPartHeight' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50', 'data-controller'=>'contao--input', 'data-important-part-field'=>'height'),
-			'sql'                     => array('type'=>'float', 'unsigned'=>true, 'default'=>'0')
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50', 'data-controller' => 'contao--input', 'data-important-part-field' => 'height'),
+			'sql'                     => array('type' => 'float', 'unsigned' => true, 'default' => '0')
 		),
 		'textTrackLanguage' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('mandatory' => true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory' => true, 'includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50 clr'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'textTrackType' => array
 		(
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption' => true, 'tl_class' => 'w50'),
 			'options_callback'        => static fn () => array_map(static fn ($case) => $case->name, TextTrackType::cases()),
-			'sql'                     => array('type'=>'string', 'length'=>12, 'notnull'=>false)
+			'sql'                     => array('type' => 'string', 'length' => 12, 'notnull' => false)
 		),
 		'meta' => array
 		(
@@ -279,8 +279,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				(
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
-					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
-					'caption'         => array('type'=>'textarea', 'basicEntities'=>true, 'allowHtml' => true),
+					'link'            => array('attributes' => 'maxlength="2048"', 'dcaPicker' => true),
+					'caption'         => array('type' => 'textarea', 'basicEntities' => true, 'allowHtml' => true),
 					'license'         => array(
 						'attributes'  => 'maxlength="255"',
 						'dcaPicker'   => true,
@@ -289,7 +289,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					)
 				)
 			),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		)
 	)
 );

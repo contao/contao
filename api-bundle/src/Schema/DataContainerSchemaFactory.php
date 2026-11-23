@@ -268,7 +268,7 @@ final class DataContainerSchemaFactory
             $schema += $this->createStringSchema($config, $sql);
         }
 
-        if ($choices = $this->normalizeChoices($config['options'] ?? null)) {
+        if ('boolean' !== ($schema['type'] ?? null) && $choices = $this->normalizeChoices($config, $schema['type'] ?? null)) {
             $schema['enum'] = $choices;
         }
 
@@ -280,6 +280,14 @@ final class DataContainerSchemaFactory
             $schema['default'] = 'date-time' === ($schema['format'] ?? null)
                 ? ($sql['default'] ? date(\DateTimeInterface::ATOM, (int) $sql['default']) : null)
                 : $sql['default'];
+        }
+
+        if (false === ($sql['notnull'] ?? true) && !($eval['multiple'] ?? false) && \is_string($schema['type'] ?? null)) {
+            $schema['type'] = [$schema['type'], 'null'];
+
+            if (isset($schema['enum'])) {
+                $schema['enum'][] = null;
+            }
         }
 
         return $schema;
@@ -346,24 +354,37 @@ final class DataContainerSchemaFactory
     /**
      * @return list<scalar>
      */
-    private function normalizeChoices(mixed $choices): array
+    private function normalizeChoices(array $config, mixed $type): array
     {
-        if (!\is_array($choices)) {
+        $options = $config['options'] ?? null;
+
+        if (!\is_array($options)) {
             return [];
         }
 
+        $eval = $config['eval'] ?? [];
+        $isAssociative = ($eval['isAssociative'] ?? false) || !array_is_list($options);
         $normalized = [];
 
-        foreach ($choices as $choice) {
-            if (\is_array($choice)) {
-                continue;
-            }
+        foreach ($options as $key => $label) {
+            // An option group decides on its own whether it is associative (see
+            // Widget::getAttributesFromDca())
+            $group = \is_array($label) ? $label : [$key => $label];
+            $isAssociativeGroup = \is_array($label) ? !array_is_list($label) : $isAssociative;
 
-            if (null === $choice || \is_object($choice)) {
-                continue;
-            }
+            foreach ($group as $groupKey => $groupLabel) {
+                if (!\is_scalar($groupLabel)) {
+                    continue;
+                }
 
-            $normalized[] = $choice;
+                $choice = $isAssociativeGroup ? $groupKey : $groupLabel;
+                $normalized[] = 'string' === $type ? (string) $choice : $choice;
+            }
+        }
+
+        // The widget accepts an empty value if the field is not mandatory
+        if ([] !== $normalized && 'string' === $type && !($eval['multiple'] ?? false) && !($eval['mandatory'] ?? false) && !\in_array('', $normalized, true)) {
+            $normalized[] = '';
         }
 
         return $normalized;
@@ -376,8 +397,9 @@ final class DataContainerSchemaFactory
     {
         return match ($rgxp) {
             'email' => ['format' => 'email'],
-            'url' => ['format' => 'uri'],
-            'digit' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'digit' => ['pattern' => ContaoValidator::REGEXP_NUMERIC],
+            'natural' => ['pattern' => ContaoValidator::REGEXP_DIGIT],
+            'prcnt' => ['minimum' => 0, 'maximum' => 100],
             'alpha' => ['pattern' => ContaoValidator::REGEXP_ALPHA],
             'alnum' => ['pattern' => ContaoValidator::REGEXP_ALNUM],
             default => [],

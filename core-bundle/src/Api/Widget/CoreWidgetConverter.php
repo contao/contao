@@ -108,6 +108,10 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
 
     public function convertToApiValue(mixed $value, array $config, array $schema): mixed
     {
+        if ($this->isNestedList($config)) {
+            return $this->convertListRows($this->decodeArray($value, $config));
+        }
+
         if (null !== $this->getStructuredSchema($config)) {
             return $this->convertStructure($this->decodeArray($value, $config), $schema, false);
         }
@@ -122,13 +126,23 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
             return $value ? date(\DateTimeInterface::ATOM, (int) $value) : null;
         }
 
-        $value = match ($schema['type'] ?? null) {
+        $types = (array) ($schema['type'] ?? null);
+
+        if (null === $value && \in_array('null', $types, true)) {
+            return null;
+        }
+
+        $value = match ($types[0] ?? null) {
             'boolean' => (bool) $value,
             'integer' => (int) $value,
             'number' => (float) $value,
             'string' => (string) $value,
             default => $value,
         };
+
+        if ('url' === ($config['eval']['rgxp'] ?? null) && \is_string($value)) {
+            $value = str_replace('|urlattr}}', '}}', $value);
+        }
 
         return match ($this->getWidgetType($config)) {
             FileTree::class => $this->convertFileReference($value, false !== ($config['eval']['binary'] ?? true)),
@@ -138,6 +152,10 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
 
     public function convertToFormValue(mixed $value, array $config, array $schema): mixed
     {
+        if ($this->isNestedList($config)) {
+            return $this->convertListRows($value);
+        }
+
         if (null !== $this->getStructuredSchema($config)) {
             return $this->convertStructure($value, $schema, true);
         }
@@ -168,7 +186,8 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
         $strings = ['type' => 'array', 'items' => $string];
 
         return match ($this->getWidgetType($config)) {
-            ListWizard::class, ChmodTable::class, CudTable::class => $strings,
+            ListWizard::class => $this->isNestedList($config) ? ['type' => 'array', 'items' => $this->getListRowSchema()] : $strings,
+            ChmodTable::class, CudTable::class => $strings,
             TableWizard::class => ['type' => 'array', 'items' => $strings],
             InputUnit::class, TimePeriod::class => $this->getObjectSchema(['value' => 'string', 'unit' => 'string']),
             KeyValueWizard::class => ['type' => 'array', 'items' => $this->getObjectSchema(['key' => 'string', 'value' => 'string'])],
@@ -213,6 +232,45 @@ final class CoreWidgetConverter implements RelationAwareWidgetConverterInterface
             'minItems' => 3,
             'maxItems' => 3,
         ];
+    }
+
+    private function getListRowSchema(): array
+    {
+        return [
+            'anyOf' => [
+                ['type' => 'string'],
+                [
+                    'type' => 'object',
+                    'properties' => [
+                        'item' => ['type' => 'string'],
+                        'list' => ['type' => 'array', 'description' => 'Nested rows with the same structure as the outer list.'],
+                    ],
+                    'additionalProperties' => false,
+                ],
+            ],
+        ];
+    }
+
+    private function convertListRows(mixed $rows): array
+    {
+        $converted = [];
+
+        foreach ((array) $rows as $row) {
+            if (!\is_array($row) && !\is_object($row)) {
+                $converted[] = (string) $row;
+                continue;
+            }
+
+            $row = (array) $row;
+            $converted[] = ['item' => (string) ($row['item'] ?? ''), 'list' => $this->convertListRows($row['list'] ?? [])];
+        }
+
+        return $converted;
+    }
+
+    private function isNestedList(array $config): bool
+    {
+        return ListWizard::class === $this->getWidgetType($config) && ($config['eval']['nesting'] ?? false);
     }
 
     private function getObjectSchema(array $types): array

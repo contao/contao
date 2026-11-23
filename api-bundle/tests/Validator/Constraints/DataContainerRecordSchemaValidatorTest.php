@@ -131,7 +131,7 @@ final class DataContainerRecordSchemaValidatorTest extends ContaoTestCase
     public function testValidatesSharedRegexAccordingToTheGeneratedSchema(): void
     {
         $this->assertViolation(
-            \sprintf('Field "digits": The string should match pattern: %s', Validator::REGEXP_DIGIT),
+            \sprintf('Field "digits": The string should match pattern: %s', Validator::REGEXP_NUMERIC),
             'digits',
             new DataContainerRecord('tl_content', [
                 'title' => 'abc',

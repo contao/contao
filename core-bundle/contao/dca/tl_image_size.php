@@ -72,124 +72,124 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_theme.name',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'name' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false)
+			'eval'                    => array('mandatory' => true, 'maxlength' => 64, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'notnull' => false)
 		),
 		'imageQuality' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'notnull'=>false)
+			'eval'                    => array('rgxp' => 'prcnt', 'nospace' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'notnull' => false)
 		),
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'densities' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('helpwizard' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'sizes' => array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('helpwizard' => true, 'maxlength' => 255, 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'width' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => array('type'=>'integer', 'notnull'=>false)
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'clr w50'),
+			'sql'                     => array('type' => 'integer', 'notnull' => false)
 		),
 		'height' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'notnull'=>false)
+			'eval'                    => array('rgxp' => 'digit', 'nospace' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'notnull' => false)
 		),
 		'resizeMode' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
-			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('helpwizard' => true, 'tl_class' => 'clr w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'zoom' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'notnull'=>false)
+			'eval'                    => array('rgxp' => 'prcnt', 'nospace' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'notnull' => false)
 		),
 		'formats' => array
 		(
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>1024, 'default'=>'')
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'string', 'length' => 1024, 'default' => '')
 		),
 		'preserveMetadata' => array
 		(
 			'inputType'               => 'radio',
 			'options'                 => array('default', 'overwrite', 'delete'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'default')
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'string', 'length' => 12, 'default' => 'default')
 		),
 		'preserveMetadataFields' => array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
-			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'mandatory' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'fetchPriority' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('high', 'low'),
-			'eval'                    => array('tl_class'=>'w50 clr', 'includeBlankOption'=>true, 'blankOptionLabel'=>'auto'),
+			'eval'                    => array('tl_class' => 'w50 clr', 'includeBlankOption' => true, 'blankOptionLabel' => 'auto'),
 		),
 		'decoding' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('sync', 'async'),
 			'default'                 => 'async',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true, 'blankOptionLabel'=>'auto'),
+			'eval'                    => array('tl_class' => 'w50', 'includeBlankOption' => true, 'blankOptionLabel' => 'auto'),
 		)
 	)
 );
@@ -230,7 +230,7 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getFormats(DataContainer|null $dc=null)
+	public function getFormats(DataContainer|null $dc = null)
 	{
 		$formats = array();
 		$missingSupport = array();
@@ -316,7 +316,7 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getMetadataFields(DataContainer|null $dc=null)
+	public function getMetadataFields(DataContainer|null $dc = null)
 	{
 		$options = array();
 

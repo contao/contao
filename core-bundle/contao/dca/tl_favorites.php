@@ -58,39 +58,39 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'sorting' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'user' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'title' => array
 		(
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'url' => array
 		(
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'url', 'maxlength' => 2048, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		)
 	)
 );

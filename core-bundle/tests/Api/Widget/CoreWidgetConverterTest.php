@@ -245,6 +245,61 @@ class CoreWidgetConverterTest extends TestCase
         $this->assertSame([], $converter->convertToFormValue([], $config, $schema));
     }
 
+    public function testConvertsNestedListRows(): void
+    {
+        $GLOBALS['BE_FFL']['listWizard'] = ListWizard::class;
+        $config = ['inputType' => 'listWizard', 'eval' => ['multiple' => true, 'nesting' => true], 'sql' => ['type' => 'blob']];
+        $stored = [['item' => 'Foo', 'list' => [['item' => 'Bar'], ['item' => 'Baz']]], ['item' => 'Qux'], 'Quux'];
+
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $schema = $converter->getSchema($config, ['type' => 'string']);
+        $api = $converter->convertToApiValue(serialize($stored), $config, $schema);
+
+        $this->assertSame(
+            [
+                ['item' => 'Foo', 'list' => [['item' => 'Bar', 'list' => []], ['item' => 'Baz', 'list' => []]]],
+                ['item' => 'Qux', 'list' => []],
+                'Quux',
+            ],
+            $api,
+        );
+
+        $validator = new Validator();
+        $jsonSchema = json_decode(json_encode($schema, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertTrue($validator->validate(json_decode(json_encode($api, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR), $jsonSchema)->isValid());
+        $this->assertTrue($validator->validate(['first', 'second'], $jsonSchema)->isValid());
+        $this->assertFalse($validator->validate([(object) ['item' => 'Foo', 'other' => 'Bar']], $jsonSchema)->isValid());
+
+        $this->assertSame(
+            [['item' => 'Foo', 'list' => [['item' => 'Bar', 'list' => []]]], 'Qux'],
+            $converter->convertToFormValue([(object) ['item' => 'Foo', 'list' => [(object) ['item' => 'Bar']]], 'Qux'], $config, $schema),
+        );
+
+        $this->assertSame([], $converter->convertToApiValue('', $config, $schema));
+    }
+
+    public function testKeepsNullForNullableValues(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $config = ['inputType' => 'text'];
+
+        $this->assertNull($converter->convertToApiValue(null, $config, ['type' => ['integer', 'null']]));
+        $this->assertSame(12, $converter->convertToApiValue('12', $config, ['type' => ['integer', 'null']]));
+        $this->assertSame(0, $converter->convertToApiValue(null, $config, ['type' => 'integer']));
+        $this->assertSame('', $converter->convertToFormValue(null, $config, ['type' => ['integer', 'null']]));
+    }
+
+    public function testRemovesTheUrlAttributeFlagFromInsertTags(): void
+    {
+        $converter = new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)));
+        $config = ['inputType' => 'text', 'eval' => ['rgxp' => 'url']];
+
+        $this->assertSame('{{link_url::1}}', $converter->convertToApiValue('{{link_url::1|urlattr}}', $config, ['type' => ['string', 'null']]));
+        $this->assertSame('/main-home', $converter->convertToApiValue('/main-home', $config, ['type' => ['string', 'null']]));
+        $this->assertSame('{{link_url::1|urlattr}}', $converter->convertToApiValue('{{link_url::1|urlattr}}', ['inputType' => 'text'], ['type' => 'string']));
+    }
+
     public function testSupportsAdditionalSelections(): void
     {
         $GLOBALS['BE_FFL']['wizard'] = CheckBoxWizard::class;
