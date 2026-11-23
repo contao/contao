@@ -43,6 +43,13 @@ use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 class NewsletterTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->resetStaticProperties([System::class]);
+    }
+
     /**
      * @dataProvider recipientProvider
      */

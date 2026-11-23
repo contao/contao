@@ -19,7 +19,7 @@ class NewsletterFailuresTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']['tl_newsletter_failures']);
+        unset($GLOBALS['TL_DCA']);
 
         parent::tearDown();
     }
