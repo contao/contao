@@ -110,6 +110,41 @@ class PaletteTest extends TestCase
         $this->assertTrue($palette->hasField('field2'));
     }
 
+    public function testRemoveExpandedSelector(): void
+    {
+        $palette = new Palette('{legend},field1,field2,[field2],field3,[field3],field4,[EOF],field5,[EOF],field6,[field6],field7,[EOF],field8');
+        $palette->removeField('field2');
+        $this->assertSame('{legend},field1,field6,[field6],field7,[EOF],field8', $palette->toString());
+    }
+
+    public function testRemoveNestedSelector(): void
+    {
+        $palette = new Palette('{legend},field1,field2,[field2],field3,[field3],field4,[EOF],field5,[EOF],field6,[field6],field7,[EOF],field8');
+        $palette->removeField('field3');
+        $this->assertSame('{legend},field1,field2,[field2],field5,[EOF],field6,[field6],field7,[EOF],field8', $palette->toString());
+    }
+
+    public function testRemoveCollapsedSelector(): void
+    {
+        $palette = new Palette('field1,field2,[field2],field3,[EOF]');
+        $palette->removeField('field1');
+        $this->assertSame('field2,[field2],field3,[EOF]', $palette->toString());
+    }
+
+    public function testRemoveMultipleFieldsFromSpecifiedLegend(): void
+    {
+        $palette = new Palette('{first_legend},field1,field2,[field2],field3,[EOF],field4;{second_legend},field2,[field2],field3,[EOF]');
+        $palette->removeField(['field1', 'field2'], 'first_legend');
+        $this->assertSame('{first_legend},field4;{second_legend},field2,[field2],field3,[EOF]', $palette->toString());
+    }
+
+    public function testRemoveChildField(): void
+    {
+        $palette = new Palette('field1,[field1],field2,field3,[EOF]');
+        $palette->removeField('field2');
+        $this->assertSame('field1,[field1],field3,[EOF]', $palette->toString());
+    }
+
     public function testInvalidPositionThrowsException(): void
     {
         $this->expectException(PalettePositionException::class);

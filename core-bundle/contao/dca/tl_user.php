@@ -18,6 +18,8 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\DropZone;
+use Contao\FileUpload;
 use Contao\Image;
 use Contao\Input;
 use Contao\Message;
@@ -149,10 +151,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'uploader' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('DropZone', 'FileUpload'),
+			'options'                 => array(DropZone::class=>'DropZone', FileUpload::class=>'FileUpload'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
 			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
 		),
 		'showHelp' => array
 		(
