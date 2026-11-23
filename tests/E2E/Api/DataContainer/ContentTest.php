@@ -507,6 +507,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/content.yaml')
         ;
 
         return ManagedEditionConfig::create($recipe, self::projectDirectory());
