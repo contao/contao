@@ -113,6 +113,14 @@ tl_article:
         alias: main-website-home
         inColumn: main
         published: 1
+    article_main_content:
+        pid: '@page_main_home'
+        sorting: 256
+        tstamp: 1704067200
+        title: Main website content
+        alias: main-website-content
+        inColumn: main
+        published: 1
     article_microsite_home:
         pid: '@page_microsite_home'
         sorting: 128
@@ -148,6 +156,26 @@ tl_content:
             - [Name, Value, Link]
             - [Lorem, Ipsum, <a href="https://contao.org">Contao</a>]
             - [Dolor, Sit, Amet]
+    content_foo:
+        pid: '@article_main_content'
+        ptable: tl_article
+        sorting: 128
+        tstamp: 1704067200
+        type: text
+        text: <p>Foo</p>
+    content_bar:
+        pid: '@article_main_content'
+        ptable: tl_article
+        sorting: 256
+        tstamp: 1704067200
+        type: element_group
+    content_baz:
+        pid: '@content_bar'
+        ptable: tl_content
+        sorting: 128
+        tstamp: 1704067200
+        type: text
+        text: <p>Baz</p>
 
 tl_files:
     files_media:
@@ -224,6 +252,16 @@ tl_news_archive:
         tstamp: 1704067200
         title: Press releases
         jumpTo: '@page_main_home'
+
+tl_news:
+    news_foo:
+        pid: '@news_archive_corporate'
+        tstamp: 1704067200
+        headline: Foo
+        alias: foo
+        date: 1704067200
+        time: 1704067200
+        published: 1
 
 tl_calendar:
     calendar_events:
