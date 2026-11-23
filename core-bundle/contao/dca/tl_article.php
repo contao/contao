@@ -103,39 +103,39 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_page.title',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'sorting' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'title' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'alias' => array
 		(
 			'inputType'               => 'text',
 			'search'                  => true,
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp' => 'alias', 'doNotCopy' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_article', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'author' => array
 		(
@@ -144,44 +144,44 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
-			'eval'                    => array('doNotCopy'=>true, 'mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('doNotCopy' => true, 'mandatory' => true, 'chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'inColumn' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory' => true, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'main')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => 'main')
 		),
 		'showTeaser' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('multiple' => true, 'size' => 2, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'teaser' => array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('rte' => 'tinyMCE', 'basicEntities' => true, 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'printable' => array
 		(
 			'inputType'               => 'checkbox',
 			'options'                 => array('print', 'facebook', 'twitter'),
-			'eval'                    => array('multiple'=>true),
+			'eval'                    => array('multiple' => true),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_article'],
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'customTpl' => array
 		(
@@ -189,50 +189,50 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('chosen' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'protected' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 		),
 		'cssID' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('multiple' => true, 'size' => 2, 'tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'published' => array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('doNotCopy' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		)
 	)
 );
@@ -311,7 +311,7 @@ class tl_article extends Backend
 			$row['protected'] ? 'articles_3.svg' : 'articles_1.svg',
 		);
 
-		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
+		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page' => $row['pid'], 'article' => ($row['alias'] ?: $row['id'])));
 
 		return RecordLabel::fromHtml('<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label);
 	}
@@ -423,7 +423,7 @@ class tl_article extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_article', $id);
-				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'article', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do' => 'article', 'act' => 'edit', 'id' => $id, 'rt' => '1')));
 				$objVersions->initialize();
 
 				// Store the new alias

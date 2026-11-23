@@ -24,6 +24,7 @@ use ApiPlatform\OpenApi\Model\Info;
 use ApiPlatform\OpenApi\Model\Paths;
 use ApiPlatform\OpenApi\OpenApi;
 use Contao\McpBundle\Api\ApiOperationRegistry;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -46,6 +47,23 @@ final class ApiOperationRegistryTest extends TestCase
         );
 
         $this->assertCount(3, $registry->discover()['operations']);
+    }
+
+    #[DataProvider('getQueries')]
+    public function testMatchesEveryWordOfAQuery(string $query, array $expected): void
+    {
+        $operations = $this->createRegistry()->discover($query)['operations'];
+
+        $this->assertSame($expected, array_column($operations, 'operation'));
+    }
+
+    public static function getQueries(): iterable
+    {
+        yield 'resource and method' => ['news get', ['contao_api_dc_news_get']];
+        yield 'any order and case' => ['READ Template', ['contao_api_user_template_read']];
+        yield 'operation name fragments' => ['user_template template_read', ['contao_api_user_template_read']];
+        yield 'surrounding whitespace' => ['  files  upload ', ['contao_api_files_upload']];
+        yield 'one word does not match' => ['news upload', []];
     }
 
     public function testDescribesAnOperationFromOpenApiAndResolvesReferences(): void

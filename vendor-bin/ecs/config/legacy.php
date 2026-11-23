@@ -71,8 +71,18 @@ return ECSConfig::configure()
     ->withSkip([
         '*/languages/*',
         '*/templates/*',
-        '*/themes/*',
-        BinaryOperatorSpacesFixer::class,
+        BinaryOperatorSpacesFixer::class => [
+            '*-bundle/contao/classes',
+            '*-bundle/contao/controllers',
+            '*-bundle/contao/drivers',
+            '*-bundle/contao/elements',
+            '*-bundle/contao/forms',
+            '*-bundle/contao/library',
+            '*-bundle/contao/models',
+            '*-bundle/contao/modules',
+            '*-bundle/contao/pages',
+            '*-bundle/contao/widgets',
+        ],
         ChainedMethodBlockFixer::class,
         CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
@@ -115,6 +125,7 @@ return ECSConfig::configure()
     ->withParallel()
     ->withSpacing(Option::INDENTATION_TAB, "\n")
     ->withConfiguredRule(ArraySyntaxFixer::class, ['syntax' => 'long'])
+    ->withConfiguredRule(BinaryOperatorSpacesFixer::class, ['default' => BinaryOperatorSpacesFixer::AT_LEAST_SINGLE_SPACE])
     ->withConfiguredRule(BracesPositionFixer::class, ['control_structures_opening_brace' => BracesPositionFixer::NEXT_LINE_UNLESS_NEWLINE_AT_SIGNATURE_END])
     ->withConfiguredRule(ConcatSpaceFixer::class, ['spacing' => 'one'])
     ->withConfiguredRule(ControlStructureContinuationPositionFixer::class, ['position' => ControlStructureContinuationPositionFixer::NEXT_LINE])
