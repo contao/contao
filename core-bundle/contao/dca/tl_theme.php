@@ -133,11 +133,11 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'name' => array
 		(
@@ -145,8 +145,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'unique' => true, 'maxlength' => 128, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 128, 'default' => '')
 		),
 		'author' => array
 		(
@@ -155,27 +155,27 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
 			'backendSearch' 		  => false,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 128, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 128, 'default' => '')
 		),
 		'folders' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'fieldType' => 'checkbox'),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'screenshot' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>'%contao.image.valid_extensions%'),
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('fieldType' => 'radio', 'filesOnly' => true, 'isGallery' => true, 'extensions' => '%contao.image.valid_extensions%'),
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'templates' => array
 		(
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('includeBlankOption' => true, 'tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		)
 	)
 );
@@ -229,7 +229,7 @@ class tl_theme extends Backend
 	 *
 	 * @return array
 	 */
-	protected function doGetTemplateFolders($path, $level=0)
+	protected function doGetTemplateFolders($path, $level = 0)
 	{
 		$return = array();
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -239,7 +239,7 @@ class tl_theme extends Backend
 			if (is_dir($projectDir . '/' . $path . '/' . $file))
 			{
 				$return[$path . '/' . $file] = str_repeat(" \u{a0} \u{a0} ", $level) . $file;
-				$return = array_merge($return, $this->doGetTemplateFolders($path . '/' . $file, $level+1));
+				$return = array_merge($return, $this->doGetTemplateFolders($path . '/' . $file, $level + 1));
 			}
 		}
 
