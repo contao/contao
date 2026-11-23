@@ -112,6 +112,7 @@ class NewsletterFailureManagerTest extends TestCase
         $manager = new NewsletterFailureManager($connection);
 
         $manager->recordFailure(42, 'recipient@example.com', new TransportException('First failure'));
+
         $id = (int) $connection->fetchOne('SELECT id FROM tl_newsletter_failures');
 
         $connection->update('tl_newsletter_failures', ['tstamp' => 1], ['id' => $id]);

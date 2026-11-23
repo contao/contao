@@ -194,7 +194,7 @@ class NewsletterFailureListenerTest extends TestCase
 
             $this->assertCount(0, $records);
 
-            $messages = iterator_to_array($queue->get());
+            $messages = [...$queue->get()];
             $this->assertCount(1, $messages);
             $send = static fn () => $handler($messages[0]->getMessage());
         } else {
