@@ -108,11 +108,7 @@ final class DataContainerWidgetFactoryTest extends ContaoTestCase
             ->with('The options_callback of field "tl_test.status" failed without a record, so the field is resolved without it.', ['exception' => $exception])
         ;
 
-        $factory = new DataContainerWidgetFactory($logger);
-        $factory->resolve($field, $dc);
-
-        // The schema is built several times per request, but the failure is only logged once
-        $resolved = $factory->resolve($field, $dc);
+        $resolved = new DataContainerWidgetFactory($logger)->resolve($field, $dc);
 
         $this->assertArrayNotHasKey('options_callback', $resolved->config);
         $this->assertArrayNotHasKey('options', $resolved->config['eval']);

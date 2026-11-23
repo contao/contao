@@ -18,11 +18,6 @@ use Psr\Log\LoggerInterface;
 
 final class DataContainerWidgetFactory
 {
-    /**
-     * @var array<string, true>
-     */
-    private array $warned = [];
-
     public function __construct(private readonly LoggerInterface|null $logger = null)
     {
     }
@@ -49,11 +44,7 @@ final class DataContainerWidgetFactory
             $config['eval'] = $class::getAttributesFromDca($config, $field->name ?? '', null, $field->name ?? '', $field->table ?? '', $dc);
         } catch (\Throwable $exception) {
             if (isset($config['options_callback'])) {
-                // The schema is built several times per request, so only log the first failure
-                if (!isset($this->warned[$key = $field->table.'.'.$field->name])) {
-                    $this->warned[$key] = true;
-                    $this->logger?->warning(\sprintf('The options_callback of field "%s" failed without a record, so the field is resolved without it.', $key), ['exception' => $exception]);
-                }
+                $this->logger?->warning(\sprintf('The options_callback of field "%s.%s" failed without a record, so the field is resolved without it.', $field->table, $field->name), ['exception' => $exception]);
 
                 unset($config['options_callback']);
 
