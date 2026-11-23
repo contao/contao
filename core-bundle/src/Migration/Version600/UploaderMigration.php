@@ -32,9 +32,7 @@ class UploaderMigration extends AbstractMigration
             return false;
         }
 
-        $userTable = $schemaManager->introspectTableByUnquotedName('tl_user');
-
-        if (!$userTable->hasColumn('uploader')) {
+        if (!$schemaManager->introspectTableByUnquotedName('tl_user')->hasColumn('uploader')) {
             return false;
         }
 
