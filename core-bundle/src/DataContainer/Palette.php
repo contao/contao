@@ -154,11 +154,11 @@ class Palette implements \Stringable
      */
     public function removeField(array|string $name, string|null $legend = null): self
     {
-        $parents = (array) $legend;
+        $names = (array) $name;
 
         foreach ($this->config as $key => $group) {
-            if ([] === $parents || \in_array($key, $parents, true)) {
-                $this->config[$key]['fields'] = array_diff($group['fields'], (array) $name);
+            if (null === $legend || $key === $legend) {
+                $this->config[$key]['fields'] = $this->filterFields($group['fields'], $names);
             }
         }
 
@@ -186,6 +186,32 @@ class Palette implements \Stringable
         }
 
         return $palette;
+    }
+
+    private function filterFields(array $fields, array $names): array
+    {
+        $remaining = [];
+        $depth = 0;
+
+        foreach ($fields as $field) {
+            if ('[EOF]' === $field && $depth > 0) {
+                --$depth;
+
+                continue;
+            }
+
+            if ('[EOF]' !== $field && str_starts_with($field, '[') && str_ends_with($field, ']')) {
+                if ($depth > 0 || \in_array(substr($field, 1, -1), $names, true)) {
+                    ++$depth;
+                }
+            }
+
+            if (0 === $depth && !\in_array($field, $names, true)) {
+                $remaining[] = $field;
+            }
+        }
+
+        return $remaining;
     }
 
     private function addFieldsToLegend(array $fields, array $parents, string $position, \Closure|array|string|null $fallback, string $fallbackPosition, bool $skipLegends): void
