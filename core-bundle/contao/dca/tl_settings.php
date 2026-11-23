@@ -32,18 +32,18 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'dateFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'tl_class'=>'w25'),
+			'eval'                    => array('mandatory' => true, 'helpwizard' => true, 'tl_class' => 'w25'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w25')
+			'eval'                    => array('mandatory' => true, 'tl_class' => 'w25')
 		),
 		'datimFormat' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w25')
+			'eval'                    => array('mandatory' => true, 'tl_class' => 'w25')
 		),
 		'timeZone' => array
 		(
@@ -51,27 +51,27 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'options_callback' => static function () {
 				return array_values(DateTimeZone::listIdentifiers());
 			},
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w25')
+			'eval'                    => array('chosen' => true, 'tl_class' => 'w25')
 		),
 		'adminEmail' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'tl_class'=>'w50')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'friendly', 'tl_class' => 'w50')
 		),
 		'resultsPerPage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'minval'=>1, 'nospace'=>true, 'tl_class'=>'w50 clr')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'minval' => 1, 'nospace' => true, 'tl_class' => 'w50 clr')
 		),
 		'maxResultsPerPage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w50')
 		),
 		'allowedTags' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'long')
+			'eval'                    => array('tl_class' => 'long')
 		),
 		'allowedAttributes' => array
 		(
@@ -90,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 					'inputType'       => 'text'
 				)
 			),
-			'eval'                    => array('tl_class'=>'clr'),
+			'eval'                    => array('tl_class' => 'clr'),
 			'load_callback' => array
 			(
 				static function ($varValue) {
@@ -152,54 +152,54 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'allowedDownload' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50')
+			'eval'                    => array('tl_class' => 'w50')
 		),
 		'uploadTypes' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50')
+			'eval'                    => array('tl_class' => 'w50')
 		),
 		'imageWidth' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w50')
 		),
 		'imageHeight' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w50')
 		),
 		'undoPeriod' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w33')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w33')
 		),
 		'versionPeriod' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w33')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w33')
 		),
 		'logPeriod' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w33')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'nospace' => true, 'tl_class' => 'w33')
 		),
 		'defaultUser' => array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.username',
-			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50')
 		),
 		'defaultGroup' => array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user_group.name',
-			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
+			'eval'                    => array('chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50')
 		),
 		'defaultChmod' => array
 		(
 			'inputType'               => 'chmod',
-			'eval'                    => array('tl_class'=>'clr')
+			'eval'                    => array('tl_class' => 'clr')
 		)
 	)
 );

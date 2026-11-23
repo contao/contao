@@ -130,6 +130,27 @@ class UserTemplateTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame($before['operations'], $after['operations']);
     }
 
+    public function testDocumentsEachOperationWithItsOwnDescription(): void
+    {
+        $response = self::managedEdition()->send(
+            HttpRequest::get('/contao/api/docs.jsonopenapi')
+                ->withHeaders([
+                    'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                    'Accept' => 'application/vnd.openapi+json',
+                ]),
+        );
+
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+
+        $create = $data['paths']['/contao/api/user_template_operations/create']['post']['description'] ?? '';
+        $delete = $data['paths']['/contao/api/user_templates/{name}']['delete']['description'] ?? '';
+
+        $this->assertStringStartsWith('Create a user override', $create);
+        $this->assertStringStartsWith('Delete the user template', $delete);
+    }
+
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(

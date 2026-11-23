@@ -15,10 +15,9 @@ namespace Contao\CoreBundle\Migration\Version600;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Index\IndexedColumn;
+use Doctrine\DBAL\Schema\Index\IndexType;
 
-/**
- * @internal
- */
 class CronJobMigration extends AbstractMigration
 {
     public function __construct(private readonly Connection $connection)
@@ -33,10 +32,18 @@ class CronJobMigration extends AbstractMigration
             return false;
         }
 
-        $column = $schemaManager->listTableColumns('tl_cron_job')['name'];
-        $index = $schemaManager->listTableIndexes('tl_cron_job')['name'] ?? null;
+        $table = $schemaManager->introspectTableByUnquotedName('tl_cron_job');
 
-        return 'ascii_bin' !== $column->getPlatformOption('collation') && null !== $index && !$index->isUnique() && ['name'] === $index->getColumns();
+        if (!$table->hasColumn('name') || !$table->hasIndex('name')) {
+            return false;
+        }
+
+        $column = $table->getColumn('name');
+        $index = $table->getIndex('name');
+
+        return 'ascii_bin' !== $column->getCollation()
+            && IndexType::UNIQUE !== $index->getType()
+            && ['name'] === array_map(static fn (IndexedColumn $column) => $column->getColumnName()->getIdentifier()->getValue(), $index->getIndexedColumns());
     }
 
     public function run(): MigrationResult
