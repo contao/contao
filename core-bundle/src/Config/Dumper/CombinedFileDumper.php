@@ -73,9 +73,9 @@ class CombinedFileDumper implements DumperInterface
             $sources[] = [$relativeFile, $line + 2, $line + $lineCount];
             $line += $lineCount + 2;
 
-            $buffer .= "\n/* START of file: $relativeFile */";
+            $buffer .= "\n// START of file: $relativeFile";
             $buffer .= $code;
-            $buffer .= "/* END of file: $relativeFile */\n";
+            $buffer .= "// END of file: $relativeFile\n";
         }
 
         $this->filesystem->dumpFile($cachePath, $this->generateHeader($sources, $cacheDir).$buffer);
@@ -98,7 +98,7 @@ class CombinedFileDumper implements DumperInterface
 
         // Account for the header, the source entries and the three comment framing lines.
         $offset = substr_count($header, "\n") + \count($sources) + 3;
-        $header .= "/*\n * Source files (line ranges in this cache file):\n";
+        $header .= "\n/*\n * Source files (line ranges in this cache file):\n";
 
         foreach ($sources as [$file, $start, $end]) {
             $file = $this->getRelative($file, $cacheDirectory);
