@@ -22,50 +22,50 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 (
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_listing', 'getAllTables'),
-	'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+	'eval'                    => array('chosen' => true, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('preserveTags' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 (
 	'inputType'               => 'text',
-	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull'=>false)
+	'eval'                    => array('preserveTags' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
@@ -74,8 +74,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 	'options_callback' => static function () {
 		return Controller::getTemplateGroup('list_');
 	},
-	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+	'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
@@ -84,8 +84,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 	'options_callback' => static function () {
 		return Controller::getTemplateGroup('info_');
 	},
-	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+	'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 );
 
 /**

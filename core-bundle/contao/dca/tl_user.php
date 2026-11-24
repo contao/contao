@@ -101,11 +101,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'username' => array
 		(
@@ -113,8 +113,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'notnull'=>false, 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'extnd', 'nospace' => true, 'unique' => true, 'maxlength' => 64, 'tl_class' => 'w50', 'autocapitalize' => 'off', 'autocomplete' => 'username'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'notnull' => false, 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'name' => array
 		(
@@ -122,174 +122,174 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'email' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'unique'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'email', 'maxlength' => 255, 'unique' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'language' => array
 		(
 			'default'                 => LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE']),
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory' => true, 'tl_class' => 'w50'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'backendWidth' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('mw1280' => '1280px', 'mw1440' => '1440px', 'mw1920' => '1920px'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>6, 'default'=>'')
+			'eval'                    => array('includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 6, 'default' => '')
 		),
 		'uploader' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array(DropZone::class=>'DropZone', FileUpload::class=>'FileUpload'),
+			'options'                 => array(DropZone::class => 'DropZone', FileUpload::class => 'FileUpload'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
-			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'showHelp' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'thumbnails' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'useRTE' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'useCE' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'doNotCollapse' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'doNotHideMessages' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'password' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'minlength'=>Config::get('minPasswordLength'), 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'minlength' => Config::get('minPasswordLength'), 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'pwChange' => array
 		(
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'admin' => array
 		(
 			'exclude'                 => false,
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'foreignKey'              => 'tl_user_group.name',
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'belongsToMany', 'load'=>'lazy')
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'belongsToMany', 'load' => 'lazy')
 		),
 		'inherit' => array
 		(
 			'inputType'               => 'radio',
 			'options'                 => array('group', 'extend', 'custom'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_user'],
-			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'group')
+			'eval'                    => array('helpwizard' => true, 'submitOnChange' => true),
+			'sql'                     => array('type' => 'string', 'length' => 12, 'default' => 'group')
 		),
 		'modules' => array
 		(
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'helpwizard' => true, 'collapseUncheckedGroups' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'themes' => array
 		(
 			'inputType'               => 'checkbox',
 			'options'                 => array('elements', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'elements' => array
 		(
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'helpwizard' => true, 'collapseUncheckedGroups' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'fields' => array
 		(
 			'inputType'               => 'checkbox',
 			'options'                 => array_keys($GLOBALS['TL_FFL']),
 			'reference'               => &$GLOBALS['TL_LANG']['FFL'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'helpwizard' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'frontendModules' => array
 		(
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'helpwizard' => true, 'collapseUncheckedGroups' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'pagemounts' => array
 		(
 			'inputType'               => 'pageTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy')
+			'eval'                    => array('multiple' => true, 'fieldType' => 'checkbox'),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('table' => 'tl_page', 'type' => 'hasMany', 'load' => 'lazy')
 		),
 		'alpty' => array
 		(
 			'default'                 => array('regular', 'redirect', 'forward'),
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'helpwizard' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'filemounts' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'fieldType' => 'checkbox'),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'fop' => array
 		(
@@ -298,41 +298,41 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'options'                 => array('f1', 'f2', 'f3', 'f4', 'f5', 'f6'),
 			'reference'               => &$GLOBALS['TL_LANG']['FOP'],
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'imageSizes' => array
 		(
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
+			'eval'                    => array('multiple' => true, 'collapseUncheckedGroups' => true),
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'forms' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 		),
 		'amg' => array
 		(
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+			'eval'                    => array('multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 		),
 		'cud' => array
 		(
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'cud',
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'disable' => array
 		(
@@ -340,26 +340,26 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'session' => array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
 			'options'                 => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
-			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
@@ -367,41 +367,41 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'default'                 => time(),
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'secret' => array
 		(
-			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'binary', 'length'=>128, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'binary', 'length' => 128, 'fixed' => true, 'notnull' => false)
 		),
 		'useTwoFactor' => array
 		(
-			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('isBoolean' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lastLogin' => array
 		(
-			'eval'                    => array('rgxp'=>'datim', 'doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotShow' => true, 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'currentLogin' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['lastLogin'],
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'backupCodes' => array
 		(
-			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('doNotCopy' => true, 'doNotShow' => true),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'trustedTokenVersion' => array
 		(
-			'eval'                    => array('doNotCopy'=>true, 'doNotShow'=>true),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('doNotCopy' => true, 'doNotShow' => true),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		)
 	)
 );
@@ -626,14 +626,14 @@ class tl_user extends Backend
 	{
 		$arrModules = array();
 
-		foreach ($GLOBALS['BE_MOD'] as $k=>$v)
+		foreach ($GLOBALS['BE_MOD'] as $k => $v)
 		{
 			if (empty($v))
 			{
 				continue;
 			}
 
-			foreach ($v as $kk=>$vv)
+			foreach ($v as $kk => $vv)
 			{
 				if (isset($vv['disablePermissionChecks']) && $vv['disablePermissionChecks'] === true)
 				{

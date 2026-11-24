@@ -188,6 +188,311 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertStringContainsString('given by the route', $data['detail'] ?? '');
     }
 
+    public function testRejectsAParentTableInThePayloadOfANestedRoute(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_home}/content');
+
+        $request = HttpRequest::json('POST', $path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'type' => 'text',
+                'text' => '<p>Text</p>',
+                'ptable' => 'tl_foo',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(422, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('given by the route', $data['detail'] ?? '');
+    }
+
+    public function testRejectsAnUnknownParentTableOnMove(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $article = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}');
+
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'target' => (int) $fixtures->value('article_main_content', 'id'),
+                'ptable' => 'tl_foo',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(422, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('is not supported by this data container', $data['detail'] ?? '');
+
+        // The element stays in the article
+        $request = HttpRequest::get($path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $read = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($read, JSON_PRETTY_PRINT));
+        $this->assertSame($article, $read['pid']['@id'] ?? null);
+    }
+
+    public function testRejectsATableThatIsNotAParentOfContentElementsOnMove(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $article = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}');
+
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson([
+                'target' => (int) $fixtures->value('article_main_content', 'id'),
+                'ptable' => 'tl_page',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(422, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('is not supported by this data container', $data['detail'] ?? '');
+
+        // The element stays in the article
+        $request = HttpRequest::get($path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $read = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($read, JSON_PRETTY_PRINT));
+        $this->assertSame($article, $read['pid']['@id'] ?? null);
+    }
+
+    public function testLooksUpTheTargetIdInTheDefaultParentTable(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+
+        // Without "ptable", the target ID is looked up in tl_article, which has no
+        // record 999999
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => 999999])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(404, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertStringContainsString('send "ptable"', $data['detail'] ?? '');
+    }
+
+    public function testMovesAnElementIntoAnElementGroupWithAParentTable(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+        $group = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_bar}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => (int) $fixtures->value('content_bar', 'id'), 'ptable' => 'tl_content'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($group, $data['pid']['@id'] ?? null);
+    }
+
+    public function testMovesAnElementIntoAnElementGroupByIri(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+        $group = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_bar}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => $group])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($group, $data['pid']['@id'] ?? null);
+    }
+
+    public function testMovesAnElementOutOfAnElementGroupByIri(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_bar}/content/{content_baz}');
+        $article = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => $article])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($article, $data['pid']['@id'] ?? null);
+    }
+
+    public function testDeniesCreatingContentInANewsWithoutAccessToTheNewsModule(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $news = $fixtures->interpolate('/contao/api/dc/news_archive/{news_archive_corporate}/news/{news_foo}');
+
+        $request = HttpRequest::json('POST', $news.'/content')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('user_content_editor'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['type' => 'text', 'text' => '<p>Text</p>'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(403, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+    }
+
+    public function testDeniesMovingContentIntoANewsWithoutAccessToTheNewsModule(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('user_content_editor'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => (int) $fixtures->value('news_foo', 'id'), 'ptable' => 'tl_news'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(403, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+
+        // The element stays in the article
+        $request = HttpRequest::get($path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $read = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($read, JSON_PRETTY_PRINT));
+        $this->assertSame($fixtures->interpolate('/contao/api/dc/article/{article_main_content}'), $read['pid']['@id'] ?? null);
+    }
+
+    public function testDeniesMovingContentIntoANewsByIriWithoutAccessToTheNewsModule(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+        $news = $fixtures->interpolate('/contao/api/dc/news_archive/{news_archive_corporate}/news/{news_foo}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('user_content_editor'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => $news, 'ptable' => 'tl_news'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(403, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+
+        // The element stays in the article
+        $request = HttpRequest::get($path)
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+            ])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $read = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($read, JSON_PRETTY_PRINT));
+        $this->assertSame($fixtures->interpolate('/contao/api/dc/article/{article_main_content}'), $read['pid']['@id'] ?? null);
+    }
+
+    public function testMovesContentIntoANewsWithAccessToTheNewsModule(): void
+    {
+        $fixtures = self::managedEdition()->database()->fixtures();
+        $path = $fixtures->interpolate('/contao/api/dc/article/{article_main_content}/content/{content_foo}');
+        $news = $fixtures->interpolate('/contao/api/dc/news_archive/{news_archive_corporate}/news/{news_foo}');
+
+        $request = HttpRequest::json('POST', $path.'/move')
+            ->withHeaders([
+                'Authorization' => 'Bearer '.self::backendAccessToken('kevin_jones'),
+                'Accept' => 'application/ld+json',
+                'Content-Type' => 'application/ld+json',
+            ])
+            ->withJson(['target' => $news, 'ptable' => 'tl_news'])
+        ;
+
+        $response = self::managedEdition()->send($request);
+        $data = $response->toArray(false);
+
+        $this->assertSame(200, $response->getStatusCode(), json_encode($data, JSON_PRETTY_PRINT));
+        $this->assertSame($news, $data['pid']['@id'] ?? null);
+    }
+
     protected static function createApplicationConfig(): ManagedEditionConfig
     {
         $composer = self::createMonorepoComposerConfig(
@@ -202,6 +507,7 @@ class ContentTest extends AbstractContaoMonorepoE2ETestCase
         $recipe = InstallationRecipe::create($composer)
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/users.yaml')
             ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/default.yaml')
+            ->withFixtureFile(self::projectDirectory().'/tests/E2E/Fixtures/Backend/content.yaml')
         ;
 
         return ManagedEditionConfig::create($recipe, self::projectDirectory());

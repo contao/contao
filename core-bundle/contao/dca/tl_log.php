@@ -59,64 +59,64 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'id' => array
 		(
 			'flag'                    => 12,
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'source' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_log'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'action' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'username' => array
 		(
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'text' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'func' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'browser' => array
 		(
 			'sorting'                 => true,
 			'search'                  => true,
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'uri' => array
 		(
 			'sorting'                 => true,
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		),
 		'page' => array
 		(
 			'sorting'                 => true,
 			'search'                  => true,
-			'sql'                     =>array('type' => 'integer', 'unsigned' => true, 'default' => 0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		)
 	)
 );

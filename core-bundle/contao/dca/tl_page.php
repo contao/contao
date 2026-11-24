@@ -147,47 +147,47 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'sorting' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'title' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'basicEntities' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'type' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('helpwizard'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard' => true, 'submitOnChange' => true, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'regular')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => 'regular')
 		),
 		'alias' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'eval'                    => array('rgxp' => 'folderalias', 'doNotCopy' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'requireItem' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'routePath' => array
 		(
@@ -196,8 +196,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'routePriority' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'default'=>0)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'default' => 0)
 		),
 		'routeConflicts' => array
 		(
@@ -207,16 +207,16 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'basicEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'basicEntities' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'language' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>''),
+			'eval'                    => array('mandatory' => true, 'maxlength' => 64, 'nospace' => true, 'doNotCopy' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => ''),
 			'save_callback'           => array
 			(
 				static function ($value) {
@@ -236,75 +236,75 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'description' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('style' => 'height:60px', 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'serpPreview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
+			'eval'                    => array('titleFields' => array('pageTitle', 'title'), 'tl_class' => 'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('permanent', 'temporary'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'permanent')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => 'permanent')
 		),
 		'alwaysForward' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('fieldType'=>'radio'), // do not set mandatory (see #5453)
+			'eval'                    => array('fieldType' => 'radio'), // do not set mandatory (see #5453)
 			'save_callback' => array
 			(
 				array('tl_page', 'checkJumpTo')
 			),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'redirectBack' => array
 		(
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'url' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'url', 'maxlength' => 2048, 'dcaPicker' => true, 'tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		),
 		'target' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'dns' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'url', 'maxlength' => 255, 'tl_class' => 'w50'),
 			'load_callback' => array
 			(
 				array('tl_page', 'loadDns')
@@ -313,123 +313,123 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'checkDns')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'staticFiles' => array
 		(
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'url', 'trailingSlash' => false, 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'staticPlugins' => array
 		(
 			'search'                  => true,
 			'backendSearch'           => false,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'url', 'trailingSlash' => false, 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'fallback' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('doNotCopy' => true, 'submitOnChange' => true, 'tl_class' => 'w50 clr'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkFallback')
 			),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'disableLanguageRedirect' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('doNotCopy' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'favicon' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'ico,svg,png'),
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('filesOnly' => true, 'fieldType' => 'radio', 'extensions' => 'ico,svg,png'),
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'robotsTxt' => array
 		(
 			'inputType'               => 'textarea',
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('doNotCopy' => true),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'maintenanceMode' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('tl_class' => 'w50', 'includeBlankOption' => true),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'enableCanonical' => array
 		(
 			'inputType'               => 'checkbox',
 			'default'                 => true,
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'canonicalLink' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'eval'                    => array('rgxp' => 'url', 'maxlength' => 2048, 'dcaPicker' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		),
 		'canonicalKeepParams' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'adminEmail' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'rgxp'=>'friendly', 'placeholder'=>Config::get('adminEmail'), 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'rgxp' => 'friendly', 'placeholder' => Config::get('adminEmail'), 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'dateFormat' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'placeholder'=>Config::get('dateFormat'), 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard' => true, 'placeholder' => Config::get('dateFormat'), 'tl_class' => 'w50'),
 			'explanation'             => 'dateFormat',
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'timeFormat' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('placeholder'=>Config::get('timeFormat'), 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('placeholder' => Config::get('timeFormat'), 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'datimFormat' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('placeholder'=>Config::get('datimFormat'), 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('placeholder' => Config::get('datimFormat'), 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'validAliasCharacters' => array
 		(
@@ -437,69 +437,69 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'options_callback' => static function () {
 				return System::getContainer()->get('contao.slug.valid_characters')->getOptions();
 			},
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'useFolderUrl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'urlPrefix' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'eval'                    => array('rgxp' => 'folderalias', 'doNotCopy' => true, 'maxlength' => 128, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 128, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'urlSuffix' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>16, 'default'=>'')
+			'eval'                    => array('nospace' => 'true', 'maxlength' => 16, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 16, 'default' => '')
 		),
 		'useSSL' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('http://', 'https://'),
-			'eval'                    => array('tl_class'=>'w50', 'isAssociative' => true),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50', 'isAssociative' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'autoforward' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'protected' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'multiple' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+			'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 		),
 		'primaryImage' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>false, 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>false),
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'notnull'=>false),
+			'eval'                    => array('multiple' => false, 'fieldType' => 'radio', 'filesOnly' => true, 'extensions' => '%contao.image.valid_extensions%', 'mandatory' => false),
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'notnull' => false),
 		),
 		'includeLayout' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'layout' => array
 		(
@@ -507,9 +507,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('chosen' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'subpageLayout' => array
 		(
@@ -517,44 +517,44 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true, 'blankOptionLabel'=>&$GLOBALS['TL_LANG']['tl_page']['layout_inherit']),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('chosen' => true, 'tl_class' => 'w50', 'includeBlankOption' => true, 'blankOptionLabel' => &$GLOBALS['TL_LANG']['tl_page']['layout_inherit']),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'includeCache' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cache' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000, 7776000, 15552000, 31536000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
-			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'alwaysLoadFromCache' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'clientCache' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array(0, 5, 15, 30, 60, 300, 900, 1800, 3600, 10800, 21600, 43200, 86400, 259200, 604800, 2592000),
 			'reference'               => &$GLOBALS['TL_LANG']['CACHE'],
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'includeChmod' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cuser' => array
 		(
@@ -563,9 +563,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'cgroup' => array
 		(
@@ -574,32 +574,32 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'backendSearch' 		  => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user_group.name',
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'chosen' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'chmod' => array
 		(
 			'default'                 => Config::get('defaultChmod'),
 			'inputType'               => 'chmod',
-			'eval'                    => array('tl_class'=>'clr'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('tl_class' => 'clr'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'cssClass' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('maxlength' => 64, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'sitemap' => array
 		(
 			'inputType'               => 'select',
 			'options'                 => array('map_default', 'map_always', 'map_never'),
-			'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength' => 32, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'searchIndexer' => array
 		(
@@ -607,94 +607,94 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
-			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength' => 32, 'includeBlankOption' => true, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'hide' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'guests' => array
 		(
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w25'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'accesskey' => array
 		(
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>1, 'default'=>'', 'fixed'=>true)
+			'eval'                    => array('rgxp' => 'alnum', 'maxlength' => 1, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 1, 'default' => '', 'fixed' => true)
 		),
 		'published' => array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('doNotCopy' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'enforceTwoFactor' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'twoFactorJumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('fieldType'=>'radio', 'mandatory'=>true),
+			'eval'                    => array('fieldType' => 'radio', 'mandatory' => true),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkJumpTo')
 			),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'enableCsp' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'csp' => array
 		(
 			'inputType'               => 'textarea',
 			'default'                 => "default-src 'self'",
-			'eval'                    => array('mandatory'=>true),
-			'sql'                     => array('type'=>'text', 'notnull'=>false),
+			'eval'                    => array('mandatory' => true),
+			'sql'                     => array('type' => 'text', 'notnull' => false),
 		),
 		'cspReportOnly' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'cspReportLog' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false),
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'feedFormat' => array
 		(
@@ -702,21 +702,21 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 			'eval'                    => array('tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'rss', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => 'rss', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'maxFeedItems' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory' => true, 'rgxp' => 'natural', 'tl_class' => 'w50'),
-			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>25)
+			'sql'                     => array('type' => 'smallint', 'unsigned' => true, 'default' => 25)
 		),
 		'feedDescription' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style' => 'height:60px', 'tl_class' => 'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'imgSize' => array
 		(
@@ -725,14 +725,14 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'feedBase' => array
 		(
-			'exclude' => true,
-			'inputType' => 'text',
-			'eval' => array('mandatory'=>true, 'trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'alwaysSave'=>true),
-			'sql' => array('type' => 'string', 'length' => 255, 'default' => ''),
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory' => true, 'trailingSlash' => true, 'rgxp' => HttpUrlListener::RGXP_NAME, 'decodeEntities' => true, 'maxlength' => 255, 'tl_class' => 'w50', 'alwaysSave' => true),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => ''),
 		)
 	)
 );
@@ -987,7 +987,7 @@ class tl_page extends Backend
 	 *
 	 * @return RecordLabel
 	 */
-	public function addIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public function addIcon($row, $label, DataContainer|null $dc = null, $imageAttribute = '', $blnReturnImage = false, $blnProtected = false, $isVisibleRootTrailPage = false)
 	{
 		return RecordLabel::fromHtml(Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage));
 	}
@@ -1061,7 +1061,7 @@ class tl_page extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_page', $id);
-				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do' => 'page', 'act' => 'edit', 'id' => $id, 'rt' => '1')));
 				$objVersions->initialize();
 
 				// Store the new alias

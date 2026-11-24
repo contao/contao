@@ -161,6 +161,8 @@ class TableDataContainerRecords
     {
         $this->validateContext($context);
 
+        $move = $this->resolveDestination($table, $id, $move, $context);
+
         return $this->write(
             new DataContainerRecord($table, [], $id),
             ['act' => 'cut', 'id' => $id] + $move->getParameters(),
@@ -345,6 +347,10 @@ class TableDataContainerRecords
         $destinationTable = 'after' === $move->position ? $table : ($dc->parentTable ?: $table);
         $destination = $dc->getCurrentRecord($move->target, $destinationTable);
 
+        if (null === $destination && 'after' !== $move->position && null === $move->ptable && ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false)) {
+            throw new ResourceNotFoundException(\sprintf('The destination record does not exist in %1$s. Without "ptable", the target ID is a record of %1$s. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group) or the destination IRI as "target".', $destinationTable));
+        }
+
         if (null === $destination) {
             throw new ResourceNotFoundException('The destination record does not exist.');
         }
@@ -352,6 +358,47 @@ class TableDataContainerRecords
         if ('after' === $move->position && !empty($destination['ptable']) && $destination['ptable'] !== $dc->parentTable) {
             throw new InvalidInputException('Specify the destination record’s parent table when moving between dynamic parents.');
         }
+    }
+
+    private function resolveDestination(string $table, int|string $id, DataContainerMove $move, DataContainerContext|null $context): DataContainerMove
+    {
+        if (\is_int($move->target)) {
+            return $move;
+        }
+
+        return $this->run(
+            $table,
+            ['id' => $id, 'act' => 'show'],
+            function (DC_Table $dc) use ($table, $move, $context): DataContainerMove {
+                $dynamic = (bool) ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false);
+
+                $tables = match (true) {
+                    'after' === $move->position => [$table],
+                    null !== $move->ptable => [$move->ptable],
+                    $dynamic => $this->getParentTables($dc, $table, $context),
+                    default => [$dc->parentTable ?: $table],
+                };
+
+                $destination = $this->mapper->toRecordIdentifier($move->target, $tables);
+
+                return new DataContainerMove($destination['id'], $move->position, $dynamic && 'after' !== $move->position ? $destination['table'] : $move->ptable);
+            },
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getParentTables(DC_Table $dc, string $table, DataContainerContext|null $context): array
+    {
+        $parents = array_diff(array_column($context?->getParents() ?? [], 'table'), [$table]);
+        $tables = [end($parents) ?: $dc->parentTable];
+
+        if (\in_array($table, (array) ($GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? []), true)) {
+            $tables[] = $table;
+        }
+
+        return array_values(array_unique(array_filter($tables)));
     }
 
     private function getParentParameters(DataContainerContext|null $context): array
