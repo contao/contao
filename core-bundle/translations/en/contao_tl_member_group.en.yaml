@@ -1,0 +1,42 @@
+tl_member_group:
+    name:
+        0: Title
+        1: Please enter the group title.
+    redirect:
+        0: Redirect on login
+        1: Redirect group members to a custom page when they log in.
+    jumpTo:
+        0: Redirect page
+        1: Please choose the page to which the group members will be redirected.
+    disable:
+        0: Deactivate
+        1: Temporarily disable the group.
+    start:
+        0: Activate on
+        1: If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        0: Deactivate on
+        1: If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    title_legend: Title
+    redirect_legend: Auto-redirect
+    account_legend: Group settings
+    new:
+        1: Create a new member group
+    show:
+        1: Show the details of member group ID %s
+    versions:
+        1: Show the versions of member group ID %s
+    edit:
+        1: Edit member group ID %s
+    copy:
+        0: Duplicate
+        1: Duplicate member group ID %s
+    delete:
+        1: Delete member group ID %s
+    toggle:
+        0: Activate/deactivate member group
+        1: Deactivate member group ID %s
+        2: Activate member group ID %s
+        3: Deactivate
+        4: Activate
+    tableLabel: Member group

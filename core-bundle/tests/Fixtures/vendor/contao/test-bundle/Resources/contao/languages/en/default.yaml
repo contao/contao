@@ -1,0 +1,12 @@
+MSC:
+    first: This is the first source
+    second:
+        0: This is the second source
+    third:
+        with:
+            1: This is the third source
+    fifth: |-
+        This is the
+        fifth source
+    apostrophe: Here's a \ path with %s and <strong>HTML</strong>
+tl_layout.responsive.css.1: This is the fourth source

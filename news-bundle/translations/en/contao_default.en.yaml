@@ -1,0 +1,15 @@
+MSC:
+    open: Read more on %s
+    author: Author
+    by: by
+    empty: There are no news items for this period.
+    emptyList: Currently there are no news items.
+    news_items: '%d item(s)'
+    news_previous: ‹
+    news_next: ›
+    newsPicker: News
+    newsOverview: Back to the news overview
+PTY:
+    news_feed:
+        0: News feed
+        1: Create an RSS, Atom or JSON feed from your news archives.

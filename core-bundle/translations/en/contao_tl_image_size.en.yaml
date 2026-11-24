@@ -1,0 +1,89 @@
+tl_image_size:
+    name:
+        0: Name
+        1: Please enter the image size name.
+    width:
+        0: Width
+        1: Here you can enter the width in pixels.
+    height:
+        0: Height
+        1: Here you can enter the height in pixels.
+    resizeMode:
+        0: Resize mode
+        1: Only applicable if width and height are specified.
+    zoom:
+        0: Zoom
+        1: 0 = the whole image is visible, 100 = only the important part of the image is visible.
+    sizes:
+        0: Sizes attribute
+        1: 'Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: <em>auto, (max-width: 600px) 100vw, 50vw</em>.'
+    densities:
+        0: Pixel densities/scale factors
+        1: Here you can define the pixel densities (e.g. <em>1x, 1.5x, 2x</em>) or width descriptors (e.g. <em>100w, 200w</em>).
+    cssClass:
+        0: CSS classes
+        1: The CSS classes will be added to the image tag.
+    formats:
+        0: Convert image formats
+        1: Here you can select which image formats shall be converted.
+    formatsNotSupported: 'The following formats are not supported on your server: %s'
+    preserveMetadata:
+        0: Preserve copyright metadata
+        1: Preserve copyright-related metadata fields (EXIF, IPTC, XMP).
+    preserveMetadataFields:
+        0: Metadata fields
+        1: Please select the metadata fields to preserve.
+    skipIfDimensionsMatch:
+        0: Use original image if dimensions match
+        1: Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.
+    imageQuality:
+        0: Image quality
+        1: Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.
+    lazyLoading:
+        0: Enable lazy loading
+        1: Defer loading the image until it is scrolled into the viewport.
+    fetchPriority:
+        0: Fetch priority
+        1: Suggest how the browser should prioritize fetching the image. Use sparingly, as incorrect priorities can reduce page performance.
+    decoding:
+        0: Decoding
+        1: Suggest how the browser should decode the image.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Image size settings
+    source_legend: Image source settings
+    loading_legend: Loading options
+    metadata_legend: Metadata settings
+    expert_legend: Expert settings
+    proportional:
+        0: Proportional
+        1: The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.
+    box:
+        0: Fit the box
+        1: The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the <em>contain</em> value in CSS.
+    crop:
+        0: Crop
+        1: The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the <em>cover</em> value in CSS.
+    preserveMetadataOptions:
+        default: Use default settings
+        overwrite: Select custom metadata fields
+        delete: Remove all metadata fields
+    new:
+        1: Create a new image size
+    show:
+        1: Show the details of image size ID %s
+    versions:
+        1: Show the versions of image size ID %s
+    edit:
+        1: Edit image size ID %s
+    children:
+        0: Media queries
+        1: Edit the media queries of image size ID %s
+    cut:
+        1: Move image size ID %s
+    copy:
+        1: Copy image size ID %s
+    delete:
+        1: Delete image size ID %s
+    tableLabel: Image size

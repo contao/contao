@@ -38,7 +38,12 @@ final class MessageCatalogue implements MessageCatalogueInterface
 
     public function getDomains(): array
     {
-        $finder = $this->resourceFinder->findIn('languages/'.$this->getLocale())->name('/\.(php|xlf)$/');
+        try {
+            $finder = $this->resourceFinder->findIn('languages/'.$this->getLocale())->name('/\.(php|xlf)$/');
+        } catch (\InvalidArgumentException) {
+            return $this->inner->getDomains();
+        }
+
         $domains = [];
 
         foreach ($finder as $file) {

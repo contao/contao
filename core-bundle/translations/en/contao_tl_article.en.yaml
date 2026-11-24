@@ -1,0 +1,96 @@
+tl_article:
+    title:
+        0: Title
+        1: Please enter the article title.
+    alias:
+        0: Article alias
+        1: The article alias is a unique reference to the article which can be called instead of its numeric ID.
+    author:
+        0: Author
+        1: Here you can change the author of the article.
+    inColumn:
+        0: Display in
+        1: Please choose the layout section you want the article to be displayed in.
+    teaserCssID:
+        0: Teaser CSS ID/class
+        1: Here you can set an ID and one or more classes for the teaser element.
+    showTeaser:
+        0: Show teaser
+        1: Show the article teaser if there are multiple articles.
+    teaser:
+        0: Article teaser
+        1: The article teaser can also be displayed with the content element "article teaser".
+    printable:
+        0: Syndication
+        1: Here you can choose which options are available.
+    customTpl:
+        0: Article template
+        1: Here you can select the article template.
+    protected:
+        0: Protect article
+        1: Show the article to certain member groups only.
+    groups:
+        0: Allowed member groups
+        1: These groups will be able to see the article.
+    cssID:
+        0: CSS ID/class
+        1: Here you can set an ID and one or more classes.
+    published:
+        0: Publish article
+        1: Make the article publicly visible on the website.
+    start:
+        0: Show from
+        1: If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        0: Show until
+        1: If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    tstamp:
+        0: Revision date
+        1: Date and time of the latest revision
+    title_legend: Title and author
+    layout_legend: Section
+    syndication_legend: Syndication
+    teaser_legend: Article teaser
+    template_legend: Template settings
+    protected_legend: Access protection
+    expert_legend: Expert settings
+    publish_legend: Publish settings
+    print: Print the page
+    pdf: Export as PDF
+    facebook: Share on Facebook
+    twitter: Share on X (formerly Twitter)
+    new:
+        1: Create a new article
+    show:
+        1: Show the details of article ID %s
+    versions:
+        1: Show the versions of article ID %s
+    edit:
+        1: Edit article ID %s
+    children:
+        0: Content elements
+        1: Edit the content elements of article ID %s
+    copy:
+        1: Copy article ID %s
+    cut:
+        1: Move article ID %s
+    delete:
+        1: Delete article ID %s
+    toggle:
+        0: Publish/unpublish article
+        1: Unpublish article ID %s
+        2: Publish article ID %s
+        3: Unpublish
+        4: Publish
+    pasteafter:
+        0: Paste after article
+        1: Paste after article ID %s
+    pasteinto:
+        0: Paste into page
+        1: Paste into page ID %s
+    pastenewafter:
+        1: Add a new article after article ID %s
+    pastenewinto:
+        0: New at the top
+        1: Add a new article in page ID %s
+    tableLabel: Article

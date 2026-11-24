@@ -1,0 +1,175 @@
+tl_layout:
+    name:
+        0: Title
+        1: Please enter the layout title.
+    type:
+        0: Layout type
+        1: Here you can select the layout type.
+    rows:
+        0: Rows
+        1: Please choose the number of rows.
+    1rw:
+        0: Main row only
+        1: Show only one row.
+    2rwh:
+        0: Header and main row
+        1: Show a header above the main row.
+    2rwf:
+        0: Main row and footer
+        1: Show a footer below the main row.
+    3rw:
+        0: Header, main row and footer
+        1: Show a header above and a footer below the main row.
+    headerHeight:
+        0: Header height
+        1: Please enter the height of the page header.
+    footerHeight:
+        0: Footer height
+        1: Please enter the height of the page footer.
+    cols:
+        0: Columns
+        1: Please choose the number of columns.
+    1cl:
+        0: Main column only
+        1: Show only one column.
+    2cll:
+        0: Left and main column
+        1: Show two columns with the main column on the right side.
+    2clr:
+        0: Main and right column
+        1: Show two columns with the main column on the left side.
+    3cl:
+        0: Main, left and right column
+        1: Show three columns with the main column in the middle.
+    widthLeft:
+        0: Left column width
+        1: Please enter the width of the left column.
+    widthRight:
+        0: Right column width
+        1: Please enter the width of the right column.
+    sections:
+        0: Custom layout sections
+        1: Here you can define custom layout sections.
+    framework:
+        0: CSS framework
+        1: Here you can activate the components of the Contao CSS framework.
+    layout\.css:
+        0: Layout builder
+        1: Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!
+    responsive\.css:
+        0: Responsive layout
+        1: Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.
+    grid\.css:
+        0: 12-column grid
+        1: Adds a responsive 12-column grid that is triggered by the CSS classes "grid1" to "grid12" and "offset1" to "offset12".
+    reset\.css:
+        0: CSS reset
+        1: Removes the inconsistent default styling of HTML elements in different browsers.
+    form\.css:
+        0: Basic forms
+        1: Adds basic form elements and buttons formatting.
+    icons\.css:
+        0: Basic icons
+        1: Adds basic mime icons for downloads and enclosures.
+    external:
+        0: External style sheets
+        1: Here you can add external CSS, SCSS or LESS files from the file system.
+    combineScripts:
+        0: Combine scripts
+        1: Combine the .css and .js files (recommended).
+    lightboxSize:
+        0: Lightbox image size
+        1: Here you can select an image size for the images shown in the lightbox.
+    defaultImageDensities:
+        0: Default image pixel densities
+        1: Here you can define the default pixel densities, e.g. <em>1x, 1.5x, 2x</em>.
+    modules:
+        0: Included elements
+        1: Here you can assign front end modules and content elements to the layout.
+    template:
+        0: Page template
+        1: Here you can select the page template.
+    minifyMarkup:
+        0: Minify the markup
+        1: Minify the HTML markup before it is sent to the browser.
+    cssClass:
+        0: Body class
+        1: Here you can add custom classes to the &lt;body&gt; tag.
+    viewport:
+        0: Viewport tag
+        1: Here you can set a custom viewport tag.
+    titleTag:
+        0: Title tag
+        1: Here you can overwrite the title tag.
+    onload:
+        0: Body onload
+        1: Here you can add a body <em>onload</em> attribute.
+    head:
+        0: Additional &lt;head&gt; tags
+        1: Here you can add individual tags to the &lt;head&gt; section of the page.
+    addJQuery:
+        0: Include jQuery
+        1: Include the jQuery library in the layout.
+    jquery:
+        0: jQuery templates
+        1: Here you can select one or more jQuery templates.
+    addMooTools:
+        0: Include MooTools
+        1: Include the MooTools library in the layout.
+    mootools:
+        0: MooTools templates
+        1: Here you can select one or more MooTools templates.
+    scripts:
+        0: JavaScript templates
+        1: Here you can select one or more JavaScript templates.
+    analytics:
+        0: Analytics templates
+        1: Here you can select one or more analytics templates.
+    externalJs:
+        0: External JavaScripts
+        1: Here you can add external JS files from the file system.
+    script:
+        0: Custom JavaScript code
+        1: The JavaScript code which will be inserted at the bottom of the page.
+    static:
+        0: Static layout
+        1: Create a static layout with a fixed width and alignment.
+    width:
+        0: Overall width
+        1: The overall width will be applied to the wrapper element.
+    align:
+        0: Alignment
+        1: Please select the alignment of the page.
+    title_legend: Title and type
+    header_legend: Rows
+    column_legend: Columns
+    sections_legend: Custom sections
+    image_legend: Image sizes
+    style_legend: Style sheets
+    feed_legend: Feeds
+    modules_legend: Include settings
+    expert_legend: Expert settings
+    script_legend: JavaScript
+    static_legend: Static layout
+    jquery_legend: jQuery
+    mootools_legend: MooTools
+    modern: Twig layout with slots
+    default: Default layout
+    edit_module: Edit the module
+    analytics_google: Google Analytics
+    analytics_matomo: Matomo
+    new:
+        1: Create a new page layout
+    show:
+        1: Show the details of page layout ID %s
+    versions:
+        1: Show the versions of page layout ID %s
+    edit:
+        1: Edit page layout ID %s
+    copy:
+        1: Copy page layout ID %s
+    cut:
+        1: Move page layout ID %s
+    delete:
+        1: Delete page layout ID %s
+    tableLabel: Layout

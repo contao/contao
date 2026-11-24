@@ -1,0 +1,109 @@
+tl_member:
+    firstname:
+        0: First name
+        1: Please enter the first name.
+    lastname:
+        0: Last name
+        1: Please enter the last name.
+    dateOfBirth:
+        0: Date of birth
+        1: Please enter the date of birth.
+    gender:
+        0: Gender
+        1: Please choose the gender.
+    company:
+        0: Company
+        1: Here you can enter a company name.
+    street:
+        0: Street
+        1: Please enter the street name and number.
+    postal:
+        0: Postal code
+        1: Please enter the postal code.
+    city:
+        0: City
+        1: Please enter the name of the city.
+    state:
+        0: State
+        1: Please enter the name of the state.
+    country:
+        0: Country
+        1: Please select the country.
+    phone:
+        0: Phone number
+        1: Please enter the phone number.
+    mobile:
+        0: Cell phone number
+        1: Please enter the cell phone number.
+    fax:
+        0: Fax number
+        1: Please enter the fax number.
+    email:
+        0: E-mail address
+        1: Please enter a valid e-mail address.
+    website:
+        0: Website
+        1: Here you can enter a web address.
+    language:
+        0: Language
+        1: Please select the language.
+    groups:
+        0: Member groups
+        1: Here you can assign the member to one or more groups.
+    login:
+        0: Allow login
+        1: Allow the member to log into the front end.
+    username:
+        0: Username
+        1: Please enter a unique username.
+    assignDir:
+        0: Set home directory
+        1: Define a home directory for the member.
+    homeDir:
+        0: Home directory
+        1: Please select a folder from the files directory.
+    disable:
+        0: Deactivate
+        1: Temporarily disable the account.
+    start:
+        0: Activate on
+        1: If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    stop:
+        0: Deactivate on
+        1: If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.
+    useTwoFactor: Use two-factor authentication
+    personal_legend: Personal data
+    address_legend: Address details
+    contact_legend: Contact details
+    groups_legend: Member groups
+    login_legend: Login details
+    homedir_legend: Home directory
+    account_legend: Account settings
+    personalDetails: Personal details
+    addressDetails: Address details
+    contactDetails: Contact details
+    loginDetails: Login details
+    captchaDetails: Verification
+    new:
+        1: Create a new member
+    show:
+        1: Show the details of member ID %s
+    versions:
+        1: Show the versions of member ID %s
+    edit:
+        1: Edit member ID %s
+    copy:
+        0: Duplicate
+        1: Duplicate member ID %s
+    delete:
+        1: Delete member ID %s
+    toggle:
+        0: Activate/deactivate member
+        1: Deactivate member ID %s
+        2: Activate member ID %s
+        3: Deactivate
+        4: Activate
+    su:
+        0: Preview front end
+        1: Preview the front end as member ID %s
+    tableLabel: Member

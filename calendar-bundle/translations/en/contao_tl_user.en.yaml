@@ -1,0 +1,14 @@
+tl_user:
+    calendars:
+        0: Allowed calendars
+        1: Here you can grant access to one or more calendars.
+    calendarp:
+        0: Calendar permissions
+        1: Here you can define the calendar permissions.
+    calendarfeeds:
+        0: Allowed calendar feeds
+        1: Here you can grant access to one or more calendar feeds.
+    calendarfeedp:
+        0: Calendar feed permissions
+        1: Here you can define the calendar feed permissions.
+    calendars_legend: Events permissions

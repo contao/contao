@@ -1,0 +1,19 @@
+MOD:
+    calendar:
+        0: Events
+        1: Manage events and display them in a calendar or event list
+    tl_calendar_events: Events
+FMD:
+    events: Events
+    calendar:
+        0: Calendar
+        1: Adds a calendar to the page
+    eventlist:
+        0: Event list
+        1: Adds a list of events to the page
+    eventreader:
+        0: Event reader
+        1: Shows the details of an event
+    eventmenu:
+        0: Event list menu
+        1: Generates a navigation menu to browse the event list

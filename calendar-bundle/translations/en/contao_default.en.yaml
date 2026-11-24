@@ -1,0 +1,27 @@
+MSC:
+    cal_events: '%d event(s)'
+    cal_previous: ‹
+    cal_next: ›
+    cal_timeSeparator: –
+    cal_emptyDay: There are no events on this day.
+    cal_emptyWeek: There are no events for this week.
+    cal_emptyMonth: There are no events for this month.
+    cal_emptyYear: There are no events for this year.
+    cal_empty: Currently there are no events.
+    cal_repeat: This event is repeated %s%s. The next event will take place on <time datetime="%s">%s</time>.
+    cal_repeat_ended: This event was repeated %s%s.
+    cal_until: until %s
+    cal_single_days: every day
+    cal_multiple_days: every %s days
+    cal_single_weeks: every week
+    cal_multiple_weeks: every %s weeks
+    cal_single_months: every month
+    cal_multiple_months: every %s months
+    cal_single_years: every year
+    cal_multiple_years: every %s years
+    eventPicker: Events
+    eventOverview: Back to the event overview
+PTY:
+    calendar_feed:
+        0: Calendar feed
+        1: Create an RSS, Atom or JSON feed from your calendars.

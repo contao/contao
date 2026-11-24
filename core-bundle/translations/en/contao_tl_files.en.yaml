@@ -1,0 +1,106 @@
+tl_files:
+    preview:
+        0: Image preview
+        1: Mark the important part of the image with your mouse cursor.
+    name:
+        0: Name
+        1: The file or folder name (without extension).
+    path:
+        0: Path
+        1: The relative path to the file or folder.
+    extension:
+        0: Extension
+        1: The file extension
+    protected:
+        0: Public
+        1: Make the folder and its sub-folders accessible via HTTP.
+    syncExclude:
+        0: Do not synchronize
+        1: Do not synchronize the folder and its subfolders with the database.
+    importantPartX:
+        0: Important part x coordinate
+        1: Here you can enter the x coordinate of the important part.
+    importantPartY:
+        0: Important part y coordinate
+        1: Here you can enter the y coordinate of the important part.
+    importantPartWidth:
+        0: Important part width
+        1: Here you can enter the width of the important part.
+    importantPartHeight:
+        0: Important part height
+        1: Here you can enter the height of the important part.
+    meta:
+        0: Metadata
+        1: Here you can enter the file metadata. To add a language, create a matching website root page.
+    metaRgxpError: Field "%s" for language "%s" must match "%s".
+    licenseRgxpError: Field "%s" for language "%s" must contain a valid URL.
+    fileupload:
+        0: File upload
+        1: Select the files you want to upload to the server (maximum %s and %s pixels).
+    editor:
+        0: Source editor
+        1: Here you can edit the file source (press F11 to toggle fullscreen mode).
+    uploadNback: Upload files and go back
+    editFF: Edit a file or folder
+    uploadFF: Upload files to folder "%s"
+    editFile: Edit file "%s"
+    browseFiles: Browse files
+    clearList: Clear list
+    startUpload: Start upload
+    dropzone: Click or drop files here to upload
+    dropzoneFileTooBig: The file is too big ({{filesize}} MiB). The maximum filesize is {{maxFilesize}} MiB.
+    dropzoneInvalidType: Files of this type cannot be uploaded.
+    fileLocation: 'Path: %s'
+    syncAdded: Added the file or folder "%s"
+    syncChanged: Updated the hash of the file or folder "%s"
+    syncUnchanged: Found the file or folder "%s"
+    syncMoved: Found the file or folder "%s" at "%s"
+    syncDeleted: Removed the file or folder "%s"
+    syncComplete: The synchronization has been completed
+    syncResult: <strong>Result:</strong> %s added | %s modified | %4$s moved | %5$s deleted
+    syncShowUnchanged: Show unchanged
+    new:
+        0: New folder
+        1: Create a new folder
+    move:
+        0: Upload files
+        1: Upload files to the server
+    sync:
+        0: Synchronize
+        1: Synchronize the file system and the database
+    textTrackLanguage:
+        0: Language
+        1: Please select the language of the file.
+    textTrackType:
+        0: Track type
+        1: Here you can select the type of text track.
+    captions: Closed captions
+    descriptions: Audio descriptions
+    subtitles: Subtitles
+    chapters: Chapters
+    metadata: Metadata
+    show:
+        1: Show the details of file or folder "%s"
+    cut:
+        1: Move file or folder "%s"
+    copy:
+        1: Copy file or folder "%s"
+    edit:
+        1: Edit file or folder "%s"
+    delete:
+        1: Delete file or folder "%s"
+    dragFolder:
+        1: Drag folder "%s"
+    dragFile:
+        1: Drag file "%s"
+    source:
+        0: Edit source
+        1: Edit the source text of file "%s"
+    upload:
+        0: Upload files
+        1: Upload files to folder "%s"
+    protect: Protect folder "%s"
+    unlock: Unprotect folder "%s"
+    pasteinto:
+        0: Paste into the root folder
+        1: Paste into folder "%s"
