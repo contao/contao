@@ -12,8 +12,8 @@ it as a regular GitHub issue.
 
 - **Trusted:** Administrators have full control over the installation.
 - **Untrusted:** Restricted backend users, frontend users and visitors.
-- **Security boundaries:** Restricted users must not be able to gain administrator privileges or bypass field-level
-  permissions.
+- **Security boundaries:** Restricted users must not be able to gain administrator privileges, bypass field-level
+  permissions, escape their filemounts/pagemounts, or act on records outside their access.
 - **Implicit admins:** Restricted backend users with access to the template editor, the Template Studio, the unfiltered
   HTML element or the "Listing" frontend module, as well as users with permission to edit page layouts or import themes
   are considered implicit administrators.
@@ -23,7 +23,7 @@ A finding is only a vulnerability if it crosses one of these boundaries.
 
 ## Non-issues
 
-The following are not vulnerabilities. Do not report them.
+The following behaviors are intended by design or are not vulnerabilities. Do not report them. If a finding only partially matches a non-issue (different preconditions, different impact, or a different surface), report it and state explicitly how it differs, referencing the non-issue ID.
 
 ### NI-1: Restoring earlier values via version history
 
