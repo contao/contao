@@ -854,6 +854,63 @@ final class TableDataContainerRecordsTest extends ContaoTestCase
         $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(999, 'after'));
     }
 
+    public function testMovesABareDestinationIdIntoTheDefaultParentTable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['ctable'] = ['tl_content'];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturnCallback(static fn (int|string|null $id = null, string|null $table = null): array => match ($table) {
+                null => ['id' => 17, 'title' => 'Moved'],
+                'tl_page' => ['id' => 42],
+                default => throw new \LogicException(\sprintf('The destination must not be looked up in %s.', $table)),
+            })
+        ;
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_INTO)
+            ->willReturnCallback(fn () => $this->assertNull($this->requestStack->getCurrentRequest()->query->get('ptable')))
+        ;
+
+        $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'first'));
+    }
+
+    public function testExplainsHowToMoveIntoAnotherParentTableWhenTheDestinationIdIsMissing(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['ctable'] = ['tl_content'];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturnCallback(static fn (int|string|null $id = null, string|null $table = null): array|null => match ($table) {
+                null => ['id' => 17, 'title' => 'Moved'],
+                'tl_content' => ['id' => 42],
+                default => null,
+            })
+        ;
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+        $dc
+            ->expects($this->never())
+            ->method('cut')
+        ;
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('The destination record does not exist in tl_page. Without "ptable", the target ID is a record of tl_page. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group) or the destination IRI as "target".');
+
+        $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42));
+    }
+
     private function createEditingDataContainer(\Closure|string $palette = '{title_legend},title;'): DC_Table&MockObject
     {
         $dc = $this->createMock(DC_Table::class);
