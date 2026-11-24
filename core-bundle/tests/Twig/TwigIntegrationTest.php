@@ -105,8 +105,8 @@ class TwigIntegrationTest extends TestCase
     {
         $environment = new Environment(
             new ArrayLoader([
-                'parent.html.twig' => '{% block attributes %}{% set attributes = attrs({class: "foo bar", title: "<safe>"}).mergeWith(attributes|default) %}<div{{ attributes }}></div>{% endblock %}',
-                'child.html.twig' => '{% extends "parent.html.twig" %}{% block attributes %}{% set attributes = attrs().removeClass("foo") %}{{ parent() }}{% endblock %}',
+                'parent.html.twig' => '{% block attributes %}{% set attributes = attrs({class: "foo bar", title: "<safe>", "data-controller": "parent"}).mergeWith(attributes|default) %}<div{{ attributes }}></div>{% endblock %}',
+                'child.html.twig' => '{% extends "parent.html.twig" %}{% block attributes %}{% set attributes = attrs().removeClass("foo").add("data-controller", "contao--collection contao--fragment") %}{{ parent() }}{% endblock %}',
             ]),
             ['autoescape' => 'html'],
         );
@@ -121,7 +121,7 @@ class TwigIntegrationTest extends TestCase
         );
 
         $this->assertInstanceOf(RecordingHtmlAttributes::class, ($environment->getFunction('attrs')->getCallable())());
-        $this->assertSame('<div class="bar" title="&lt;safe&gt;"></div>', $environment->render('child.html.twig'));
+        $this->assertSame('<div class="bar" title="&lt;safe&gt;" data-controller="parent contao--collection contao--fragment"></div>', $environment->render('child.html.twig'));
     }
 
     public function testRendersAttributes(): void
