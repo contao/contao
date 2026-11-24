@@ -58,30 +58,40 @@ Run the narrowest useful check first, then broaden verification.
 
 ```bash
 # Unit tests
-composer unit-tests
-composer unit-tests -- --filter TestName
+vendor/bin/phpunit
+vendor/bin/phpunit --filter TestName
 
 # Functional tests (requires configured contao_test database)
-composer functional-tests
+vendor/bin/phpunit --testsuite=functional
 
 # Static analysis & CS for new code
-composer phpstan
-composer ecs-default -- --no-progress-bar
+vendor-bin/phpstan/vendor/bin/phpstan analyze
+vendor-bin/ecs/vendor/bin/ecs check
 
 # CS for legacy code
-composer ecs-legacy -- --no-progress-bar
+vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php
 
 # Rector dry-run
-vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar
+vendor-bin/rector/vendor/bin/rector --dry-run
 
 # Additional linters & build
-composer twig-cs-fixer
-composer service-linter
-composer monorepo-tools
-composer depcheck
+vendor-bin/twig-cs-fixer/vendor/bin/twig-cs-fixer check
+vendor-bin/service-linter/bin/lint-service-ids
+vendor-bin/monorepo-tools/vendor/bin/monorepo-tools composer-json --validate
+vendor/bin/composer-dependency-analyser --config=depcheck.php
 
 # Assets linter & build
 npx biome ci core-bundle/assets
-npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
-npm run build
+npx stylelint core-bundle/assets/styles
+npx encore production
 ```
+
+## Security reports
+
+Before reporting any security finding (security audit, code review, or any other task), read the `SECURITY.md` in the
+repository root. It lists known non-issues and the project's threat model.
+
+- Do not report anything that matches a non-issue listed there.
+- If a finding only partially matches a non-issue (different preconditions, different impact), report it and state
+  explicitly how it differs.
+- If the `SECURITY.md` is missing or unreadable, say so in your report instead of proceeding silently.
