@@ -566,7 +566,7 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" is deprecated and will no longer work in Contao 7. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" is deprecated and will no longer work in Contao 7. Use Symfony’s HttpFoundation and kernel.response events instead.');
 
 		if (!$strPath)
 		{

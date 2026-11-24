@@ -135,7 +135,7 @@
                         {% if collector.backendSearchChecks.supervisor_supported %}
                             Using the SuperVisor is supported.
                         {% else %}
-                            Using the SuperVisor is not supported and thus Contao's default messenger queues are not processed automatically.
+                            Using the SuperVisor is not supported and thus Contao’s default messenger queues are not processed automatically.
                         {% endif %}
                     </td>
                 </tr>
@@ -145,7 +145,7 @@
                         {% if not collector.backendSearchChecks.pnctl_disabled %}
                             The pnctl_* functions are available.
                         {% else %}
-                            Some pnctl_* functions are disabled in PHP's disable_functions setting.
+                            Some pnctl_* functions are disabled in PHP’s disable_functions setting.
                         {% endif %}
                     </td>
                 </tr>
@@ -155,7 +155,7 @@
                         {% if collector.backendSearchChecks.cron_running %}
                             The contao:cron cronjob is executed minutely on the command line.
                         {% else %}
-                            The contao:cron cronjob is not executed minutely on the command line and thus Contao's default messenger queues are not processed automatically.
+                            The contao:cron cronjob is not executed minutely on the command line and thus Contao’s default messenger queues are not processed automatically.
                         {% endif %}
                     </td>
                 </tr>

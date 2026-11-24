@@ -17,7 +17,7 @@ and follow the conventions of the area being edited. **Do not over-engineer!**
   `monorepo.yml`. The root package itself is not intended for production.
 - Top-level `*-bundle/` directories are individual Symfony bundles. `test-case/` contains shared testing
   infrastructure; `vendor-bin/` contains isolated dev tools.
-- New PHP code lives in a bundle's `src/` directory (PSR-4). Tests live in the corresponding `tests/` directory.
+- New PHP code lives in a bundle’s `src/` directory (PSR-4). Tests live in the corresponding `tests/` directory.
 - Standalone bundle tests exist only for bundles that contain a `tests/` directory.
 - If a bundle provides asset source files, they live in its `assets/` directory.
 - Do not manually edit generated or third-party files in `node_modules/` or `vendor/`.
@@ -35,7 +35,7 @@ or formatting.**
 
 ### Legacy code (`contao/`)
 
-- Everything inside a bundle's `contao/` directory is legacy code, **except** the Twig templates in
+- Everything inside a bundle’s `contao/` directory is legacy code, **except** the Twig templates in
   `contao/templates/`.
 - Legacy PHP uses long array syntax and brace-on-next-line formatting.
 - **Never** apply root `ecs.php`, Rector, PHPStan, or modern style conventions to legacy code.
@@ -48,7 +48,7 @@ or formatting.**
 
 ## Working principles & Workflow
 
-1. **Context First:** Inspect the bundle's `composer.json`, neighboring implementations, and existing tests before
+1. **Context First:** Inspect the bundle’s `composer.json`, neighboring implementations, and existing tests before
    changing behavior or public APIs.
 2. **Bug Fixes:** For testable bug fixes, first add or adjust a focused regression test. Implement the smallest
    possible fix, then verify the test passes.

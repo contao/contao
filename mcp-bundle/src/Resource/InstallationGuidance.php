@@ -30,7 +30,7 @@ final class InstallationGuidance
 
             ## Managed Edition
 
-            In the Contao Managed Edition, the root project's composer.json requires `contao/manager-bundle`. This bundle provides the managed application setup and requires `contao/core-bundle` at `self.version`, keeping their installed versions aligned. The root project's own package version is not the Contao version.
+            In the Contao Managed Edition, the root project’s composer.json requires `contao/manager-bundle`. This bundle provides the managed application setup and requires `contao/core-bundle` at `self.version`, keeping their installed versions aligned. The root project’s own package version is not the Contao version.
 
             An installation without `contao/manager-bundle` can integrate `contao/core-bundle` into a custom Symfony application. The absence of the manager bundle does not mean Contao is missing.
 

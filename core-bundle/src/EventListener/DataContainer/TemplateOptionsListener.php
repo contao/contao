@@ -86,7 +86,7 @@ class TemplateOptionsListener
             $guessedType = $legacyPrefix.$type;
 
             if (isset($this->filesystemLoader->getInheritanceChains()[$guessedType])) {
-                $help = \sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller\'s service tag/attribute.', $guessedType);
+                $help = \sprintf('In case you wanted to use the legacy type "%s", define it explicitly in the "template" property of your controller’s service tag/attribute.', $guessedType);
             } else {
                 $help = 'Did you forget to create the default template?';
             }

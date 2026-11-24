@@ -74,7 +74,7 @@ class DynamicUseTokenParserTest extends TestCase
                         <li>ice</li>
 
                         <!-- only in the recipe -->
-                        <li>secret sauce (don't tell anyone)</li>
+                        <li>secret sauce (don’t tell anyone)</li>
                     </ul>
 
                 <p>Put everything in a blender and mix for 30 seconds.</p>
