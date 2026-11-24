@@ -4,9 +4,9 @@ The general Contao security policy is available here: https://github.com/contao/
 
 ## Supported versions
 
-Check the [Contao release plan](https://contao.org/en/release-plan) for supported versions. If the affected version is
-no longer supported, do not report vulnerabilities as they will not be fixed. If a vulnerability is found in the `main`
-branch (unreleased), please report it as a regular GitHub issue.
+Check the [open milestones][1] for supported versions. If the affected version is no longer supported, do not report
+vulnerabilities as they will not be fixed. If a vulnerability is found in the `main` branch (unreleased), please report
+it as a regular GitHub issue.
 
 ## Threat model
 
@@ -38,3 +38,5 @@ The following are not vulnerabilities. Do not report them.
   implicit-administrator privileges.
 - **Does not apply when:** Restoring gives a restricted user administrator privileges (`tl_user.admin`), implicit-admin
   permissions (see threat model), or membership in a group holding them.
+
+[1]: https://api.github.com/repos/contao/contao/milestones?state=open
