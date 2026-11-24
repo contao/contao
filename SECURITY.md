@@ -23,7 +23,9 @@ A finding is only a vulnerability if it crosses one of these boundaries.
 
 ## Non-issues
 
-The following behaviors are intended by design or are not vulnerabilities. Do not report them. If a finding only partially matches a non-issue (different preconditions, different impact, or a different surface), report it and state explicitly how it differs, referencing the non-issue ID.
+The following behaviors are intended by design or are not vulnerabilities. Do not report them. If a finding only
+partially matches a non-issue (different preconditions, different impact, or a different surface), report it and state
+explicitly how it differs, referencing the non-issue ID.
 
 ### NI-1: Restoring earlier values via version history
 
