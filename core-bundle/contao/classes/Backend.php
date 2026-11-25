@@ -98,6 +98,7 @@ abstract class Backend extends Controller
 			case 'json':
 			case 'less':
 			case 'mysql':
+			case 'php':
 			case 'scss':
 			case 'sql':
 			case 'twig':
@@ -129,10 +130,6 @@ abstract class Backend extends Controller
 			case 'c': case 'cc': case 'cpp': case 'c++':
 			case 'h': case 'hh': case 'hpp': case 'h++':
 				return 'c_cpp';
-
-			case 'php':
-			case 'html5':
-				return 'php';
 
 			case 'svg':
 			case 'svgz':

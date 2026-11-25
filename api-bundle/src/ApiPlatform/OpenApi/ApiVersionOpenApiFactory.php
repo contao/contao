@@ -69,10 +69,10 @@ final readonly class ApiVersionOpenApiFactory implements OpenApiFactoryInterface
         return \sprintf(
             <<<'MARKDOWN'
                 Selects the API contract applicable on a calendar date for built-in and custom API resources.
-                When starting an integration, send today's date, for example `%1$s: %2$s`, and pin that date
+                When starting an integration, send today’s date, for example `%1$s: %2$s`, and pin that date
                 in your client to preserve compatibility.
 
-                Omitting this header or computing today's UTC date for each request automatically opts into
+                Omitting this header or computing today’s UTC date for each request automatically opts into
                 new breaking changes as the API is upgraded. Different requests may select different dates,
                 allowing endpoints to be migrated independently. Dates do not need to match a Contao release.
 
@@ -88,10 +88,10 @@ final readonly class ApiVersionOpenApiFactory implements OpenApiFactoryInterface
                 fields. This also applies to direct responses and error responses. Invalid version headers
                 have no resolved date to echo. Caches must distinguish responses by this request header.
 
-                For browser clients on another origin, allow `%1$s` as a request header in the server's CORS
+                For browser clients on another origin, allow `%1$s` as a request header in the server’s CORS
                 configuration and expose the response header if JavaScript needs to read it.
 
-                Select a date in the documentation's API version field to display the specification for that
+                Select a date in the documentation’s API version field to display the specification for that
                 date. Documentation downloads use the selected version as well.
                 MARKDOWN,
             ApiVersion::HEADER,

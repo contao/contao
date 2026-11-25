@@ -94,88 +94,88 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'source' => array
 		(
 			'filter'                  => true,
 			'reference'               => &$GLOBALS['TL_LANG']['tl_comments'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'parent' => array
 		(
 			'filter'                  => true,
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'date' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'name' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 64, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'email' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'maxlength' => 255, 'rgxp' => 'email', 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'website' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>128, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>128, 'default'=>'')
+			'eval'                    => array('maxlength' => 128, 'rgxp' => HttpUrlListener::RGXP_NAME, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 128, 'default' => '')
 		),
 		'member' => array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_member.CONCAT(firstname," ",lastname)',
-			'eval'                    => array('chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'eval'                    => array('chosen' => true, 'doNotCopy' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'comment' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('mandatory'=>true),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('mandatory' => true),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'addReply' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'author' => array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'doNotCopy'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'chosen' => true, 'doNotCopy' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'reply' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('rte' => 'tinyMCE', 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'published' => array
 		(
@@ -183,24 +183,24 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true),
+			'eval'                    => array('doNotCopy' => true),
 			'save_callback' => array
 			(
 				array('tl_comments', 'sendNotifications')
 			),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'ip' => array
 		(
-			'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '')
 		),
 		'notified' => array
 		(
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'notifiedReply' => array
 		(
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -287,7 +287,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do' => 'article', 'table' => 'tl_content', 'id' => $objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -298,7 +298,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do' => 'page', 'act' => 'edit', 'id' => $objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 
@@ -309,7 +309,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->headline) . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do' => 'news', 'table' => 'tl_news', 'act' => 'edit', 'id' => $objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->headline) . '</a>';
 				}
 				break;
 
@@ -320,7 +320,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->question) . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do' => 'faq', 'table' => 'tl_faq', 'act' => 'edit', 'id' => $objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->question) . '</a>';
 				}
 				break;
 
@@ -331,7 +331,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do' => 'calendar', 'table' => 'tl_calendar_events', 'act' => 'edit', 'id' => $objParent->id))) . '"' . $onClick . '>' . StringUtil::specialchars($objParent->title) . '</a>';
 				}
 				break;
 

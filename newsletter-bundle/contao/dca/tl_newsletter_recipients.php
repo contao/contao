@@ -96,17 +96,17 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_newsletter_channel.title',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'email' => array
 		(
@@ -114,29 +114,29 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'email', 'maxlength' => 255, 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
 				array('tl_newsletter_recipients', 'checkDenyList')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>false),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'notnull' => false),
 		),
 		'active' => array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'addedOn' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
-			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'doNotCopy' => true),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		)
 	)
 );

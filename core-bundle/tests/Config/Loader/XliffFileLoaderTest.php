@@ -51,8 +51,6 @@ class XliffFileLoaderTest extends TestCase
     public function testLoadsXlfFilesIntoAString(): void
     {
         $source = <<<'TXT'
-
-            // vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf
             $GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first source';
             $GLOBALS['TL_LANG']['MSC']['second']['0'] = 'This is the second source';
             $GLOBALS['TL_LANG']['MSC']['third']['with']['1'] = 'This is the third source';
@@ -67,8 +65,6 @@ class XliffFileLoaderTest extends TestCase
             TXT;
 
         $target = <<<'TXT'
-
-            // vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf
             $GLOBALS['TL_LANG']['MSC']['first'] = 'This is the first target';
             $GLOBALS['TL_LANG']['MSC']['second']['0'] = 'This is the second target';
             $GLOBALS['TL_LANG']['MSC']['third']['with']['1'] = 'This is the third target';

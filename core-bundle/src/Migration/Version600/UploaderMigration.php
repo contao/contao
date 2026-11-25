@@ -18,9 +18,6 @@ use Contao\DropZone;
 use Contao\FileUpload;
 use Doctrine\DBAL\Connection;
 
-/**
- * @internal
- */
 class UploaderMigration extends AbstractMigration
 {
     public function __construct(private readonly Connection $connection)
