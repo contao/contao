@@ -94,7 +94,7 @@ class ModuleSearch extends Module
 
 		$this->Template->uniqueId = $this->id;
 		$this->Template->queryType = $strQueryType;
-		$this->Template->keyword = StringUtil::specialchars($strKeywords);
+		$this->Template->keyword = $strKeywords;
 		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Backwards compatibility

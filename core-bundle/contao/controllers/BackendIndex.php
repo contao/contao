@@ -106,8 +106,8 @@ class BackendIndex extends Backend
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->curUsername = Input::post('username') ?: '';
-		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
-		$objTemplate->webauthnSuccessUrl = StringUtil::specialchars($targetPath);
+		$objTemplate->targetPath = base64_encode($targetPath);
+		$objTemplate->webauthnSuccessUrl = $targetPath;
 		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
 
 		// Backwards compatibility

@@ -102,8 +102,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasUp = true;
 				$this->Template->upHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->upTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->upPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->upTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->upPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 
 				// Backwards compatibility
 				$this->Template->upLink = $GLOBALS['TL_LANG']['MSC']['up'];
