@@ -280,29 +280,17 @@ class ChangeSetTest extends TestCase
     {
         $changeSet = new ChangeSet(
             [],
-            [
-                1 => [ChangeSet::ATTR_HASH => '6628'],
-            ],
-            [
-                2 => ChangeSet::TYPE_DIRECTORY,
-            ],
-            [
-                3 => 111111,
-            ],
+            [1 => [ChangeSet::ATTR_HASH => '6628']],
+            [2 => ChangeSet::TYPE_DIRECTORY],
+            [3 => 111111],
         );
 
         $newChangeSet = $changeSet->withOther(
             new ChangeSet(
                 [],
-                [
-                    4 => [ChangeSet::ATTR_PATH => 'file'],
-                ],
-                [
-                    5 => ChangeSet::TYPE_FILE,
-                ],
-                [
-                    6 => 111111,
-                ],
+                [4 => [ChangeSet::ATTR_PATH => 'file']],
+                [5 => ChangeSet::TYPE_FILE],
+                [6 => 111111],
             ),
             'foo',
         );

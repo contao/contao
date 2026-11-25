@@ -101,7 +101,7 @@ class DefaultOperationsListener
         $operations = [];
 
         $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
-        $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
+        $hasPtable = !empty($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) || !empty($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null);
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);

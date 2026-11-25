@@ -55,7 +55,6 @@ class BlockRecipientListenerTest extends ContaoTestCase
             ->method('getRecord')
             ->willReturn($record)
         ;
-
         $operation
             ->expects($this->once())
             ->method('hide')
@@ -209,7 +208,6 @@ class BlockRecipientListenerTest extends ContaoTestCase
             NewsletterDenyListModel::class => $denyListAdapter,
             System::class => $systemAdapter,
         ]);
-
         $framework
             ->expects($this->never())
             ->method('createInstance')
@@ -284,9 +282,7 @@ class BlockRecipientListenerTest extends ContaoTestCase
                 NewsletterDenyListModel::class => $denyListAdapter,
                 System::class => $systemAdapter,
             ],
-            [
-                NewsletterDenyListModel::class => $denyListModel,
-            ],
+            [NewsletterDenyListModel::class => $denyListModel],
         );
 
         $security = $this->createMock(Security::class);

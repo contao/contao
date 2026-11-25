@@ -104,6 +104,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
 
         $jobs = $this->getJobs();
         $job = $jobs->createJob('crawl');
+
         $message = $this->createMessage($job);
 
         $handler = $this->createMessageHandler($jobs, $factory, $this->mockMessageBusThatExpectsARedispatch($message));
@@ -128,6 +129,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
         ;
 
         $jobs = $this->getJobs();
+
         $job = $jobs->createJob('crawl');
         $job = $job->withMetadata(['escargotJobId' => $escargot->getJobId()]);
 
@@ -147,7 +149,7 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
     private function createEscargot(LazyQueue $lazyQueue): Escargot
     {
         $escargot = Escargot::create($this->baseUriCollection, $lazyQueue)->withHttpClient(new MockHttpClient());
-        $escargot->addSubscriber(new class() implements SubscriberInterface {
+        $escargot->addSubscriber(new class implements SubscriberInterface {
             public function shouldRequest(CrawlUri $crawlUri): string
             {
                 return self::DECISION_POSITIVE;
@@ -180,7 +182,6 @@ class CrawlMessageHandlerTest extends AbstractJobsTestCase
             ->method('getCrawlUriCollection')
             ->willReturn($this->baseUriCollection)
         ;
-
         $escargotFactory
             ->method('createLazyQueue')
             ->willReturn($lazyQueue)

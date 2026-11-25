@@ -208,7 +208,6 @@ class DcaHierarchyTest extends ContaoTestCase
             ->with([1], $this->isDcaDefinition('tl_page'), $childOptions)
             ->willReturn([['id' => '2', 'pid' => '1', 'title' => 'Child']])
         ;
-
         $hierarchy
             ->expects($this->once())
             ->method('getParentRows')
@@ -236,8 +235,7 @@ class DcaHierarchyTest extends ContaoTestCase
             static fn (HierarchyDefinition $definition): bool => $table === $definition->table()
                 && 'id' === $definition->idColumn()
                 && 'pid' === $definition->parentColumn()
-                && ($dynamicPtable ? 'ptable' === $definition->scopeColumn() : null === $definition->scopeColumn())
-                && ($dynamicPtable ? $table === $definition->scopeValue() : null === $definition->scopeValue()),
+                && ($dynamicPtable ? ['ptable' => $table] : []) === $definition->scopes(),
         );
     }
 

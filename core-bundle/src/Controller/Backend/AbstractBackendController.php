@@ -17,6 +17,8 @@ use Contao\BackendMain;
 use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,9 +30,10 @@ abstract class AbstractBackendController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['request_stack'] = RequestStack::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
 
         return $services;
     }
@@ -45,7 +48,12 @@ abstract class AbstractBackendController extends AbstractController
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
         $getBackendContext = function (Request $request) {
-            $templateClosure = new class() extends BackendMain {
+            // Ensure a response context is created
+            if (!$this->container->get('contao.routing.response_context_accessor')->getResponseContext()) {
+                $this->container->get('contao.routing.response_context_factory')->createWebpageResponseContext();
+            }
+
+            $templateClosure = new class extends BackendMain {
                 public function __invoke(Request $request): BackendTemplate
                 {
                     // Create an empty template, so that the template engine's parse() method won't
@@ -96,7 +104,7 @@ abstract class AbstractBackendController extends AbstractController
 
         // Set the status code to 422 if a widget did not validate, so that Turbo can
         // handle form errors.
-        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error')) {
+        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_errors')) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

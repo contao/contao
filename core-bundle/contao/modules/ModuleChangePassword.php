@@ -66,6 +66,14 @@ class ModuleChangePassword extends Module
 	 */
 	protected function compile()
 	{
+		$user = System::getContainer()->get('security.helper')->getUser();
+
+		// $user type is checked in `generate()`, but we need it here for type-safety
+		if (!$user instanceof FrontendUser)
+		{
+			throw new \RuntimeException('Invalid user object');
+		}
+
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -101,7 +109,6 @@ class ModuleChangePassword extends Module
 
 		$strFields = '';
 		$doNotSubmit = false;
-		$user = FrontendUser::getInstance();
 		$objMember = MemberModel::findById($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();

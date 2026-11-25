@@ -49,6 +49,7 @@ class UserListCommandTest extends TestCase
         $command = $this->getCommand($this->mockQueryBuilder([]));
 
         $this->expectException(\LogicException::class);
+
         $this->executeCommand($command, ['--format' => 'foo'], 1);
     }
 
@@ -167,14 +168,12 @@ class UserListCommandTest extends TestCase
             ->with('*')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_user')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('fetchAllAssociative')

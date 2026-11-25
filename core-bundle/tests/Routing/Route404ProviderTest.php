@@ -433,7 +433,6 @@ class Route404ProviderTest extends TestCase
             ->method('getPathInfo')
             ->willReturn($path)
         ;
-
         $request
             ->method('getLanguages')
             ->willReturn($languages)

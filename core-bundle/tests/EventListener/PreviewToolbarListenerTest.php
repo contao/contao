@@ -368,7 +368,6 @@ class PreviewToolbarListenerTest extends TestCase
             ->method('getLoader')
             ->willReturn($loader)
         ;
-
         $twig
             ->expects($this->once())
             ->method('render')

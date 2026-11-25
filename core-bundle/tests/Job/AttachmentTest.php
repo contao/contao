@@ -66,6 +66,7 @@ class AttachmentTest extends TestCase
         $response = $attachment->toStreamedResponse();
 
         $this->assertSame('text/csv', $response->headers->get('Content-Type'));
+
         $disposition = $response->headers->get('Content-Disposition');
         $this->assertNotNull($disposition);
         $this->assertStringContainsString('attachment', $disposition);

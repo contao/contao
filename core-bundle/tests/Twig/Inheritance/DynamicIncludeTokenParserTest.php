@@ -88,17 +88,20 @@ class DynamicIncludeTokenParserTest extends TestCase
 
         yield 'conditional includes' => [
             "{% include x == 1 ? '@Contao/foo.html.twig' : '@Foo/bar.html.twig' %}",
-            '<foo-template>', '@Foo/bar.html.twig',
+            '<foo-template>',
+            '@Foo/bar.html.twig',
         ];
 
         yield 'conditional Contao includes' => [
             "{% include x == 1 ? '@Contao/foo.html.twig' : '@Contao/bar.html.twig' %}",
-            '<foo-template>', '<bar-template>',
+            '<foo-template>',
+            '<bar-template>',
         ];
 
         yield 'optional includes' => [
             "{% include ['a.html.twig', 'b.html.twig'] %}",
-            'a.html.twig', 'b.html.twig',
+            'a.html.twig',
+            'b.html.twig',
         ];
 
         yield 'optional Contao includes' => [
@@ -121,7 +124,6 @@ class DynamicIncludeTokenParserTest extends TestCase
             ->method('getAllFirstByThemeSlug')
             ->willReturnMap([['foo.html.twig', ['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig']]])
         ;
-
         $filesystemLoader
             ->method('getCurrentThemeSlug')
             ->willReturn('theme')
@@ -176,6 +178,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addTokenParser(new DynamicIncludeTokenParser($this->createStub(ContaoFilesystemLoader::class)));
 
         $tokenStream = new Lexer($environment)->tokenize(new Source($source, 'foo.html.twig'));
+
         $parser = new Parser($environment);
         $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
 

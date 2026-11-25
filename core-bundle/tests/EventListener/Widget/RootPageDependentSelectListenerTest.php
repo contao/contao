@@ -70,6 +70,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         );
 
         $dataContainer = $this->createClassWithPropertiesStub(DataContainer::class);
+
         $dataContainer->value = serialize([
             '1' => '10',
             '2' => '20',
@@ -255,7 +256,7 @@ class RootPageDependentSelectListenerTest extends TestCase
             ->method('executeQuery')
             ->willReturnMap([
                 [
-                    "SELECT * FROM tl_content WHERE ptable = 'tl_theme' AND pid = ?",
+                    "SELECT * FROM tl_content WHERE ptable = 'tl_theme' AND pid = ? AND type != 'root_page_dependent_elements'",
                     [1],
                     $contentResult,
                 ],

@@ -149,8 +149,10 @@ class CalendarEventsGenerator
         $timestamp = $start;
         $key = date('Ymd', $start);
         $formattedDate = Date::parse($page->dateFormat, $start);
+
         $day = $this->translator->trans('DAYS.'.date('w', $start), [], 'contao_default');
         $month = $this->translator->trans('MONTHS.'.(date('n', $start) - 1), [], 'contao_default');
+
         $span = Calendar::calculateSpan($start, $end);
         $timeSeparator = $this->translator->trans('MSC.cal_timeSeparator', [], 'contao_default');
 
@@ -224,7 +226,7 @@ class CalendarEventsGenerator
         $event['calendar'] = $calendarModel->findById($eventModel->pid);
         $event['link'] = $eventModel->title;
         $event['target'] = '';
-        $event['title'] = StringUtil::specialchars($eventModel->title, true);
+        $event['title'] = StringUtil::stripInsertTags($eventModel->title);
         $event['href'] = $url;
         $event['class'] = $eventModel->cssClass ? ' '.$eventModel->cssClass : '';
         $event['recurring'] = $recurring;
@@ -259,8 +261,10 @@ class CalendarEventsGenerator
         // Compile the event text
         else {
             $id = $eventModel->id;
+
             $controller = $this->contaoFramework->getAdapter(Controller::class);
             $contentModel = $this->contaoFramework->getAdapter(ContentModel::class);
+
             $template = $this->contaoFramework->getAdapter(Template::class);
 
             $event['details'] = $template->once(

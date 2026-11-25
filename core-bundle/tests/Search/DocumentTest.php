@@ -75,9 +75,10 @@ class DocumentTest extends TestCase
         $html = '<body><style>body { background: grey; }</style></body>';
         $request = Request::create('https://example.com/foo?bar=baz');
         $response = new Response($html, 200, ['content-type' => ['text/html']]);
-        $document = Document::createFromRequestResponse($request, $response);
 
+        $document = Document::createFromRequestResponse($request, $response);
         $crawler = $document->getContentCrawler();
+
         $this->assertStringContainsString($html, $crawler->html());
 
         // Simulate some listener doing something with the document crawler and remove
@@ -196,6 +197,16 @@ class DocumentTest extends TestCase
                     'foobar' => true,
                 ],
             ],
+        ];
+
+        yield 'Test with one valid json ld element with multiple types' => [
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":["Product","SoftwareApplication"]}</script></body></html>',
+            [
+                [
+                    '@type' => ['Product', 'SoftwareApplication'],
+                ],
+            ],
+            'https://schema.org',
         ];
 
         yield 'Test with one valid json ld element with context prefix' => [

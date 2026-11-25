@@ -167,16 +167,19 @@ class ChangeSet
             return $items;
         }
 
-        return [...array_map(
-            static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
-                (string) $existingPath,
-                null,
-                null,
-                $lastModified,
+        return [
+            ...array_map(
+                static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
+                    (string) $existingPath,
+                    null,
+                    null,
+                    $lastModified,
+                ),
+                array_keys($lastModifiedUpdates),
+                array_values($lastModifiedUpdates),
             ),
-            array_keys($lastModifiedUpdates),
-            array_values($lastModifiedUpdates),
-        ), ...$items];
+            ...$items,
+        ];
     }
 
     /**

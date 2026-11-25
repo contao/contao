@@ -383,14 +383,14 @@ class DcaUrlAnalyzer
      */
     private function needsPtableParameter(string $childTable, string $ptable): bool
     {
-        (new DcaLoader($childTable))->load();
+        new DcaLoader($childTable)->load();
 
         if (!($GLOBALS['TL_DCA'][$childTable]['config']['dynamicPtable'] ?? null)) {
             return false;
         }
 
         foreach ($this->getCurrentModuleTables() as $parentTable) {
-            (new DcaLoader($parentTable))->load();
+            new DcaLoader($parentTable)->load();
 
             if (\in_array($childTable, $GLOBALS['TL_DCA'][$parentTable]['config']['ctable'] ?? [], true)) {
                 return $parentTable !== $ptable;
@@ -458,7 +458,7 @@ class DcaUrlAnalyzer
 
             // Find the parent table in the back end module
             foreach ($tables as $ptable) {
-                (new DcaLoader($ptable))->load();
+                new DcaLoader($ptable)->load();
 
                 if (\in_array($table, $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [], true)) {
                     return $ptable;

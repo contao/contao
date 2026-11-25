@@ -27,7 +27,7 @@ class DynamicPtableTraitTest extends TestCase
             ->willReturn([['id' => 5, 'pid' => 3, 'ptable' => 'tl_article']])
         ;
 
-        $subject = new class() {
+        $subject = new class {
             use DynamicPtableTrait;
 
             /**

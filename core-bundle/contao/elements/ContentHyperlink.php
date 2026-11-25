@@ -78,7 +78,7 @@ class ContentHyperlink extends ContentElement
 
 		if ($this->titleText)
 		{
-			$this->Template->linkTitle = StringUtil::specialchars($this->titleText);
+			$this->Template->linkTitle = $this->titleText;
 		}
 
 		// Override the link target

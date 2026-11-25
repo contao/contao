@@ -33,6 +33,7 @@ class DotenvDumpCommandFactory
 
             try {
                 unset($_SERVER['APP_ENV']);
+
                 $_ENV = [];
                 new Dotenv()->loadEnv($filePath, 'APP_ENV', 'jwt');
                 $env = $_ENV['APP_ENV'];

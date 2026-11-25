@@ -56,6 +56,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             && $parameters[RouteObjectInterface::CONTENT_OBJECT] instanceof PageModel
         ) {
             trigger_deprecation('contao/core-bundle', '4.13', 'Using "RouteObjectInterface::OBJECT_BASED_ROUTE_NAME" to generate page URLs is deprecated and will no longer work in Contao 7. Use "PageRoute::PAGE_BASED_ROUTE_NAME" instead.');
+
             $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
             unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
         } elseif (
@@ -64,6 +65,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof PageRoute
         ) {
             trigger_deprecation('contao/core-bundle', '4.13', 'Using "RouteObjectInterface::OBJECT_BASED_ROUTE_NAME" to generate page URLs is deprecated and will no longer work in Contao 7. Use "PageRoute::PAGE_BASED_ROUTE_NAME" instead.');
+
             $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
             unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
         } else {
@@ -85,6 +87,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             if ($staticPrefix === $indexPath || $staticPrefix === $indexPath.$route->getUrlSuffix()) {
                 $route->setPath('/');
                 $route->setUrlSuffix('');
+
                 $compiledRoute = $route->compile();
             }
         }

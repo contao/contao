@@ -45,7 +45,6 @@ class MountManagerTest extends TestCase
             ->with('bar/test.zip')
             ->willReturn(false)
         ;
-
         $adapter
             ->expects($this->never())
             ->method('mimeType')
@@ -66,21 +65,18 @@ class MountManagerTest extends TestCase
             ->with('bar/test.zip')
             ->willReturn(true)
         ;
-
         $adapter
             ->expects($this->once())
             ->method('mimeType')
             ->with('bar/test.zip')
             ->willReturn(new FileAttributes('bar/test.zip', null, null, null, 'application/zip'))
         ;
-
         $adapter
             ->expects($this->once())
             ->method('lastModified')
             ->with('bar/test.zip')
             ->willReturn(new FileAttributes('bar/test.zip', null, null, 123450, null))
         ;
-
         $adapter
             ->expects($this->once())
             ->method('fileSize')
@@ -110,19 +106,16 @@ class MountManagerTest extends TestCase
             ->with('bar/test.zip')
             ->willReturn(true)
         ;
-
         $adapter
             ->expects($this->once())
             ->method('mimeType')
             ->with('bar/test.zip')
             ->willReturn(new FileAttributes('bar/test.zip', 1024, null, 123450, 'application/zip'))
         ;
-
         $adapter
             ->expects($this->never())
             ->method('lastModified')
         ;
-
         $adapter
             ->expects($this->never())
             ->method('fileSize')
@@ -145,9 +138,7 @@ class MountManagerTest extends TestCase
         $manager = $this->getMountManagerWithRootAdapter($rootAdapter = new InMemoryFilesystemAdapter());
 
         $this->assertSame(
-            [
-                '' => $rootAdapter,
-            ],
+            ['' => $rootAdapter],
             $manager->getMounts(),
             'mounts root adapter by default',
         );
@@ -389,7 +380,7 @@ class MountManagerTest extends TestCase
     {
         [$delegateMethod] = $expectedDelegateCall;
 
-        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
+        $flysystemException = new class extends \RuntimeException implements FilesystemException {
         };
 
         $adapter = $this->createMock(FilesystemAdapter::class);
@@ -511,7 +502,8 @@ class MountManagerTest extends TestCase
     public static function provideListings(): iterable
     {
         yield 'root, shallow' => [
-            '', false,
+            '',
+            false,
             [
                 'file1 (file)',
                 'files (dir)',
@@ -520,7 +512,8 @@ class MountManagerTest extends TestCase
         ];
 
         yield 'sub directory, shallow' => [
-            'foo', false,
+            'foo',
+            false,
             [
                 'foo/bar (dir)',
                 'foo/file2 (file)',
@@ -528,14 +521,16 @@ class MountManagerTest extends TestCase
         ];
 
         yield 'sub sub directory, shallow' => [
-            'foo/bar', false,
+            'foo/bar',
+            false,
             [
                 'foo/bar/file3 (file)',
             ],
         ];
 
         yield 'sub directory, deep' => [
-            'foo', true,
+            'foo',
+            true,
             [
                 'foo/bar (dir)',
                 'foo/bar/file3 (file)',
@@ -544,7 +539,8 @@ class MountManagerTest extends TestCase
         ];
 
         yield 'sub directory with mounts, shallow' => [
-            'files', false,
+            'files',
+            false,
             [
                 'files/random.txt (file)',
                 'files/special (dir)',
@@ -553,7 +549,8 @@ class MountManagerTest extends TestCase
         ];
 
         yield 'root, deep (including virtual directories from mounts)' => [
-            '', true,
+            '',
+            true,
             [
                 'file1 (file)',
                 'files (dir)',
@@ -576,14 +573,16 @@ class MountManagerTest extends TestCase
         ];
 
         yield 'virtual parent directory, shallow' => [
-            'files/media', false,
+            'files/media',
+            false,
             [
                 'files/media/extra (dir)',
             ],
         ];
 
         yield 'virtual parent directory, deep' => [
-            'files/media', true,
+            'files/media',
+            true,
             [
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
@@ -615,7 +614,6 @@ class MountManagerTest extends TestCase
                 },
             )
         ;
-
         $adapter
             ->method('mimeType')
             ->willReturnMap([['bar/test.zip', new FileAttributes('bar/test.zip', null, null, null, 'application/zip')]])

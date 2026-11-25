@@ -1,0 +1,1012 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\ApiBundle\Tests\DataContainer;
+
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
+use ApiPlatform\Validator\Exception\ValidationException;
+use Contao\ApiBundle\DataContainer\DataContainerContext;
+use Contao\ApiBundle\DataContainer\DataContainerRecordMapper;
+use Contao\ApiBundle\DataContainer\DataContainerRelationDefinitionFactory;
+use Contao\ApiBundle\DataContainer\DataContainerRelationResolver;
+use Contao\ApiBundle\DataContainer\DataContainerWidgetFactory;
+use Contao\ApiBundle\DataContainer\TableDataContainerRecords;
+use Contao\ApiBundle\Dto\DataContainerMove;
+use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
+use Contao\ApiBundle\Exception\ResourceNotFoundException;
+use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+use Contao\Controller;
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
+use Contao\CoreBundle\DataContainer\DcaHierarchy;
+use Contao\CoreBundle\DataContainer\DcaRequestSwitcher;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\ForeignKeyParser;
+use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Widget\DateValueFormatter;
+use Contao\DataContainer;
+use Contao\DC_Table;
+use Contao\DcaLoader;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
+use Contao\TextField;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Exception as PdoException;
+use Doctrine\DBAL\Exception\DeadlockException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+
+final class TableDataContainerRecordsTest extends ContaoTestCase
+{
+    private ResourceMetadataCollectionFactoryInterface $relationMetadataFactory;
+
+    private RequestStack $requestStack;
+
+    private WidgetConverterRegistry $converters;
+
+    private LocaleSwitcher $localeSwitcher;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
+
+        $this->converters = new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]);
+        $this->localeSwitcher = $this->createLocaleSwitcher();
+
+        $GLOBALS['BE_FFL']['text'] = TextField::class;
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_FFL']);
+
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
+    public function testReadsTheRecordThroughTheDataContainer(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Example'])
+        ;
+
+        $record = $this->createRecords($dc)->find('tl_content', 17);
+
+        $this->assertSame(17, $record->id);
+        $this->assertSame(['title' => 'Example'], $record->data);
+    }
+
+    #[DataProvider('providePreviousTitles')]
+    public function testUpdatesThroughTheBackendEditor(string $previous): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(['id' => 17, 'title' => $previous], ['id' => 17, 'title' => 'After'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function (): void {
+                    $this->assertSame(['FORM_SUBMIT' => 'tl_content', 'title' => 'After'], $this->requestStack->getCurrentRequest()->request->all());
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $result = $this->createRecords($dc)->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+
+        $this->assertSame(['title' => 'After'], $result->data);
+    }
+
+    #[DataProvider('provideValidationRedirects')]
+    public function testReportsWidgetErrorsAndRestoresPreviousErrors(bool $redirect): void
+    {
+        $errors = new ConstraintViolationList([
+            new ConstraintViolation('First error', 'First error', [], null, 'title', 'After'),
+            new ConstraintViolation('Second error', 'Second error', [], null, 'title', 'After'),
+            new ConstraintViolation('Invalid alias', 'Invalid alias', [], null, 'alias', '123'),
+        ]);
+
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function () use ($redirect, $errors): void {
+                    $attributes = $this->requestStack->getMainRequest()->attributes;
+                    $this->assertFalse($attributes->has('_contao_widget_errors'));
+
+                    $attributes->set('_contao_widget_errors', $errors);
+
+                    if ($redirect) {
+                        throw new ResponseException(new RedirectResponse('/contao'));
+                    }
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $attributes = $this->requestStack->getMainRequest()->attributes;
+        $previousErrors = new ConstraintViolationList([new ConstraintViolation('Previous error', 'Previous error', [], null, 'previous', null)]);
+        $attributes->set('_contao_widget_errors', $previousErrors);
+
+        try {
+            $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+
+            $this->fail('Expected widget validation errors.');
+        } catch (ValidationException $exception) {
+            $violations = $exception->getConstraintViolationList();
+            $this->assertCount(3, $violations);
+            $this->assertSame('title', $violations[0]->getPropertyPath());
+            $this->assertSame('First error', $violations[0]->getMessage());
+            $this->assertSame('title', $violations[1]->getPropertyPath());
+            $this->assertSame('Second error', $violations[1]->getMessage());
+            $this->assertSame('alias', $violations[2]->getPropertyPath());
+            $this->assertSame('Invalid alias', $violations[2]->getMessage());
+            $this->assertSame($errors[0], $violations[0]);
+            $this->assertSame($errors[1], $violations[1]);
+            $this->assertSame($errors[2], $violations[2]);
+        }
+
+        $this->assertSame($previousErrors, $attributes->get('_contao_widget_errors'));
+        $this->assertSame([], $this->requestStack->getCurrentRequest()->request->all());
+    }
+
+    public static function provideValidationRedirects(): iterable
+    {
+        yield 'form rendered with errors' => [false];
+        yield 'redirect with errors' => [true];
+    }
+
+    public function testKeepsGenericRejectionWhenNoWidgetMessagesAreAvailable(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => 123, 'title' => 'Before'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturn('')
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $this->expectException(InvalidInputException::class);
+        $this->expectExceptionMessage('The data container rejected the submitted fields.');
+
+        $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+    }
+
+    public static function providePreviousTitles(): iterable
+    {
+        yield 'changed value' => ['Before'];
+        yield 'unchanged value still reaches validation' => ['After'];
+    }
+
+    #[DataProvider('provideUpdateTimestamps')]
+    public function testStoresSubmitOnChangeFieldsBeforeTheCompleteUpdate(int $tstamp): void
+    {
+        $dc = $this->createEditingDataContainer('{type_legend},type;{template_legend},customTpl;');
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'html', 'customTpl' => 'ce_html'],
+                ['id' => 17, 'tstamp' => $tstamp, 'type' => 'text', 'customTpl' => 'ce_text'],
+            )
+        ;
+
+        $submitted = [];
+
+        $dc
+            ->expects($this->exactly(2))
+            ->method('edit')
+            ->willReturnCallback(
+                function () use (&$submitted): void {
+                    $submitted[] = $this->requestStack->getCurrentRequest()->request->all();
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'type' => ['inputType' => 'text', 'eval' => ['submitOnChange' => true], 'sql' => ['type' => 'string']],
+            'customTpl' => ['inputType' => 'text', 'sql' => ['type' => 'string']],
+        ];
+
+        $result = $records->update(new DataContainerRecord('tl_content', ['type' => 'text', 'customTpl' => 'ce_text'], 17));
+
+        $this->assertSame(
+            [
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text'],
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'text', 'customTpl' => 'ce_text'],
+            ],
+            $submitted,
+        );
+
+        $this->assertSame(['type' => 'text', 'customTpl' => 'ce_text'], $result->data);
+    }
+
+    public static function provideUpdateTimestamps(): iterable
+    {
+        yield 'existing record' => [123];
+        yield 'draft' => [0];
+    }
+
+    #[DataProvider('provideCreationValues')]
+    public function testCreationFollowsTheRedirectIntoAnEditSubmission(array $input, string $default): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function () use ($input, $default): void {
+                    $this->assertSame(['FORM_SUBMIT' => 'tl_content', 'title' => $input['title'] ?? $default], $this->requestStack->getCurrentRequest()->request->all());
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(['id' => 47, 'title' => $default], ['id' => 47, 'title' => $input['title'] ?? $default])
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields']['title']['eval']['mandatory'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['fields']['otherPalette'] = ['inputType' => 'text', 'eval' => ['mandatory' => true]];
+
+        $result = $records->create(new DataContainerRecord('tl_content', $input));
+
+        $this->assertSame(47, $result->id);
+        $this->assertSame(['title' => $input['title'] ?? $default], $result->data);
+    }
+
+    public static function provideCreationValues(): iterable
+    {
+        yield 'new value' => [['title' => 'New'], ''];
+        yield 'explicit default' => [['title' => 'Default'], 'Default'];
+        yield 'explicit empty value' => [['title' => ''], ''];
+        yield 'omitted mandatory default' => [[], 'Default'];
+        yield 'omitted mandatory empty value' => [[], ''];
+    }
+
+    public function testCreationStoresSubmitOnChangeFieldsInTheirOwnRequest(): void
+    {
+        $dc = $this->createEditingDataContainer('{type_legend},type;{template_legend},customTpl;');
+        $dc
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'tstamp' => 0, 'type' => 'text', 'customTpl' => ''])
+        ;
+
+        $submitted = [];
+        $requests = [];
+
+        $dc
+            ->expects($this->exactly(2))
+            ->method('edit')
+            ->willReturnCallback(
+                function () use (&$submitted, &$requests): void {
+                    $requests[] = $this->requestStack->getCurrentRequest();
+                    $submitted[] = $this->requestStack->getCurrentRequest()->request->all();
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'type' => ['inputType' => 'text', 'eval' => ['submitOnChange' => true], 'sql' => ['type' => 'string']],
+            'customTpl' => ['inputType' => 'text', 'sql' => ['type' => 'string']],
+        ];
+
+        $records->create(new DataContainerRecord('tl_content', ['type' => 'headline', 'customTpl' => 'content_element/headline/variant']));
+
+        $this->assertSame(
+            [
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'headline'],
+                ['FORM_SUBMIT' => 'tl_content', 'type' => 'headline', 'customTpl' => 'content_element/headline/variant'],
+            ],
+            $submitted,
+        );
+
+        $this->assertNotSame($requests[0], $requests[1]);
+    }
+
+    public function testCreationEditsTheNewRecordInTheSessionOfTheCreate(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->method('create')
+            ->willReturnCallback(
+                function (): never {
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+
+                    $bag->set('new_records', ['tl_content' => [47]]);
+
+                    throw new ResponseException(new RedirectResponse('/contao?act=edit&id=47'));
+                },
+            )
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'tstamp' => 0, 'title' => ''])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function (): never {
+                    $session = $this->requestStack->getCurrentRequest()->getSession();
+                    $bag = $session->getBag('contao_backend');
+
+                    $this->assertNotSame($this->requestStack->getMainRequest()->getSession(), $session);
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['tl_content' => [47]], $bag->get('new_records'));
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $this->requestStack->getCurrentRequest()->setSession(new Session(new MockArraySessionStorage()));
+
+        $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+    }
+
+    #[DataProvider('provideDefaultSubmissions')]
+    public function testSubmitsDefaultsAccordingToThePaletteAndRecordState(int $tstamp, bool $mandatory, bool $changed): void
+    {
+        $dc = $this->createEditingDataContainer(fn (): string => $changed && !$this->requestStack->getCurrentRequest()->request->has('FORM_SUBMIT') ? 'title' : 'title,alias');
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'tstamp' => $tstamp, 'title' => 'Before', 'alias' => ''])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willReturnCallback(
+                function () use ($tstamp, $mandatory, $changed): void {
+                    $expected = ['FORM_SUBMIT' => 'tl_content', 'title' => 'After'];
+
+                    if (0 === $tstamp || ($mandatory && $changed)) {
+                        $expected['alias'] = '';
+                    }
+
+                    $this->assertSame($expected, $this->requestStack->getCurrentRequest()->request->all());
+
+                    throw new ResponseException(new RedirectResponse('/contao'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $GLOBALS['TL_DCA']['tl_content']['fields']['alias'] = ['inputType' => 'text', 'sql' => ['type' => 'string'], 'eval' => ['mandatory' => $mandatory]];
+
+        $records->update(new DataContainerRecord('tl_content', ['title' => 'After'], 17));
+    }
+
+    public static function provideDefaultSubmissions(): iterable
+    {
+        yield 'creation includes optional defaults' => [0, false, false];
+        yield 'new mandatory field on update' => [123, true, true];
+        yield 'unchanged mandatory field stays omitted' => [123, true, false];
+        yield 'new optional field stays omitted' => [123, false, true];
+        yield 'unchanged optional field stays omitted' => [123, false, false];
+    }
+
+    public function testDeletesWithAnIsolatedBackendSession(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('delete')
+            ->with(true)
+            ->willReturnCallback(
+                function (): void {
+                    $request = $this->requestStack->getCurrentRequest();
+                    $this->assertNotSame($this->requestStack->getMainRequest()->getSession(), $request->getSession());
+                    $this->assertNull($request->getSession()->get('marker'));
+                    $this->assertInstanceOf(AttributeBagInterface::class, $request->getSession()->getBag('contao_backend'));
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('marker', 'saved backend state');
+
+        $this->requestStack->getCurrentRequest()->setSession($session);
+
+        $records->delete(new DataContainerRecord('tl_content', [], 17));
+
+        $this->assertSame('saved backend state', $session->get('marker'));
+    }
+
+    public function testCreationEditsTheNewRecordInTheTransactionOfTheCreate(): void
+    {
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao')))
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'title' => 'New'])
+        ;
+
+        $active = false;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('transactional')
+            ->willReturnCallback(
+                static function (\Closure $callback) use (&$active): mixed {
+                    $active = true;
+
+                    try {
+                        return $callback();
+                    } finally {
+                        $active = false;
+                    }
+                },
+            )
+        ;
+        $connection
+            ->method('isTransactionActive')
+            ->willReturnCallback(
+                static function () use (&$active): bool {
+                    return $active;
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc, $connection);
+        $result = $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+
+        $this->assertSame(47, $result->id);
+    }
+
+    public function testReportsADeadlockAsARetryableConflict(): void
+    {
+        $deadlock = new DeadlockException(PdoException::new(new \PDOException('Deadlock found when trying to get lock')), null);
+
+        $dc = $this->createEditingDataContainer();
+        $dc
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new ResponseException(new RedirectResponse('/contao?act=edit&id=47')))
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('edit')
+            ->willThrowException($deadlock)
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 47, 'title' => ''])
+        ;
+
+        $records = $this->createRecords($dc);
+
+        try {
+            $records->create(new DataContainerRecord('tl_content', ['title' => 'New']));
+
+            $this->fail('The deadlock was not reported.');
+        } catch (ConflictHttpException $exception) {
+            $this->assertSame(409, $exception->getStatusCode());
+            $this->assertSame($deadlock, $exception->getPrevious());
+        }
+    }
+
+    public function testReportsTheMaximumPageForTheRequestedPageSize(): void
+    {
+        $records = $this->createRecords($this->createStub(DC_Table::class));
+
+        $this->expectException(InvalidInputException::class);
+        $this->expectExceptionMessage(\sprintf('The page must not exceed %d for a page size of 30.', intdiv(PHP_INT_MAX, 30) + 1));
+
+        $records->list('tl_content', PHP_INT_MAX);
+    }
+
+    #[DataProvider('provideListingPages')]
+    public function testUsesTheDataContainerListingWithoutQueryingTheDatabase(int $size, array $expected): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('setLimit')
+            ->with(2 * $size)
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): array {
+                    $this->assertTrue($this->requestStack->getCurrentRequest()->hasSession());
+
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['sorting' => ['tl_content' => 'title DESC']], $bag->all());
+                    $this->assertNull($this->requestStack->getCurrentRequest()->query->get('sort'));
+
+                    return range(1, 33);
+                },
+            )
+        ;
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturnCallback(static fn ($id) => ['id' => $id, 'title' => 'Record '.$id])
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('executeQuery')
+        ;
+        $connection
+            ->expects($this->never())
+            ->method('iterateColumn')
+        ;
+
+        $page = $this->createRecords($dc, $connection)->list('tl_content', 2, itemsPerPage: $size, sort: ['title DESC']);
+
+        $this->assertSame(2.0, $page->getCurrentPage());
+        $this->assertSame((float) $size, $page->getItemsPerPage());
+        $this->assertSame($expected, array_map(static fn ($record) => $record->id, iterator_to_array($page)));
+    }
+
+    public function testPassesTheSortingChoiceToTheDataContainer(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): array {
+                    $bag = $this->requestStack->getCurrentRequest()->getSession()->getBag('contao_backend');
+                    $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+                    $this->assertSame(['tl_content' => 'title'], $bag->get('sorting'));
+
+                    return [];
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+        $records->list('tl_content', sort: ['title']);
+    }
+
+    public function testListingDoesNotInheritTheBackendSession(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): array {
+                    $this->assertNull($this->requestStack->getCurrentRequest()->getSession()->get('marker'));
+
+                    return [];
+                },
+            )
+        ;
+
+        $records = $this->createRecords($dc);
+
+        $session = new Session(new MockArraySessionStorage());
+        $session->set('marker', 'saved backend state');
+
+        $this->requestStack->getCurrentRequest()->setSession($session);
+
+        $records->list('tl_content');
+
+        $this->assertSame('saved backend state', $session->get('marker'));
+    }
+
+    public function testListingLimitDoesNotOverflow(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('setLimit')
+            ->with(PHP_INT_MAX)
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturn([])
+        ;
+
+        $this->assertCount(0, $this->createRecords($dc)->list('tl_content', PHP_INT_MAX, itemsPerPage: 1));
+    }
+
+    public function testUsesTheParentContextForTheDataContainer(): void
+    {
+        $modules = $GLOBALS['BE_MOD'] ?? null;
+        $GLOBALS['BE_MOD'] = ['content' => ['article' => ['tables' => ['tl_page', 'tl_content']]]];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->once())
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 7])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('showAll')
+            ->willReturnCallback(
+                function (): array {
+                    $this->assertSame('7', $this->requestStack->getCurrentRequest()->query->get('id'));
+                    $this->assertSame('tl_page', $this->requestStack->getCurrentRequest()->query->get('ptable'));
+
+                    return [];
+                },
+            )
+        ;
+
+        try {
+            $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
+            $this->createRecords($dc)->list('tl_content', context: $context);
+        } finally {
+            if (null === $modules) {
+                unset($GLOBALS['BE_MOD']);
+            } else {
+                $GLOBALS['BE_MOD'] = $modules;
+            }
+        }
+    }
+
+    public function testRejectsAParentChainThatDoesNotMatchTheStoredRecords(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(['id' => 7], ['id' => 9, 'pid' => 8])
+        ;
+
+        $operation = new Get(extraProperties: [
+            'contao' => [
+                'parents' => [
+                    ['table' => 'tl_page', 'parameter' => 'page_id'],
+                    ['table' => 'tl_content', 'parameter' => 'content_id'],
+                ],
+            ],
+        ]);
+
+        $context = DataContainerContext::fromOperation($operation, ['page_id' => 7, 'content_id' => 9]);
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('does not belong to the requested parent');
+
+        $this->createRecords($dc)->list('tl_content', context: $context);
+    }
+
+    public function testRejectsAParentInThePayloadOfANestedRoute(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 7])
+        ;
+        $dc
+            ->expects($this->never())
+            ->method('create')
+        ;
+
+        $context = DataContainerContext::fromOperation(new Get(extraProperties: ['contao' => ['parents' => [['table' => 'tl_page', 'parameter' => 'page_id']]]]), ['page_id' => 7]);
+
+        $this->expectException(InvalidInputException::class);
+        $this->expectExceptionMessage('The parent record is given by the route');
+
+        $this->createRecords($dc)->create(new DataContainerRecord('tl_content', ['pid' => ['iri' => '/contao/api/dc/page/8'], 'headline' => 'Example']), $context);
+    }
+
+    public static function provideListingPages(): iterable
+    {
+        yield 'default size' => [30, [31, 32, 33]];
+        yield 'custom size' => [10, range(11, 20)];
+        yield 'empty page' => [40, []];
+    }
+
+    public function testMovesThroughTheExistingCutAction(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->exactly(3))
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Moved'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_AFTER)
+        ;
+
+        $result = $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'after'));
+
+        $this->assertSame(17, $result->id);
+    }
+
+    public function testMovesIntoTheParentTableOfTheDca(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_page';
+        $modules = $GLOBALS['BE_MOD'] ?? null;
+        $GLOBALS['BE_MOD'] = [];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['id' => 17, 'title' => 'Moved'])
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_INTO)
+        ;
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+
+        try {
+            $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'first', 'tl_page'));
+        } finally {
+            if (null === $modules) {
+                unset($GLOBALS['BE_MOD']);
+            } else {
+                $GLOBALS['BE_MOD'] = $modules;
+            }
+        }
+    }
+
+    public function testRejectsAMissingMoveDestinationBeforeCutting(): void
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->expects($this->exactly(2))
+            ->method('getCurrentRecord')
+            ->willReturnOnConsecutiveCalls(['id' => 17], null)
+        ;
+        $dc
+            ->expects($this->never())
+            ->method('cut')
+        ;
+
+        $this->expectException(ResourceNotFoundException::class);
+
+        $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(999, 'after'));
+    }
+
+    public function testMovesABareDestinationIdIntoTheDefaultParentTable(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['ctable'] = ['tl_content'];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturnCallback(static fn (int|string|null $id = null, string|null $table = null): array => match ($table) {
+                null => ['id' => 17, 'title' => 'Moved'],
+                'tl_page' => ['id' => 42],
+                default => throw new \LogicException(\sprintf('The destination must not be looked up in %s.', $table)),
+            })
+        ;
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+        $dc
+            ->expects($this->once())
+            ->method('cut')
+            ->with(true, 42, DataContainer::PASTE_INTO)
+            ->willReturnCallback(fn () => $this->assertNull($this->requestStack->getCurrentRequest()->query->get('ptable')))
+        ;
+
+        $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42, 'first'));
+    }
+
+    public function testExplainsHowToMoveIntoAnotherParentTableWhenTheDestinationIdIsMissing(): void
+    {
+        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+        $GLOBALS['TL_DCA']['tl_content']['config']['ctable'] = ['tl_content'];
+
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturnCallback(static fn (int|string|null $id = null, string|null $table = null): array|null => match ($table) {
+                null => ['id' => 17, 'title' => 'Moved'],
+                'tl_content' => ['id' => 42],
+                default => null,
+            })
+        ;
+        $dc
+            ->method('__get')
+            ->willReturnCallback(static fn (string $key): string|null => 'parentTable' === $key ? 'tl_page' : null)
+        ;
+        $dc
+            ->expects($this->never())
+            ->method('cut')
+        ;
+
+        $this->expectException(ResourceNotFoundException::class);
+        $this->expectExceptionMessage('The destination record does not exist in tl_page. Without "ptable", the target ID is a record of tl_page. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group) or the destination IRI as "target".');
+
+        $this->createRecords($dc)->move('tl_content', 17, new DataContainerMove(42));
+    }
+
+    private function createEditingDataContainer(\Closure|string $palette = '{title_legend},title;'): DC_Table&MockObject
+    {
+        $dc = $this->createMock(DC_Table::class);
+        $dc
+            ->method('__get')
+            ->willReturnMap([['table', 'tl_content']])
+        ;
+        $dc
+            ->method('getPalette')
+            ->willReturnCallback($palette instanceof \Closure ? $palette : static fn () => $palette)
+        ;
+
+        return $dc;
+    }
+
+    private function createRecords(DC_Table $dc, Connection|null $connection = null): TableDataContainerRecords
+    {
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = ['title' => ['inputType' => 'text', 'sql' => ['type' => 'string'], 'sorting' => true, 'flag' => DataContainer::SORT_BOTH]];
+        $GLOBALS['TL_DCA']['tl_content']['list']['sorting'] = ['mode' => DataContainer::MODE_SORTABLE, 'panelLayout' => 'sort'];
+        $GLOBALS['TL_DCA']['tl_content']['config']['dataContainer'] = DC_Table::class;
+        $GLOBALS['TL_DCA']['tl_page']['config']['dataContainer'] = DC_Table::class;
+
+        $system = $this->createAdapterStub(['loadLanguageFile']);
+        $controller = $this->createAdapterStub(['loadDataContainer']);
+        $loader = $this->createAdapterStub(['switchToCurrentRequest']);
+
+        $framework = $this->createContaoFrameworkStub([Controller::class => $controller, DcaLoader::class => $loader, System::class => $system]);
+        $framework
+            ->method('createInstance')
+            ->willReturnCallback(
+                function ($driver, $arguments) use ($dc) {
+                    $this->assertSame(DC_Table::class, $driver);
+                    $this->assertContains($arguments, [['tl_content'], ['tl_page']]);
+                    $this->assertSame('backend', $this->requestStack->getCurrentRequest()->attributes->get('_scope'));
+                    $this->assertTrue($this->requestStack->getCurrentRequest()->attributes->getBoolean('_stateless'));
+
+                    return $dc;
+                },
+            )
+        ;
+
+        $relationResolver = $this->createRelationResolver();
+        $mapper = new DataContainerRecordMapper(new DataContainerSchemaFactory($framework, $this->converters, $relationResolver, $this->localeSwitcher, $this->createRelationDefinitionFactory($this->converters), new DataContainerWidgetFactory()), $this->converters, $relationResolver, $this->createRelationDefinitionFactory($this->converters));
+
+        if (!$connection) {
+            $connection = $this->createStub(Connection::class);
+            $connection
+                ->method('transactional')
+                ->willReturnCallback(static fn ($callback) => $callback())
+            ;
+        }
+
+        $stack = $this->requestStack = new RequestStack();
+        $stack->push(Request::create('/contao', 'POST'));
+
+        $analyzer = $this->createStub(DcaUrlAnalyzer::class);
+        $analyzer
+            ->method('getEditUrl')
+            ->willReturn('/contao?do=article')
+        ;
+
+        $router = $this->createStub(UrlGeneratorInterface::class);
+        $router
+            ->method('generate')
+            ->willReturnCallback(static fn ($route, $parameters) => '/contao?'.http_build_query($parameters))
+        ;
+
+        return new TableDataContainerRecords($mapper, $connection, $framework, $stack, $analyzer, $router, new DcaRequestSwitcher($framework, $stack));
+    }
+
+    private function createRelationResolver(): DataContainerRelationResolver
+    {
+        $connection = $this->createStub(Connection::class);
+        $this->relationMetadataFactory = $this->createStub(ResourceMetadataCollectionFactoryInterface::class);
+
+        return new DataContainerRelationResolver(
+            $connection,
+            $this->relationMetadataFactory,
+            $this->createStub(RouterInterface::class),
+            $this->createStub(DcaHierarchy::class),
+        );
+    }
+
+    private function createLocaleSwitcher(): LocaleSwitcher
+    {
+        $localeSwitcher = $this->createStub(LocaleSwitcher::class);
+        $localeSwitcher
+            ->method('runWithLocale')
+            ->willReturnCallback(static fn (string $locale, callable $callback): mixed => $callback($locale))
+        ;
+
+        return $localeSwitcher;
+    }
+
+    private function createRelationDefinitionFactory(WidgetConverterRegistry $converters): DataContainerRelationDefinitionFactory
+    {
+        return new DataContainerRelationDefinitionFactory(new ForeignKeyParser($this->createStub(Connection::class)), $converters, $this->relationMetadataFactory);
+    }
+}

@@ -75,7 +75,7 @@ class ModuleNavigation extends Module
 			$host = $objRootPage->domain;
 		}
 
-		$this->Template->ariaLabel = StringUtil::specialchars($this->ariaLabel);
+		$this->Template->ariaLabel = $this->ariaLabel;
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->items = isset($trail[$level]) ? $this->renderNavigation($trail[$level], 1, $host, $lang) : '';

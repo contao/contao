@@ -67,14 +67,17 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
         $loader
             ->method('exists')
             ->willReturnCallback(
-                static fn (string $name) => \in_array($name, [
-                    '@Contao/prefix/foo.html.twig',
-                    '@Contao/prefix/foo/new_variant.html.twig',
-                    '@Contao/prefix/foo/new_variant2.html.twig',
-                ], true),
+                static fn (string $name) => \in_array(
+                    $name,
+                    [
+                        '@Contao/prefix/foo.html.twig',
+                        '@Contao/prefix/foo/new_variant.html.twig',
+                        '@Contao/prefix/foo/new_variant2.html.twig',
+                    ],
+                    true,
+                ),
             )
         ;
-
         $loader
             ->method('getInheritanceChains')
             ->willReturn([
@@ -200,7 +203,7 @@ class CreateVariantOperationTest extends AbstractOperationTestCase
 
     private function getCreateVariantOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null): AbstractCreateVariantOperation
     {
-        $operation = new class() extends AbstractCreateVariantOperation {
+        $operation = new class extends AbstractCreateVariantOperation {
             protected function getPrefix(): string
             {
                 return 'prefix';

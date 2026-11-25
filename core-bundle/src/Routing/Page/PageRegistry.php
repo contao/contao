@@ -52,6 +52,7 @@ class PageRegistry implements ResetInterface
     public function getRoute(PageModel $pageModel): PageRoute
     {
         $type = $pageModel->type;
+
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();

@@ -378,7 +378,6 @@ class PageCandidatesTest extends TestCase
             ->with('type IN (:types)')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
@@ -412,7 +411,6 @@ class PageCandidatesTest extends TestCase
             ->with('type IN (:types)')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
@@ -446,7 +444,6 @@ class PageCandidatesTest extends TestCase
             ->with('type IN (:types)')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
@@ -476,7 +473,6 @@ class PageCandidatesTest extends TestCase
             ->method('getHttpHost')
             ->willReturn('www.example.com')
         ;
-
         $request
             ->expects($this->atLeastOnce())
             ->method('getPathinfo')
@@ -494,7 +490,6 @@ class PageCandidatesTest extends TestCase
             ->method('getUrlPrefixes')
             ->willReturn($urlPrefixes ?: [])
         ;
-
         $pageRegistry
             ->expects(null === $urlSuffixes ? $this->never() : $this->once())
             ->method('getUrlSuffixes')
@@ -523,14 +518,12 @@ class PageCandidatesTest extends TestCase
             ->with('id')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->expects($this->once())
             ->method('from')
             ->with('tl_page')
             ->willReturnSelf()
         ;
-
         $queryBuilder
             ->method('executeQuery')
             ->willReturn($result)

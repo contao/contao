@@ -35,7 +35,6 @@ class RegisterPagesPassTest extends TestCase
             ->with('contao.routing.page_registry')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('findDefinition')
@@ -241,7 +240,6 @@ class RegisterPagesPassTest extends TestCase
             ->onlyMethods(['addMethodCall'])
             ->getMock()
         ;
-
         $definition
             ->expects($this->once())
             ->method('addMethodCall')

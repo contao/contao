@@ -196,6 +196,7 @@ class ImageFactory implements ImageFactoryInterface
 
                 if ($imageSize = $imageModel->findById($size[2])) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
+
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
                     if ('delete' === $imageSize->preserveMetadata) {
@@ -243,6 +244,7 @@ class ImageFactory implements ImageFactoryInterface
             // Predefined sizes
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
+
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
 
                 $options->setPreserveCopyrightMetadata([

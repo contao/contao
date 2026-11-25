@@ -44,12 +44,10 @@ abstract class DoctrineTestCase extends TestCase
                 ->method('getDatabasePlatform')
                 ->willReturn(new MySQLPlatform())
             ;
-
             $connection
                 ->method('getParams')
                 ->willReturn(['defaultTableOptions' => $this->getDefaultTableOptions()])
             ;
-
             $connection
                 ->method('getConfiguration')
                 ->willReturn($this->createStub(Configuration::class))

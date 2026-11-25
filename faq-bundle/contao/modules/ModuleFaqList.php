@@ -94,7 +94,7 @@ class ModuleFaqList extends Module
 			$objFaq = $objFaqs->current();
 
 			$arrTemp = $objFaq->row();
-			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
+			$arrTemp['title'] = StringUtil::stripInsertTags($objFaq->question);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
 			if (($objPid = FaqCategoryModel::findById($objFaq->pid)) && empty($arrFaq[$objFaq->pid]))

@@ -42,6 +42,7 @@ class PagePickerProviderTest extends ContaoTestCase
 
         $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'pagePicker'));
+
         $uri = 'contao_backend?do=page&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
         $this->assertSame('Page picker', $item->getLabel());

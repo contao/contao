@@ -1,0 +1,20 @@
+{% embed '@Contao/backend/template_studio/show_modal.stream.html.twig' %}
+    {% trans_default_domain 'contao_template_studio' %}
+    {% set dialog_attributes = attrs().addClass('template-studio--snapshot-compare') %}
+
+    {% block title %}{{ 'template_studio.snapshots.compare'|trans }}{% endblock %}
+
+    {% block content %}
+        {% if diff %}
+            {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
+            {% set highlighted = diff|highlight('diff') %}
+            {% set code_attributes = attrs()
+                .addClass('hljs')
+                .addClass(highlighted.language)
+            %}
+            <pre class="template-studio--snapshot-diff"><code{{ code_attributes }}>{{ highlighted.value|raw }}</code></pre>
+        {% else %}
+            <p class="description">{{ 'template_studio.snapshots.no_changes'|trans }}</p>
+        {% endif %}
+    {% endblock %}
+{% endembed %}

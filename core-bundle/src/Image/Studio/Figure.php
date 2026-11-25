@@ -16,7 +16,6 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\File;
-use Contao\StringUtil;
 use Contao\Template;
 
 /**
@@ -140,6 +139,7 @@ final class Figure
     public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
         $this->resolveIfClosure($this->linkAttributes);
+
         $this->linkAttributes ??= [];
 
         // Generate the href attribute
@@ -221,13 +221,6 @@ final class Figure
 
             $mapping = $metadata->all();
 
-            // Handle special chars
-            foreach ([Metadata::VALUE_ALT, Metadata::VALUE_TITLE] as $key) {
-                if (isset($mapping[$key])) {
-                    $mapping[$key] = StringUtil::specialchars($mapping[$key]);
-                }
-            }
-
             // Rename certain keys (as used in the Contao templates)
             if (isset($mapping[Metadata::VALUE_TITLE])) {
                 $mapping['imageTitle'] = $mapping[Metadata::VALUE_TITLE];
@@ -244,6 +237,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
+
         $fileInfoImageSize = new File($image->getImageSrc(true))->imageSize;
 
         $linkAttributes = iterator_to_array($this->getLinkAttributes());
@@ -254,7 +248,7 @@ final class Figure
             'picture' => [
                 'img' => $image->getImg(),
                 'sources' => $image->getSources(),
-                'alt' => StringUtil::specialchars($metadata->getAlt()),
+                'alt' => $metadata->getAlt(),
             ],
             'width' => $originalSize->getWidth(),
             'height' => $originalSize->getHeight(),
@@ -273,18 +267,17 @@ final class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define the "attributes" key if href is set
 
-            // Use link "title" attribute for "linkTitle" as it is already output explicitly
-            // in image.html5 (see #3385)
+            // Use a link "title" attribute for "linkTitle" (see #3385)
             if (\array_key_exists('title', $linkAttributes)) {
                 $templateData['linkTitle'] = $linkAttributes['title'];
                 unset($linkAttributes['title']);
             } else {
                 // Map "imageTitle" to "linkTitle"
-                $templateData['linkTitle'] = $templateData['imageTitle'] ?? StringUtil::specialchars($metadata->getTitle());
+                $templateData['linkTitle'] = $templateData['imageTitle'] ?? $metadata->getTitle();
                 unset($templateData['imageTitle']);
             }
         } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
-            $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
+            $templateData['picture']['title'] = $metadata->getTitle();
         }
 
         if ($linkAttributes) {

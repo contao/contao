@@ -56,7 +56,6 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->method('getUri')
             ->willReturn('https://localhost')
         ;
-
         $request
             ->expects($this->once())
             ->method('getSession')

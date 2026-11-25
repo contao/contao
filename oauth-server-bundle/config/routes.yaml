@@ -1,0 +1,28 @@
+contao_oauth_server_authorization_server:
+    path: /.well-known/oauth-authorization-server
+    controller: contao_oauth_server.controller.authorization_server_metadata
+    methods: [GET]
+
+contao_oauth_server_protected_resource:
+    path: /.well-known/oauth-protected-resource
+    controller: contao_oauth_server.controller.protected_resource_metadata
+    methods: [GET]
+
+contao_oauth_server_protected_resource_path:
+    path: /.well-known/oauth-protected-resource/{path}
+    controller: contao_oauth_server.controller.protected_resource_metadata
+    methods: [GET]
+    requirements:
+        path: .+
+
+contao_oauth_server_authorize:
+    path: '%contao.backend.route_prefix%/oauth/authorize'
+    controller: contao_oauth_server.controller.authorize
+    methods: [GET, POST]
+    defaults:
+        _scope: backend
+
+contao_oauth_server_token:
+    path: /_contao/oauth/token
+    controller: contao_oauth_server.controller.token
+    methods: [POST]

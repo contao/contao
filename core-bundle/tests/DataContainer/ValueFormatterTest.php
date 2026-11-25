@@ -30,6 +30,7 @@ class ValueFormatterTest extends TestCase
     public function testFormat(mixed $value, array $dca, string $expected, array|null $rawValues = null): void
     {
         $tz = date_default_timezone_get();
+
         date_default_timezone_set('UTC');
 
         $GLOBALS['TL_DCA']['tl_foo']['fields']['foo'] = $dca;
@@ -398,9 +399,7 @@ class ValueFormatterTest extends TestCase
                 Date::class => $dateAdapter,
                 Config::class => $configAdapter,
             ],
-            [
-                DcaExtractor::class => $dcaExtractor,
-            ],
+            [DcaExtractor::class => $dcaExtractor],
         );
 
         $connection = $this->createMock(Connection::class);
@@ -410,7 +409,6 @@ class ValueFormatterTest extends TestCase
             ->with('SELECT `name` FROM tl_foo WHERE id = ?', [42])
             ->willReturn('bar')
         ;
-
         $connection
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
@@ -463,9 +461,7 @@ class ValueFormatterTest extends TestCase
                 Date::class => $dateAdapter,
                 Config::class => $configAdapter,
             ],
-            [
-                DcaExtractor::class => $dcaExtractor,
-            ],
+            [DcaExtractor::class => $dcaExtractor],
         );
 
         $connection = $this->createMock(Connection::class);
@@ -475,7 +471,6 @@ class ValueFormatterTest extends TestCase
             ->with('SELECT `name` FROM tl_foo WHERE bar = ?', [42])
             ->willReturn('bar')
         ;
-
         $connection
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)

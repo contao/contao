@@ -66,6 +66,7 @@ class FilesyncCommandTest extends TestCase
     public function testRenderStats(): void
     {
         $clock = new MockClock();
+
         $manager = $this->createMock(DbafsManager::class);
         $manager
             ->expects($this->once())

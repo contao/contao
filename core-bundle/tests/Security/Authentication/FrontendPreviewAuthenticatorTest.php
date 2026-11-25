@@ -191,6 +191,72 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($previewLinkId, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewLinkId']);
     }
 
+    public function testSetsThePreviewTime(): void
+    {
+        $session = $this->mockSession();
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
+
+        $this->assertTrue($authenticator->authenticateFrontendGuest(false));
+        $this->assertTrue($authenticator->setPreviewTime(new \DateTimeImmutable('@637974000')));
+
+        $this->assertSame(637974000, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewTime']);
+
+        $this->assertTrue($authenticator->setPreviewTime(null));
+        $this->assertNull($session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewTime']);
+    }
+
+    public function testDoesNotSetThePreviewTimeWithoutPreviewSession(): void
+    {
+        $session = $this->mockSession();
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
+
+        $this->assertFalse($authenticator->setPreviewTime(new \DateTimeImmutable('@637974000')));
+        $this->assertFalse($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
+    }
+
+    public function testKeepsPreviewTimeWhenSwitchingToAnotherFrontendUser(): void
+    {
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->willReturnOnConsecutiveCalls(true)
+        ;
+
+        $session = $this->mockSession();
+        $user = new \ReflectionClass(FrontendUser::class)->newInstanceWithoutConstructor();
+
+        $userProvider = $this->createStub(UserProviderInterface::class);
+        $userProvider
+            ->method('loadUserByIdentifier')
+            ->willReturn($user)
+        ;
+
+        $authenticator = $this->getAuthenticator($security, null, null, $session, $userProvider);
+
+        $this->assertTrue($authenticator->authenticateFrontendGuest(false));
+        $this->assertTrue($authenticator->setPreviewTime(new \DateTimeImmutable('@637974000')));
+
+        // Authentication should not remove the previewTime
+        $this->assertTrue($authenticator->authenticateFrontendUser('foobar', false));
+
+        $payload = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
+
+        $this->assertSame(637974000, $payload['previewTime']);
+    }
+
+    public function testResetsThePreviewTimeWhenAuthenticationIsRemoved(): void
+    {
+        $session = $this->mockSession();
+        $authenticator = $this->getAuthenticator(null, null, null, $session);
+
+        $this->assertTrue($authenticator->authenticateFrontendGuest(false));
+        $this->assertTrue($authenticator->setPreviewTime(new \DateTimeImmutable('@1700000000')));
+        $this->assertTrue($authenticator->removeFrontendAuthentication());
+
+        $this->assertFalse($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
+    }
+
     public static function getShowUnpublishedPreviewLinkIdData(): iterable
     {
         yield [true, null];

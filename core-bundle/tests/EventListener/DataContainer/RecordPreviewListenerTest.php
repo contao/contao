@@ -86,14 +86,12 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_form')
             ->willReturn('tl_form')
         ;
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_form WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
-
         $connection
             ->expects($this->once())
             ->method('update')
@@ -104,7 +102,6 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_form',
         ]);
-
         $dataContainer
             ->expects($this->once())
             ->method('generateRecordLabel')
@@ -144,7 +141,6 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_user')
             ->willReturn('tl_user')
         ;
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -205,7 +201,6 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_user')
             ->willReturn('tl_user')
         ;
-
         $connection
             ->expects($this->once())
             ->method('executeQuery')
@@ -260,14 +255,12 @@ class RecordPreviewListenerTest extends TestCase
             ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
-
         $connection
             ->expects($this->once())
             ->method('quoteSingleIdentifier')
             ->with('tl_content')
             ->willReturn('tl_content')
         ;
-
         $connection
             ->expects($this->once())
             ->method('update')
@@ -278,7 +271,6 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_content',
         ]);
-
         $dataContainer
             ->expects($this->once())
             ->method('generateRecordLabel')
@@ -312,7 +304,6 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_form',
         ]);
-
         $dataContainer
             ->expects($this->never())
             ->method('generateRecordLabel')

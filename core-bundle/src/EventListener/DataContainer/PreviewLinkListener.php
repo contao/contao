@@ -89,6 +89,7 @@ class PreviewLinkListener
 
         $act = $request->query->get('act');
         $url = $request->query->getString('url');
+
         $now = $this->clock->now();
 
         if (!$act) {
@@ -101,6 +102,7 @@ class PreviewLinkListener
 
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = $url;
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = $request->query->getBoolean('showUnpublished');
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['previewTime']['default'] = $request->query->getString('previewTime');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = $now->getTimestamp();
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day', $now->getTimestamp());
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $user instanceof BackendUser ? (int) $user->id : 0;

@@ -57,9 +57,7 @@ class PageRoutingListenerTest extends TestCase
             ->method('render')
             ->with(
                 '@Contao/backend/routing/path_widget.html.twig',
-                [
-                    'path' => $expected,
-                ],
+                ['path' => $expected],
             )
             ->willReturn('foobar')
         ;
@@ -180,7 +178,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(1)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -210,7 +207,6 @@ class PageRoutingListenerTest extends TestCase
             ->method('isRoutable')
             ->willReturn(true)
         ;
-
         $pageRegistry
             ->expects($this->exactly(4))
             ->method('getRoute')
@@ -262,7 +258,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(42)
             ->willReturn(null)
         ;
-
         $pageAdapter
             ->expects($this->never())
             ->method('findSimilarByAlias')
@@ -299,7 +294,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(42)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -315,7 +309,6 @@ class PageRoutingListenerTest extends TestCase
             ->method('isRoutable')
             ->willReturn(true)
         ;
-
         $pageRegistry
             ->expects($this->never())
             ->method('getRoute')
@@ -344,7 +337,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(42)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->never())
             ->method('findSimilarByAlias')
@@ -397,7 +389,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(1)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -422,7 +413,6 @@ class PageRoutingListenerTest extends TestCase
             ->method('isRoutable')
             ->willReturnOnConsecutiveCalls(true, false)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('getRoute')
@@ -467,7 +457,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(1)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -492,7 +481,6 @@ class PageRoutingListenerTest extends TestCase
             ->method('isRoutable')
             ->willReturn(true)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('getRoute')
@@ -537,7 +525,6 @@ class PageRoutingListenerTest extends TestCase
             ->with(1)
             ->willReturn($pageModel)
         ;
-
         $pageAdapter
             ->expects($this->once())
             ->method('findSimilarByAlias')
@@ -595,7 +582,6 @@ class PageRoutingListenerTest extends TestCase
             ->method('getPath')
             ->willReturn($path)
         ;
-
         $route
             ->expects($this->once())
             ->method('getRequirements')
@@ -620,22 +606,18 @@ class PageRoutingListenerTest extends TestCase
             ->method('getPath')
             ->willReturn($url)
         ;
-
         $route
             ->method('getRequirements')
             ->willReturn([])
         ;
-
         $route
             ->method('getUrlPrefix')
             ->willReturn($pageModel->urlPrefix)
         ;
-
         $route
             ->method('getUrlSuffix')
             ->willReturn($pageModel->urlSuffix)
         ;
-
         $route
             ->method('compile')
             ->willReturn(new CompiledRoute($staticPrefix, '', [], []))

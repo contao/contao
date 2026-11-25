@@ -81,6 +81,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $session->getFlashBag()->get('flash');
 
         $request = Request::create('/');
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
         $request->setSession($session);
 
         $this->assertTrue($tokenManager->canSkipTokenValidation($request, 'csrf_contao_csrf_token'));
@@ -100,7 +101,6 @@ class ContaoCsrfTokenManagerTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
-
         $foreignSession
             ->expects($this->once())
             ->method('all')

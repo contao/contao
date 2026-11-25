@@ -89,6 +89,7 @@ class CommandCompiler
                 foreach ($commands as $key => $command) {
                     try {
                         $this->executeSqlCommand($command);
+
                         $commandExecuted = true;
                         unset($commands[$key]);
                     } catch (\Throwable $e) {
@@ -211,10 +212,14 @@ class CommandCompiler
                 continue;
             }
 
-            $engine = $table->hasOption('engine') ? $table->getOption('engine') : '';
+            $defaultTableOptions = $this->connection->getParams()['defaultTableOptions'] ?? [];
+
+            // Fall back to the connection's default engine so tables missing an explicit
+            // engine option still get fixed instead of being left on the wrong engine.
+            $engine = $table->hasOption('engine') ? $table->getOption('engine') : ($defaultTableOptions['engine'] ?? '');
             $innodb = 'innodb' === strtolower($engine);
 
-            if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
+            if ('' !== $engine && strtolower($tableOptions['Engine']) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
@@ -237,8 +242,8 @@ class CommandCompiler
                 $commands[] = $command;
             }
 
-            $collate = '';
-            $charset = $table->hasOption('charset') ? $table->getOption('charset') : '';
+            $collate = $defaultTableOptions['collation'] ?? '';
+            $charset = $table->hasOption('charset') ? $table->getOption('charset') : ($defaultTableOptions['charset'] ?? '');
 
             if ($table->hasOption('collation')) {
                 $collate = $table->getOption('collation');
@@ -246,7 +251,7 @@ class CommandCompiler
                 $collate = $table->getOption('collate');
             }
 
-            if ($tableOptions['Collation'] !== $collate && '' !== $charset) {
+            if ($tableOptions['Collation'] !== $collate && '' !== $collate && '' !== $charset) {
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
                 $commands[] = $command;

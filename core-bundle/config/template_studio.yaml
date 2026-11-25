@@ -21,6 +21,7 @@ services:
             - '@contao.twig.studio.autocomplete'
             - '@contao.twig.studio.environment_information'
             - '@database_connection'
+            - '@contao.twig.studio.template_snapshots'
             - !tagged_iterator { tag: contao.operation.template_studio_element }
 
     contao.twig.studio.autocomplete:
@@ -92,6 +93,14 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.inspector'
+
+    contao.twig.studio.template_snapshots:
+        class: Contao\CoreBundle\Twig\Studio\TemplateSnapshots
+        arguments:
+            - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
+            - '@contao.twig.studio.cache_invalidator'
+            - '@contao.twig.filesystem_loader'
 
     # Autowiring aliases
     Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory: '@contao.twig.studio.template_skeleton_factory'

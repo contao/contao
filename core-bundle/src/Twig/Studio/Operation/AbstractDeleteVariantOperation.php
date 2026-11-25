@@ -33,6 +33,7 @@ abstract class AbstractDeleteVariantOperation extends DeleteOperation
     public function execute(Request $request, OperationContext $context): Response
     {
         $response = parent::execute($request, $context);
+
         $this->migrateDatabaseUsages($context->getIdentifier());
 
         return $response;
@@ -41,7 +42,6 @@ abstract class AbstractDeleteVariantOperation extends DeleteOperation
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['database_connection'] = Connection::class;
 
         return $services;

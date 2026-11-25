@@ -66,7 +66,6 @@ class ReindexMessageHandlerTest extends TestCase
             ->with('foobar')
             ->willReturn(Job::new('job-type', Owner::asSystem()))
         ;
-
         $jobs
             ->expects($this->once())
             ->method('persist')

@@ -138,7 +138,6 @@ class FaviconControllerTest extends TestCase
         $framework = $this->createContaoFrameworkMock([
             FilesModel::class => $filesModelAdapter,
         ]);
-
         $framework
             ->expects($this->once())
             ->method('initialize')

@@ -29,7 +29,6 @@ class UndoOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['fromTable' => 'tl_foo', 'data' => serialize(['tl_foo' => [['id' => 42]]])])
         ;
-
         $operation
             ->expects($this->never())
             ->method('disable')
@@ -58,7 +57,6 @@ class UndoOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['fromTable' => 'tl_bar', 'data' => serialize(['tl_bar' => [['id' => 42]]])])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')
@@ -87,7 +85,6 @@ class UndoOperationListenerTest extends TestCase
             ->method('getRecord')
             ->willReturn(['fromTable' => 'tl_bar', 'data' => serialize([])])
         ;
-
         $operation
             ->expects($this->once())
             ->method('disable')

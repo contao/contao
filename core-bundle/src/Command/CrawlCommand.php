@@ -187,6 +187,7 @@ class CrawlCommand extends Command
 
         $outputHandler = new ConsoleHandler($output);
         $outputHandler->setFormatter(new LineFormatter("[%context.source%] [%context.crawlUri%] %message%\n"));
+
         $handlers[] = $outputHandler;
 
         $groupHandler = new GroupHandler($handlers);

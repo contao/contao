@@ -54,6 +54,7 @@ class PageRoute extends Route implements RouteObjectInterface
 
         // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
+
         $options['utf8'] ??= true;
         $options['compiler_class'] ??= PageRouteCompiler::class;
 

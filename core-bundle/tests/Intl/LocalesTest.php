@@ -51,6 +51,7 @@ class LocalesTest extends TestCase
     public function testGetsEnabledLocaleIds(): void
     {
         $this->assertSame(['en', 'de'], $this->getLocalesService()->getEnabledLocaleIds());
+
         $this->assertSame(
             ['gsw', 'de', 'en'],
             $this->getLocalesService(null, null, [], [], 'gsw')->getEnabledLocaleIds(),
@@ -177,7 +178,6 @@ class LocalesTest extends TestCase
             ->method('getCatalogue')
             ->willReturnMap([['de', $catalogue]])
         ;
-
         $translator
             ->method('trans')
             ->willReturnCallback(

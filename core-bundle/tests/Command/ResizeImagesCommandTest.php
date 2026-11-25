@@ -53,6 +53,7 @@ class ResizeImagesCommandTest extends TestCase
         ;
 
         $command = $this->getCommand(null, null, $storage);
+
         $tester = new CommandTester($command);
         $code = $tester->execute([], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
@@ -82,6 +83,7 @@ class ResizeImagesCommandTest extends TestCase
         ;
 
         $command = $this->getCommand($factory, $resizer, $storage);
+
         $tester = new CommandTester($command);
         $code = $tester->execute(['--no-sub-process' => true], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
@@ -119,6 +121,7 @@ class ResizeImagesCommandTest extends TestCase
         ;
 
         $command = $this->getCommand($factory, $resizer, $storage);
+
         $tester = new CommandTester($command);
         $code = $tester->execute(['--no-sub-process' => true, '--time-limit' => 0.5], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();

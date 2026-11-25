@@ -22,6 +22,8 @@ namespace Contao;
  */
 class Validator
 {
+	public const REGEXP_NUMERIC = '^-?\d+(\.\d+)?$';
+
 	public const REGEXP_DIGIT = '^\d+$';
 
 	public const REGEXP_ALPHA = '^[\pL .-]+$';
@@ -37,7 +39,7 @@ class Validator
 	 */
 	public static function isNumeric($varValue)
 	{
-		return 1 === preg_match('/^-?\d+(\.\d+)?$/', $varValue);
+		return 1 === preg_match('/' . static::REGEXP_NUMERIC . '/', $varValue);
 	}
 
 	/**

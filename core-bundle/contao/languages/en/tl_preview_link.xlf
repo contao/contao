@@ -14,6 +14,12 @@
       <trans-unit id="tl_preview_link.showUnpublished.1">
         <source>Show unpublished pages and elements when sharing this link.</source>
       </trans-unit>
+      <trans-unit id="tl_preview_link.previewTime.0">
+        <source>Preview time</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.previewTime.1">
+        <source>Show the preview at a specific date and time.</source>
+      </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
       </trans-unit>

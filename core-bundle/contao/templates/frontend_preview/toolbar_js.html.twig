@@ -57,7 +57,8 @@
                 display: none;
             }
 
-            .cto-toolbar__close {
+            .cto-toolbar__close,
+            .cto-toolbar__clear-time {
                 border: none;
                 border-left: 1px solid #ccc;
                 padding: 3px 8px;
@@ -67,12 +68,14 @@
                 cursor: pointer;
             }
 
-            .cto-toolbar__close:hover {
+            .cto-toolbar__close:hover,
+            .cto-toolbar__clear-time:hover {
                 color: #666;
                 background: rgba(0, 0, 0, 0.03);
             }
 
-            .cto-toolbar__close .color-scheme--dark {
+            .cto-toolbar__close .color-scheme--dark,
+            .cto-toolbar__clear-time .color-scheme--dark {
                 display: none;
             }
 
@@ -128,13 +131,14 @@
                 margin: 0 3px 0 0;
             }
 
-            .cto-toolbar input[type="text"] {
+            .cto-toolbar input[type="text"],
+            .cto-toolbar input[type="datetime-local"] {
                 margin: 0;
                 width: auto;
                 box-sizing: border-box;
                 padding: 4px 6px 5px;
                 border: 1px solid #aaa;
-                border-radius: 2px;
+                border-radius: 0.375rem;
                 background-color: #fff;
                 -moz-appearance: none;
                 -webkit-appearance: none;
@@ -146,8 +150,8 @@
                 box-sizing: border-box;
                 border: 1px solid #aaa;
                 padding: 4px 22px 5px 6px;
-                border-radius: 2px;
-                background: #fff url({{ asset('icons/down.svg', 'contao_core') }}) right -16px center no-repeat;
+                border-radius: 0.375rem;
+                background: #fff url({{ asset('icons/chevron-down.svg', 'contao_core') }}) right -16px top 2.5px no-repeat;
                 background-origin: content-box;
                 cursor: pointer;
                 text-transform: none;
@@ -155,11 +159,40 @@
                 -webkit-appearance: none;
             }
 
+            .cto-toolbar__time {
+                display: inline-flex;
+                align-items: center;
+                height: 29px;
+                box-sizing: border-box;
+                border: 1px solid #aaa;
+                border-radius: 0.375rem;
+                background: #fff;
+            }
+
+            .cto-toolbar .cto-toolbar__time input {
+                height: 27px;
+                min-width: 0;
+                border: none;
+                border-radius: 0.375rem 0 0 0.375rem;
+                outline: none;
+            }
+
+            .cto-toolbar__clear-time {
+                justify-content: center;
+                flex-shrink: 0;
+                width: 24px;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                border-left-color: #ddd;
+                border-radius: 0 0.375rem 0.375rem 0;
+            }
+
             .cto-toolbar .tl_submit {
                 margin: 0 0 0 6px;
                 padding: 4px 10px 5px;
                 border: 1px solid #aaa;
-                border-radius: 2px;
+                border-radius: 0.375rem;
                 box-sizing: border-box;
                 cursor: pointer;
                 background: #eee;
@@ -285,6 +318,14 @@
                 }
 
                 const userField = form.querySelector('input[name="user"]');
+                const timeField = form.querySelector('input[name="previewTime"]');
+
+                form.querySelector('#ctrl_preview_time_clear')?.addEventListener('click', function () {
+                    // Safari may keep the cleared datetime-local input invalid unless assigned twice.
+                    // https://stackoverflow.com/questions/77537783
+                    timeField.value = '';
+                    timeField.value = '';
+                });
 
                 form.addEventListener('submit', function (e) {
                     e.preventDefault();

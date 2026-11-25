@@ -23,7 +23,7 @@ class DropZone extends FileUpload
 	public function generateMarkup()
 	{
 		// Maximum file size in MB
-		$intMaxSize = round(static::getMaxUploadSize() / 1024 / 1024);
+		$intMaxSize = System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSizeInMegabytes();
 
 		// String of accepted file extensions
 		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
@@ -52,25 +52,29 @@ class DropZone extends FileUpload
       dictFileTooBig: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneFileTooBig']) . ',
       dictInvalidFileType: ' . json_encode($GLOBALS['TL_LANG']['tl_files']['dropzoneInvalidType']) . '
     }).on("addedfile", function() {
-      $$(".dz-message").setStyle("display", "none");
+      document.querySelectorAll(".dz-message")?.forEach(function(el) {
+        el.style.display = "none";
+      });
     }).on("success", function(file, message) {
       if (!message) return;
-      var container = $("tl_message");
+      var container = document.getElementById("tl_message");
       if (!container) {
-        container = new Element("div", {
-          "id": "tl_message",
-          "class": "tl_message"
-        }).inject($("tl_buttons"), "before");
+        container = document.createElement("div");
+        container.id = "tl_message";
+        container.className = "tl_message";
+        document.getElementById("tl_buttons").before(container);
       }
-      container.appendHTML(message);
+      container.insertAdjacentHTML("beforeend", message);
     });
-    $$("div.tl_formbody_submit").setStyle("display", "none");
+    document.querySelectorAll("div.tl_formbody_submit").forEach(function(el) {
+      el.style.display = "none";
+    });
   </script>';
 
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
+  <p class="tl_help tl_tip" data-contao--tooltips-target="content">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;

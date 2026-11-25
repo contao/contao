@@ -20,7 +20,6 @@ class FailTolerantFilesystemLoaderTest extends TestCase
     public function testToleratesInvalidPaths(): void
     {
         $loader = new FailTolerantFilesystemLoader([], '/project/dir');
-
         $loader->addPath('non/existing/path');
         $loader->prependPath('non/existing/path');
 

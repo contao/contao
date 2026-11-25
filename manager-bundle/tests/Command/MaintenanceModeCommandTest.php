@@ -48,7 +48,6 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             ->method('getLoader')
             ->willReturn($loader)
         ;
-
         $twig
             ->expects($this->once())
             ->method('render')
@@ -124,7 +123,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             '/path/to/var/maintenance.html',
             $this->createStub(Environment::class),
             $this->createStub(Locales::class),
-            $this->createStub(TranslatorInterface::class), $filesystem);
+            $this->createStub(TranslatorInterface::class),
+            $filesystem,
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);

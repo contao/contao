@@ -46,6 +46,8 @@
                     .set('data-contao--sortable-handle-value', '.drag-handle', is_sortable)
                     .set('data-contao--sortable-parent-mode-value', 'true', is_sortable)
                     .set('data-contao--sortable-request-token-value', contao.request_token, is_sortable)
+                    .set('data-contao--sortable-confirm-url-value', path('contao_backend_confirm'), is_sortable)
+                    .set('data-contao--sortable-error-message-value', 'ERR.moveFailed'|trans, is_sortable)
                     .set('data-id', pid, is_sortable)
                 %}
                 <ul{{ list_attributes }}>

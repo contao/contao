@@ -49,11 +49,11 @@ class ContentDownloads extends ContentDownload
 		}
 
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if ($this->useHomeDir)
 		{
-			$user = FrontendUser::getInstance();
+			$user = System::getContainer()->get('security.helper')->getUser();
 
-			if ($user->assignDir && $user->homeDir)
+			if ($user instanceof FrontendUser && $user->assignDir && $user->homeDir)
 			{
 				$this->multiSRC = array($user->homeDir);
 			}
@@ -161,7 +161,7 @@ class ContentDownloads extends ContentDownload
 				// Use the file name as title if none is given
 				if (empty($arrMeta['title']))
 				{
-					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
+					$arrMeta['title'] = $objFile->basename;
 				}
 
 				$strHref = Environment::get('requestUri');
@@ -185,7 +185,7 @@ class ContentDownloads extends ContentDownload
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename),
 					'link'      => $arrMeta['title'] ?? null,
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,
@@ -251,7 +251,7 @@ class ContentDownloads extends ContentDownload
 					// Use the file name as title if none is given
 					if (empty($arrMeta['title']))
 					{
-						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
+						$arrMeta['title'] = $objFile->basename;
 					}
 
 					$strHref = Environment::get('requestUri');
@@ -270,7 +270,7 @@ class ContentDownloads extends ContentDownload
 						'id'        => $objSubfiles->id,
 						'uuid'      => $objSubfiles->uuid,
 						'name'      => $objFile->basename,
-						'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+						'title'     => \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename),
 						'link'      => $arrMeta['title'],
 						'caption'   => $arrMeta['caption'] ?? null,
 						'href'      => $strHref,

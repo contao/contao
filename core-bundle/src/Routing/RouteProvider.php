@@ -211,9 +211,9 @@ class RouteProvider extends AbstractPageRouteProvider
     /**
      * Sorts routes so that the FinalMatcher will correctly resolve them.
      *
-     * 1. The ones with hostname should come first, so the ones with empty host are only taken if no hostname matches
-     * 2. Root pages come last, so non-root pages with index alias (= identical path) match first
-     * 3. Root/Index pages must be sorted by accept language and fallback, so the best language matches first
+     * 1. Group routes by hostname, with empty hosts last so they are only taken if no hostname matches
+     * 2. Root/Index pages must be sorted by accept language and fallback, so the best language matches first
+     * 3. Otherwise, root pages come last, so non-root pages with index alias (= identical path) match first
      * 4. Pages with longer alias (folder page) must come first to match if applicable
      */
     private function sortRoutes(array &$routes, array|null $languages = null): void

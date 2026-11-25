@@ -67,7 +67,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -139,7 +138,6 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->willReturnMap([[$page1, new PageRoute($page1)], [$page2, new PageRoute($page2)]])
         ;
-
         $pageRegistry
             ->expects($this->exactly(2))
             ->method('isRoutable')
@@ -181,7 +179,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -223,7 +220,6 @@ class RouteProviderTest extends TestCase
             ->with($page)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -305,7 +301,6 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->willReturnMap(array_map(static fn ($page) => [$page, new PageRoute($page)], $pages))
         ;
-
         $pageRegistry
             ->expects($this->exactly(\count($pages)))
             ->method('isRoutable')
@@ -318,6 +313,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(\count($pages), $collection);
 
         $i = 0;
+
         ksort($pages);
 
         foreach ($collection as $name => $route) {
@@ -486,19 +482,22 @@ class RouteProviderTest extends TestCase
         ];
     }
 
-    public function testSortsTheRootRoutes(): void
+    #[DataProvider('getRootRoutes')]
+    public function testSortsTheRootRoutes(array $pages, array $languages, bool $withFallbacks): void
     {
-        $pages = [
-            2 => $this->mockRootPage('en', 'english-root'),
-            1 => $this->mockPage('en', 'index'),
-            0 => $this->mockRootPage('de', 'german-root', false),
-        ];
+        $pages = array_map(
+            function (array $page) {
+                [$type, $arguments, $properties] = $page;
+                $model = 'root' === $type ? $this->mockRootPage(...$arguments) : $this->mockPage(...$arguments);
 
-        $expectedNames = [
-            'tl_page.'.$pages[0]->id.'.root',
-            'tl_page.'.$pages[1]->id.'.root',
-            'tl_page.'.$pages[2]->id.'.root',
-        ];
+                foreach ($properties as $name => $value) {
+                    $model->$name = $value;
+                }
+
+                return $model;
+            },
+            $pages,
+        );
 
         $pageAdapter = $this->createAdapterMock(['findBy']);
         $pageAdapter
@@ -508,7 +507,7 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/', ['de', 'en']);
+        $request = $this->mockRequestWithPath('/', $languages);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -520,10 +519,11 @@ class RouteProviderTest extends TestCase
         $provider = $this->getRouteProvider($framework, $pageRegistry);
         $collection = $provider->getRouteCollectionForRequest($request);
 
-        $this->assertCount(\count($expectedNames), $collection);
+        $this->assertCount(\count($pages) * ($withFallbacks ? 2 : 1), $collection);
 
         $i = 0;
         $c = \count($pages);
+
         ksort($pages);
 
         foreach ($collection as $name => $route) {
@@ -557,82 +557,38 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function testSortsTheRootRoutesWithFallbacks(): void
+    public static function getRootRoutes(): iterable
     {
-        $pages = [
-            2 => $this->mockRootPage('en', 'english-root'),
-            1 => $this->mockPage('en', 'index'),
-            0 => $this->mockRootPage('de', 'german-root', false),
+        yield 'Sorts index before root with other domains and unmatched languages' => [
+            [
+                2 => ['root', ['nl', 'domain-b'], ['domain' => 'b.example.com', 'rootSorting' => 256]],
+                0 => ['regular', ['nl', 'index', true, 'c.example.com'], ['rootSorting' => 384]],
+                3 => ['regular', ['zh', 'index', true, 'a.example.com'], ['rootSorting' => 128]],
+                1 => ['regular', ['nl', 'index', true, 'b.example.com'], ['rootSorting' => 256]],
+            ],
+            ['en', 'de'],
+            false,
         ];
 
-        $pages[0]->urlPrefix = 'en';
-        $pages[1]->urlPrefix = 'en';
-        $pages[2]->urlPrefix = 'de';
-
-        $expectedNames = [
-            'tl_page.'.$pages[0]->id.'.root',
-            'tl_page.'.$pages[1]->id.'.root',
-            'tl_page.'.$pages[2]->id.'.root',
-            'tl_page.'.$pages[0]->id.'.fallback',
-            'tl_page.'.$pages[1]->id.'.fallback',
-            'tl_page.'.$pages[2]->id.'.fallback',
+        yield 'Sorts the root routes' => [
+            [
+                2 => ['root', ['en', 'english-root'], []],
+                1 => ['regular', ['en', 'index'], []],
+                0 => ['root', ['de', 'german-root', false], []],
+            ],
+            ['de', 'en'],
+            false,
         ];
 
-        $pageAdapter = $this->createAdapterMock(['findBy']);
-        $pageAdapter
-            ->expects($this->exactly(2))
-            ->method('findBy')
-            ->willReturnOnConsecutiveCalls(new Collection(array_values($pages), 'tl_page'), null)
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/', ['de', 'en']);
-
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $pageRegistry
-            ->expects($this->exactly(\count($pages)))
-            ->method('getRoute')
-            ->willReturnMap(array_map(static fn ($page) => [$page, new PageRoute($page)], $pages))
-        ;
-
-        $provider = $this->getRouteProvider($framework, $pageRegistry);
-        $collection = $provider->getRouteCollectionForRequest($request);
-
-        $this->assertCount(\count($expectedNames), $collection);
-
-        $i = 0;
-        $c = \count($pages);
-        ksort($pages);
-
-        foreach ($collection as $name => $route) {
-            $routedPage = $route->getDefault('pageModel');
-
-            if ($i > $c - 1) {
-                $suffix = '.fallback';
-                $page = $pages[$i - $c];
-            } else {
-                $suffix = '.root';
-                $page = $pages[$i];
-            }
-
-            $this->assertInstanceOf(PageModel::class, $routedPage);
-            $this->assertSame('tl_page.'.$page->id.$suffix, $name);
-
-            $this->assertSame(
-                $page,
-                $routedPage,
-                \sprintf(
-                    'Position %s should be %s/%s but is %s/%s',
-                    $i,
-                    $page->rootLanguage,
-                    $page->alias,
-                    $routedPage->rootLanguage,
-                    $routedPage->alias,
-                ),
-            );
-
-            ++$i;
-        }
+        yield 'Sorts the root routes with fallbacks' => [
+            [
+                2 => ['root', ['en', 'english-root'], ['urlPrefix' => 'de']],
+                1 => ['regular', ['en', 'index'], ['urlPrefix' => 'en']],
+                0 => ['root', ['de', 'german-root', false], ['urlPrefix' => 'en']],
+            ],
+            ['de', 'en'],
+            true,
+        ];
     }
 
     #[DataProvider('getPageRoutes')]
@@ -663,7 +619,6 @@ class RouteProviderTest extends TestCase
             ->with($pageModel)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -715,7 +670,6 @@ class RouteProviderTest extends TestCase
             ->with($routablePage)
             ->willReturn($route)
         ;
-
         $pageRegistry
             ->expects($this->exactly(2))
             ->method('isRoutable')
@@ -804,12 +758,10 @@ class RouteProviderTest extends TestCase
             ->method('getPathInfo')
             ->willReturn($path)
         ;
-
         $request
             ->method('getLanguages')
             ->willReturn($languages)
         ;
-
         $request
             ->method('getHttpHost')
             ->willReturn('example.com')

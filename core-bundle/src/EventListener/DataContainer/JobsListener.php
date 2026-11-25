@@ -87,6 +87,7 @@ class JobsListener
         // Job children view
         if ($request->query->has('ptable')) {
             $pidFilter = 'pid != 0';
+
             $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
             $GLOBALS['TL_DCA']['tl_job']['list']['label']['fields'] = ['uuid', 'status'];
             $GLOBALS['TL_DCA']['tl_job']['list']['label']['format'] = '%s <span class="label-info">%s</span>';
@@ -95,7 +96,8 @@ class JobsListener
             $pidFilter = 'pid = 0';
         }
 
-        $query = \sprintf('%s AND (owner = %d OR (public = 1 AND owner = %d))',
+        $query = \sprintf(
+            '%s AND (owner = %d OR (public = 1 AND owner = %d))',
             $pidFilter,
             $userId,
             Owner::SYSTEM,

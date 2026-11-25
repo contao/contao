@@ -324,17 +324,14 @@ class ForwardPageControllerTest extends TestCase
             ->method('getPageModel')
             ->willReturn($pageModel)
         ;
-
         $route
             ->expects($this->never())
             ->method('setPath')
         ;
-
         $route
             ->expects($this->never())
             ->method('setRequirements')
         ;
-
         $route
             ->expects($this->never())
             ->method('setDefaults')
@@ -355,29 +352,24 @@ class ForwardPageControllerTest extends TestCase
             ->method('getPageModel')
             ->willReturn($pageModel)
         ;
-
         $route
             ->method('getRequirements')
             ->willReturn(['parameters' => '(/.+?)?'])
         ;
-
         $route
             ->method('getDefaults')
             ->willReturn(['parameters' => ''])
         ;
-
         $route
             ->expects($this->once())
             ->method('setPath')
             ->with('/foobar')
         ;
-
         $route
             ->expects($this->once())
             ->method('setRequirements')
             ->with([])
         ;
-
         $route
             ->expects($this->once())
             ->method('setDefaults')

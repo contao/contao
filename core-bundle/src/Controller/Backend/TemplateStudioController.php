@@ -27,10 +27,15 @@ use Contao\CoreBundle\Twig\Studio\EnvironmentInformation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshotException;
+use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
@@ -58,6 +63,7 @@ class TemplateStudioController extends AbstractBackendController
         private readonly Autocomplete $autocomplete,
         private readonly EnvironmentInformation $environmentInformation,
         private readonly Connection $connection,
+        private readonly TemplateSnapshots $snapshots,
         iterable $taggedOperations,
     ) {
         $operationsByName = [];
@@ -70,6 +76,25 @@ class TemplateStudioController extends AbstractBackendController
         ksort($operationsByName);
 
         $this->operations = $operationsByName;
+    }
+
+    protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null, \Throwable|null $apiError = null): Response
+    {
+        // We expose the Template Studio in our api-bundle. If a sub request is made in
+        // that context, we return the raw context instead of a rendered response.
+        if ($this->container->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api')) {
+            if ($apiError) {
+                $parameters['errorClass'] = $apiError::class;
+                $parameters['errorMessage'] = $apiError->getMessage();
+            }
+
+            return new JsonResponse(
+                $parameters,
+                $apiError ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK,
+            );
+        }
+
+        return parent::render($view, $parameters, $response, $includeChromeContext);
     }
 
     #[Route(
@@ -95,7 +120,23 @@ class TemplateStudioController extends AbstractBackendController
             'themes' => $availableThemes,
             'current_theme' => $themeContext,
             'environment_information' => $this->environmentInformation->getData(),
+            ...$this->getSnapshotPanelData(),
         ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/panel',
+        name: '_contao_template_studio_snapshot_panel.stream',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function snapshotPanel(): Response
+    {
+        return $this->render(
+            '@Contao/backend/template_studio/snapshot/panel.stream.html.twig',
+            $this->getSnapshotPanelData(),
+        );
     }
 
     /**
@@ -112,6 +153,20 @@ class TemplateStudioController extends AbstractBackendController
     {
         return $this->render('@Contao/backend/template_studio/tree/tree.stream.html.twig', [
             'tree' => $this->generateTree(),
+        ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio-themes',
+        name: '_contao_template_studio_themes.stream',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function themes(): Response
+    {
+        return new JsonResponse([
+            'themes' => $this->getAvailableThemes(),
         ]);
     }
 
@@ -158,6 +213,7 @@ class TemplateStudioController extends AbstractBackendController
             return $this->render(
                 '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
                 ['identifier' => $identifier],
+                apiError: new NotFoundHttpException('Given identifier does not exist.'),
             );
         }
 
@@ -181,8 +237,10 @@ class TemplateStudioController extends AbstractBackendController
         for ($i = 0; $i < $numTemplates; ++$i) {
             $logicalName = $logicalNamesChain[$i];
             $source = $this->loader->getSourceContext($logicalName);
+
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
             $isComponent = $templateInformation->isComponent();
+
             $templateNameInformation = $this->getTemplateNameInformation($logicalName);
 
             $template = [
@@ -393,10 +451,12 @@ class TemplateStudioController extends AbstractBackendController
         $operationContext = $this->getOperationContext($identifier);
 
         $result = null;
+        $executed = false;
 
         foreach ($candidates as $candidate) {
             if ($candidate->canExecute($operationContext)) {
                 $result = $candidate->execute($request, $operationContext);
+                $executed = true;
 
                 break;
             }
@@ -406,10 +466,103 @@ class TemplateStudioController extends AbstractBackendController
         // nothing at all - in which case we stream a default result.
         $request->setRequestFormat('turbo_stream');
 
-        return $result ?? $this->render('@Contao/backend/template_studio/operation/default_result.stream.html.twig', [
-            'operation' => $operationName,
-            'context' => $operationContext,
+        return $result ?? $this->render(
+            '@Contao/backend/template_studio/operation/default_result.stream.html.twig',
+            [
+                'operation' => $operationName,
+                'context' => $operationContext,
+            ],
+            apiError: $executed ? null : new UnprocessableEntityHttpException('The operation is not available for this template.'),
+        );
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot',
+        name: '_contao_template_studio_snapshot.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function snapshot(): Response
+    {
+        try {
+            $hash = $this->snapshots->snapshot();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        return $this->render('@Contao/backend/template_studio/snapshot/created.stream.html.twig', [
+            'snapshot_hash' => $hash,
         ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/compare',
+        name: '_contao_template_studio_snapshot_compare.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function compareSnapshots(): Response
+    {
+        try {
+            $diff = $this->snapshots->diff();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        return $this->render('@Contao/backend/template_studio/snapshot/compare.stream.html.twig', [
+            'diff' => $diff,
+        ]);
+    }
+
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/snapshot/rollback',
+        name: '_contao_template_studio_snapshot_rollback.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function rollbackSnapshots(Request $request, #[MapQueryParameter('open_tab')] array $openTabs = []): Response
+    {
+        try {
+            if (!$request->request->has('confirm_rollback')) {
+                $this->snapshots->diff();
+
+                return $this->render('@Contao/backend/template_studio/snapshot/rollback_confirm.stream.html.twig');
+            }
+
+            $this->snapshots->rollback();
+        } catch (TemplateSnapshotException $exception) {
+            return $this->snapshotError($exception);
+        }
+
+        $validTabs = array_filter($openTabs, $this->isAllowedIdentifier(...));
+
+        return $this->render('@Contao/backend/template_studio/snapshot/rollback_result.stream.html.twig', [
+            'open_tabs' => $validTabs,
+            'removed_tabs' => array_diff($openTabs, $validTabs),
+        ]);
+    }
+
+    private function snapshotError(TemplateSnapshotException $exception): Response
+    {
+        return $this->render('@Contao/backend/template_studio/snapshot/failed.stream.html.twig', [
+            'error' => $exception->getMessage(),
+        ]);
+    }
+
+    /**
+     * @return array{snapshots_available: bool, current_snapshot: array{hash: string, date: string}|null}
+     */
+    private function getSnapshotPanelData(): array
+    {
+        $available = $this->snapshots->isAvailable();
+
+        return [
+            'snapshots_available' => $available,
+            'current_snapshot' => $available ? $this->snapshots->latestSnapshot() : null,
+        ];
     }
 
     protected function getOperationContext(string $identifier): OperationContext
@@ -564,10 +717,16 @@ class TemplateStudioController extends AbstractBackendController
             $suppressedPrefixes[] = $this->themeNamespace->getPath((string) $slug);
         }
 
-        $regex = \sprintf('#^(%s)/#', implode('|', array_map(
-            static fn (string $path): string => preg_quote($path, '#'),
-            $suppressedPrefixes,
-        )));
+        $regex = \sprintf(
+            '#^(?!backend/rte/)(%s)/#',
+            implode(
+                '|',
+                array_map(
+                    static fn (string $path): string => preg_quote($path, '#'),
+                    $suppressedPrefixes,
+                ),
+            ),
+        );
 
         return $this->finder
             ->create()

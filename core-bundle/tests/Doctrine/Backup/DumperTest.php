@@ -269,21 +269,23 @@ class DumperTest extends ContaoTestCase
         ];
 
         yield 'Table with binary data' => [
-            [new Table(
-                'tl_page',
-                [
-                    new Column('x_string', Type::getType(Types::STRING), ['length' => 255, 'platformOptions' => ['charset' => 'utf8mb4']]),
-                    new Column('x_json', Type::getType(Types::JSON)),
-                    new Column('x_ascii', Type::getType(Types::ASCII_STRING), ['length' => 255]),
-                    new Column('x_binary', Type::getType(Types::BINARY), ['length' => 255]),
-                    new Column('x_blob', Type::getType(Types::BLOB)),
-                    new Column('x_simple_array', Type::getType(Types::SIMPLE_ARRAY)),
-                ],
-                [],
-                [],
-                [],
-                $tableOptions,
-            )],
+            [
+                new Table(
+                    'tl_page',
+                    [
+                        new Column('x_string', Type::getType(Types::STRING), ['length' => 255, 'platformOptions' => ['charset' => 'utf8mb4']]),
+                        new Column('x_json', Type::getType(Types::JSON)),
+                        new Column('x_ascii', Type::getType(Types::ASCII_STRING), ['length' => 255]),
+                        new Column('x_binary', Type::getType(Types::BINARY), ['length' => 255]),
+                        new Column('x_blob', Type::getType(Types::BLOB)),
+                        new Column('x_simple_array', Type::getType(Types::SIMPLE_ARRAY)),
+                    ],
+                    [],
+                    [],
+                    [],
+                    $tableOptions,
+                ),
+            ],
             [],
             [
                 'SELECT `x_string`, `x_json`, `x_ascii`, `x_binary`, `x_blob`, `x_simple_array` FROM `tl_page`' => [
@@ -373,7 +375,6 @@ class DumperTest extends ContaoTestCase
             ->method('introspectTables')
             ->willReturn($tables)
         ;
-
         $schemaManager
             ->expects($this->once())
             ->method('introspectViews')
@@ -386,7 +387,6 @@ class DumperTest extends ContaoTestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())
@@ -404,7 +404,6 @@ class DumperTest extends ContaoTestCase
             ->method('executeQuery')
             ->willReturnMap($calls)
         ;
-
         $connection
             ->method('quote')
             ->willReturnCallback(static fn ($value) => \sprintf("'%s'", str_replace("'", "''", $value)))

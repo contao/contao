@@ -24,6 +24,7 @@ class AutolinkRuntimeTest extends TestCase
         /** @var AutolinkRuntime $runtime */
         $runtime = $this->getContainerWithContaoConfiguration()->get('contao.twig.autolink_runtime');
         $actual = $runtime->linkUrls($text);
+
         $this->assertSame($expected, $actual);
     }
 

@@ -55,22 +55,26 @@ abstract class AbstractOperationTestCase extends ContaoTestCase
     public static function provideCommonThemeAndPathForNonExistingUserTemplate(): iterable
     {
         yield 'no theme' => [
-            null, 'content_element/no_user_template.html.twig',
+            null,
+            'content_element/no_user_template.html.twig',
         ];
 
         yield 'my theme' => [
-            'my_theme', 'my/theme/content_element/no_user_template.html.twig',
+            'my_theme',
+            'my/theme/content_element/no_user_template.html.twig',
         ];
     }
 
     public static function provideCommonThemeAndPathForExistingUserTemplate(): iterable
     {
         yield 'no theme' => [
-            null, 'content_element/existing_user_template.html.twig',
+            null,
+            'content_element/existing_user_template.html.twig',
         ];
 
         yield 'my theme' => [
-            'my_theme', 'my/theme/content_element/existing_user_template.html.twig',
+            'my_theme',
+            'my/theme/content_element/existing_user_template.html.twig',
         ];
     }
 

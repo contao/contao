@@ -44,6 +44,7 @@ class FilePickerProviderTest extends TestCase
 
         $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'filePicker'));
+
         $uri = 'contao_backend?do=files&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
         $this->assertSame('File picker', $item->getLabel());
@@ -259,7 +260,6 @@ class FilePickerProviderTest extends TestCase
             ->method('findByUuid')
             ->willReturn($filesModel)
         ;
-
         $adapter
             ->method('findByPath')
             ->willReturnOnConsecutiveCalls($filesModel, null)

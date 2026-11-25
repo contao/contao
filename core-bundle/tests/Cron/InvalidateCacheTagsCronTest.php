@@ -30,7 +30,6 @@ class InvalidateCacheTagsCronTest extends TestCase
             ->method('getId')
             ->willReturn(1)
         ;
-
         $first
             ->method('getTags')
             ->willReturn(['foo', 'bar'])
@@ -41,7 +40,6 @@ class InvalidateCacheTagsCronTest extends TestCase
             ->method('getId')
             ->willReturn(2)
         ;
-
         $second
             ->method('getTags')
             ->willReturn(['bar', 'baz'])
@@ -54,7 +52,6 @@ class InvalidateCacheTagsCronTest extends TestCase
             ->with($now)
             ->willReturn([$first, $second])
         ;
-
         $repository
             ->expects($this->once())
             ->method('removeByIds')
@@ -79,7 +76,6 @@ class InvalidateCacheTagsCronTest extends TestCase
             ->method('findDue')
             ->willReturn([])
         ;
-
         $repository
             ->expects($this->never())
             ->method('removeByIds')

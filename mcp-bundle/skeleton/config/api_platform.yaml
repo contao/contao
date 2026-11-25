@@ -1,4 +1,3 @@
 api_platform:
     mcp:
-        enabled: true
-        format: jsonld
+        enabled: false

@@ -32,6 +32,7 @@ class SymlinkedLocalFilesProvider extends AbstractPublicUriProvider implements P
         private readonly RequestStack $requestStack,
     ) {
         $this->adapters = new \WeakMap();
+
         $this->registerAdapter($localFilesAdapter, $uploadDir);
     }
 

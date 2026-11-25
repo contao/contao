@@ -146,20 +146,22 @@ class DataContainerCallbackListenerTest extends TestCase
     public static function singletonProvider(): iterable
     {
         yield 'handles label_callback' => [
-            ['list.sorting.label_callback' => [[
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'firstCallback',
-                    'closure' => null,
-                    'singleton' => null,
-                ],
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'secondCallback',
-                    'closure' => null,
-                    'singleton' => null,
-                ],
-            ]]],
+            [
+                'list.sorting.label_callback' => [[
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'firstCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ],
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'secondCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ],
+                ]],
+            ],
             [
                 'list' => [
                     'sorting' => [
@@ -170,20 +172,22 @@ class DataContainerCallbackListenerTest extends TestCase
         ];
 
         yield 'uses singleton if attribute is true' => [
-            ['fields.foo.barCallback' => [[
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'firstCallback',
-                    'closure' => null,
-                    'singleton' => true,
-                ],
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'secondCallback',
-                    'closure' => null,
-                    'singleton' => null,
-                ],
-            ]]],
+            [
+                'fields.foo.barCallback' => [[
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'firstCallback',
+                        'closure' => null,
+                        'singleton' => true,
+                    ],
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'secondCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ],
+                ]],
+            ],
             [
                 'fields' => [
                     'foo' => [
@@ -194,20 +198,22 @@ class DataContainerCallbackListenerTest extends TestCase
         ];
 
         yield 'does not use singleton if attribute is false' => [
-            ['list.sorting.label_callback' => [[
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'firstCallback',
-                    'closure' => null,
-                    'singleton' => false,
-                ],
-                [
-                    'service' => 'Test\CallbackListener',
-                    'method' => 'secondCallback',
-                    'closure' => null,
-                    'singleton' => false,
-                ],
-            ]]],
+            [
+                'list.sorting.label_callback' => [[
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'firstCallback',
+                        'closure' => null,
+                        'singleton' => false,
+                    ],
+                    [
+                        'service' => 'Test\CallbackListener',
+                        'method' => 'secondCallback',
+                        'closure' => null,
+                        'singleton' => false,
+                    ],
+                ]],
+            ],
             [
                 'list' => [
                     'sorting' => [
@@ -242,6 +248,7 @@ class DataContainerCallbackListenerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub([System::class => $systemAdapter]);
+
         $listener = new DataContainerCallbackListener($framework);
 
         $listener->setCallbacks(

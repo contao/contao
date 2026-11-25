@@ -54,6 +54,7 @@ class SymlinksCommandTest extends TestCase
     public function testSymlinksTheContaoFolders(): void
     {
         $command = $this->getCommand();
+
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();

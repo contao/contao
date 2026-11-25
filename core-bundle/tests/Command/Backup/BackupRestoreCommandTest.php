@@ -39,6 +39,7 @@ class BackupRestoreCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+
         $normalizedOutput = preg_replace('/\\s\\s+/', ' ', $commandTester->getDisplay(true));
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
@@ -74,6 +75,60 @@ class BackupRestoreCommandTest extends TestCase
         $code = $commandTester->execute([]);
 
         $this->assertSame(0, $code);
+    }
+
+    #[DataProvider('specificBackupProvider')]
+    public function testRestoresSpecificBackup(array $arguments, array $inputs, bool $interactive): void
+    {
+        $older = $this->createBackup('older__20250101000000.sql.gz', 100);
+        $newest = $this->createBackup('newer__20260101000000.sql.gz', 200);
+
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->method('listBackups')
+            ->willReturn([$newest, $older])
+        ;
+        $backupManager
+            ->expects($this->once())
+            ->method('createRestoreConfig')
+            ->willReturn(new RestoreConfig($newest))
+        ;
+        $backupManager
+            ->expects($this->once())
+            ->method('restore')
+            ->with($this->callback(static fn (RestoreConfig $config) => 'older__20250101000000.sql.gz' === $config->getBackup()->getFilename()))
+        ;
+
+        $command = new BackupRestoreCommand($backupManager);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs($inputs);
+
+        $code = $commandTester->execute($arguments, ['interactive' => $interactive]);
+
+        $this->assertStringContainsString('Successfully restored backup from "older__20250101000000.sql.gz".', $commandTester->getDisplay(true));
+        $this->assertSame(0, $code);
+    }
+
+    public static function specificBackupProvider(): iterable
+    {
+        yield 'Name argument, interactive' => [
+            ['name' => 'older__20250101000000.sql.gz'],
+            [],
+            true,
+        ];
+
+        yield 'Name argument, non-interactive' => [
+            ['name' => 'older__20250101000000.sql.gz'],
+            [],
+            false,
+        ];
+
+        yield 'Selected backup' => [
+            [],
+            ['1'],
+            true,
+        ];
     }
 
     public static function unsuccessfulCommandRunProvider(): iterable
@@ -151,7 +206,6 @@ class BackupRestoreCommandTest extends TestCase
             ->method('createRestoreConfig')
             ->willReturn(new RestoreConfig($backup))
         ;
-
         $backupManager
             ->expects($this->once())
             ->method('restore')

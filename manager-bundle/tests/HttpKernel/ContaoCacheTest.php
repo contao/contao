@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
+use Contao\CoreBundle\EventListener\HttpCache\StripQueryParametersSubscriber;
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
@@ -41,7 +42,8 @@ class ContaoCacheTest extends ContaoTestCase
 
         $postHandleListeners = $dispatcher->getListeners(Events::POST_HANDLE);
 
-        $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[0][0]);
+        $this->assertInstanceOf(StripQueryParametersSubscriber::class, $postHandleListeners[0][0]);
+        $this->assertInstanceOf(CleanupCacheTagsListener::class, $postHandleListeners[1][0]);
     }
 
     #[DataProvider('cookieAllowListProvider')]
@@ -97,13 +99,11 @@ class ContaoCacheTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn(new Container())
         ;
-
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('handle')
             ->willReturnOnConsecutiveCalls($response, $response)
         ;
-
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('terminate')

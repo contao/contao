@@ -18,6 +18,7 @@ use CmsIg\Seal\Engine;
 use CmsIg\Seal\EngineInterface;
 use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
 use CmsIg\Seal\Schema\Index;
+use Contao\BackendUser;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
@@ -82,7 +83,6 @@ class BackendSearchTest extends TestCase
                 ),
             )
         ;
-
         $engine
             ->expects($this->once())
             ->method('bulk')
@@ -178,21 +178,18 @@ class BackendSearchTest extends TestCase
             ->with('type')
             ->willReturn(true)
         ;
-
         $provider
             ->expects($this->exactly(3))
             ->method('convertTypeToVisibleType')
             ->with('type')
             ->willReturn('visible-type')
         ;
-
         $provider
             ->expects($this->once())
             ->method('getFacetLabelForTag')
             ->with('tag-1')
             ->willReturn('tag-1-label')
         ;
-
         $provider
             ->expects($this->exactly(2))
             ->method('convertDocumentToHit')
@@ -200,15 +197,35 @@ class BackendSearchTest extends TestCase
             ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
         ;
 
+        $user = $this->createMock(BackendUser::class);
+        $user
+            ->expects($this->exactly(4))
+            ->method('__get')
+            ->with('groups')
+            ->willReturn([1])
+        ;
+
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+        $security
+            ->expects($this->exactly(4))
             ->method('isGranted')
-            ->with(
-                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
-                $this->callback(static fn (Document $document): bool => '42' === $document->getId()),
+            ->willReturnCallback(
+                function (string $attribute, mixed $subject = null): bool {
+                    if ('ROLE_ADMIN' === $attribute) {
+                        return false;
+                    }
+
+                    $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $attribute);
+                    $this->assertInstanceOf(Document::class, $subject);
+                    $this->assertSame('42', $subject->getId());
+
+                    return true;
+                },
             )
-            ->willReturn(true)
         ;
 
         $engine = new Engine(new MemoryAdapter(), BackendSearch::getSearchEngineSchema($indexName));
@@ -219,6 +236,7 @@ class BackendSearchTest extends TestCase
             'type' => 'type',
             'searchableContent' => 'search me',
             'tags' => ['tag-1'],
+            'allowedGroups' => [1],
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
@@ -271,7 +289,6 @@ class BackendSearchTest extends TestCase
             ->with('type')
             ->willReturn(true)
         ;
-
         $provider
             ->expects($this->once())
             ->method('convertDocumentToHit')

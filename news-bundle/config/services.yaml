@@ -39,6 +39,13 @@ services:
             - '@contao.routing.content_url_generator'
             - '@contao.routing.response_context_accessor'
 
+    contao_news.listener.data_container.default_user_id:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultUserIdListener
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: contao.callback, table: tl_news, target: fields.author.default }
+
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:

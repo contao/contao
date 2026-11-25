@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
@@ -113,96 +114,7 @@ abstract class Controller extends System
 			$arrTemplates[$strTemplate][] = 'root';
 		}
 
-		$strGlobPrefix = $strPrefix;
-
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
-
-		// Add the customized templates
-		if (!empty($arrCustomized) && \is_array($arrCustomized))
-		{
-			$blnIsGroupPrefix = preg_match('/^[a-z]+_$/', $strPrefix);
-
-			foreach ($arrCustomized as $strFile)
-			{
-				$strTemplate = basename($strFile, strrchr($strFile, '.'));
-
-				// Ignore bundle templates, e.g. mod_article and mod_article_list
-				if (\in_array($strTemplate, $arrBundleTemplates))
-				{
-					continue;
-				}
-
-				// Also ignore custom templates belonging to a different bundle template,
-				// e.g. mod_article and mod_article_list_custom
-				if (!$blnIsGroupPrefix)
-				{
-					foreach ($arrBundleTemplates as $strKey)
-					{
-						if (str_starts_with($strTemplate, $strKey . '_'))
-						{
-							continue 2;
-						}
-					}
-				}
-
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['user'] ?? 'user';
-			}
-		}
-
 		$arrDefaultPlaces = array();
-
-		if ($strDefaultTemplate)
-		{
-			$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['default'];
-
-			if (file_exists($projectDir . '/templates/' . $strDefaultTemplate . '.html5'))
-			{
-				$arrDefaultPlaces[] = $GLOBALS['TL_LANG']['MSC']['user'];
-			}
-		}
-
-		// Do not look for back end templates in theme folders (see #5379)
-		if ($strPrefix != 'be_' && $strPrefix != 'mail_')
-		{
-			// Try to select the themes (see #5210)
-			try
-			{
-				$objTheme = ThemeModel::findAll(array('order'=>'name'));
-			}
-			catch (\Throwable $e)
-			{
-				$objTheme = null;
-			}
-
-			// Add the theme templates
-			if ($objTheme !== null)
-			{
-				while ($objTheme->next())
-				{
-					if (!$objTheme->templates)
-					{
-						continue;
-					}
-
-					if ($strDefaultTemplate && file_exists($projectDir . '/' . $objTheme->templates . '/' . $strDefaultTemplate . '.html5'))
-					{
-						$arrDefaultPlaces[] = $objTheme->name;
-					}
-
-					$arrThemeTemplates = self::braceGlob($projectDir . '/' . $objTheme->templates . '/' . $strGlobPrefix . '*.html5');
-
-					if (!empty($arrThemeTemplates) && \is_array($arrThemeTemplates))
-					{
-						foreach ($arrThemeTemplates as $strFile)
-						{
-							$strTemplate = basename($strFile, strrchr($strFile, '.'));
-							$arrTemplates[$strTemplate][] = $objTheme->name;
-						}
-					}
-				}
-			}
-		}
 
 		// Show the template sources (see #6875)
 		foreach ($arrTemplates as $k=>$v)
@@ -240,7 +152,7 @@ abstract class Controller extends System
 	/**
 	 * Generate a front end module and return it as string
 	 *
-	 * @param mixed  $intId                       A module ID or a Model object
+	 * @param mixed  $intId                       A module ID, a Model object or a FrontendModuleReference
 	 * @param string $strColumn                   The name of the column
 	 * @param array  $arrPreloadedContentElements
 	 *
@@ -248,6 +160,20 @@ abstract class Controller extends System
 	 */
 	public static function getFrontendModule($intId, $strColumn='main', array $arrPreloadedContentElements=array())
 	{
+		$frontendModuleReference = null;
+
+		if ($intId instanceof FrontendModuleReference)
+		{
+			if (\func_num_args() > 1)
+			{
+				throw new \InvalidArgumentException('Passing a column name or preloaded content elements is not supported when using a FrontendModuleReference.');
+			}
+
+			$frontendModuleReference = $intId;
+			$strColumn = $frontendModuleReference->getSection();
+			$intId = $frontendModuleReference->getModuleModel();
+		}
+
 		if (!\is_object($intId) && !\strlen($intId))
 		{
 			return '';
@@ -363,7 +289,7 @@ abstract class Controller extends System
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
-		$objModule = new $strClass($objRow, $strColumn);
+		$objModule = new $strClass(is_a($strClass, ModuleProxy::class, true) && $frontendModuleReference ? $frontendModuleReference : $objRow, $strColumn);
 		$strBuffer = $objModule->generate();
 
 		// HOOK: add custom logic
@@ -641,19 +567,9 @@ abstract class Controller extends System
 			}
 		}
 
-		/** @var class-string<Form> $strClass */
-		$strClass = $blnModule ? Module::findClass('form') : ContentElement::findClass('form');
-
-		if (!class_exists($strClass))
-		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Form class "' . $strClass . '" does not exist');
-
-			return '';
-		}
-
 		$objRow->form = $objRow->id;
 
-		$objElement = new $strClass($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
+		$objElement = new Form($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic
@@ -1443,7 +1359,7 @@ abstract class Controller extends System
 				// Use the file name as title if none is given
 				if (empty($arrMeta['title']))
 				{
-					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
+					$arrMeta['title'] = $objFile->basename;
 				}
 
 				$arrEnclosures[] = array
@@ -1451,7 +1367,7 @@ abstract class Controller extends System
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename),
 					'link'      => $arrMeta['title'],
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,

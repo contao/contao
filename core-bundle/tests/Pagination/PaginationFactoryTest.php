@@ -32,7 +32,6 @@ class PaginationFactoryTest extends TestCase
         ;
 
         $factory = new PaginationFactory($requestStack);
-
         $pagination = $factory->create(new PaginationConfig('page', 10, 5));
 
         $this->assertSame(2, $pagination->getCurrent());

@@ -133,7 +133,6 @@ class TemplateOptionsListenerTest extends TestCase
             ->method('quoteSingleIdentifier')
             ->willReturnArgument(0)
         ;
-
         $connection
             ->expects($this->atLeastOnce())
             ->method('executeQuery')
@@ -277,18 +276,27 @@ class TemplateOptionsListenerTest extends TestCase
             ->method('getTemplateGroup')
             ->willReturnMap([
                 [
-                    'ce_legacy_fragment_element_', [], 'ce_legacy_fragment_element', [
+                    'ce_legacy_fragment_element_',
+                    [],
+                    'ce_legacy_fragment_element',
+                    [
                         '' => 'ce_legacy_fragment_element',
                         'ce_legacy_fragment_element_variant' => 'ce_legacy_fragment_element_variant',
                     ],
                 ],
                 [
-                    'mod_legacy_fragment_module_', [], 'mod_legacy_fragment_module', [
+                    'mod_legacy_fragment_module_',
+                    [],
+                    'mod_legacy_fragment_module',
+                    [
                         '' => 'mod_legacy_fragment_module',
                     ],
                 ],
                 [
-                    'form_widget_', [], 'form_widget', [
+                    'form_widget_',
+                    [],
+                    'form_widget',
+                    [
                         '' => 'form_widget',
                         'form_widget_variant' => 'form_widget_variant',
                     ],

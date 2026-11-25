@@ -118,7 +118,7 @@ class ContentDownload extends ContentElement
 		// Use the meta title (see #1459)
 		if (!$this->overwriteLink && isset($arrMeta['title']))
 		{
-			$this->linkTitle = StringUtil::specialchars($arrMeta['title']);
+			$this->linkTitle = $arrMeta['title'];
 		}
 
 		if (!$this->titleText || !$this->overwriteLink)
@@ -142,7 +142,7 @@ class ContentDownload extends ContentElement
 		$strHref .= (str_contains($strHref, '?') ? '&' : '?') . 'file=' . System::urlEncode($objFile->value) . '&cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
-		$this->Template->title = StringUtil::specialchars($this->titleText);
+		$this->Template->title = $this->titleText;
 		$this->Template->href = $strHref;
 		$this->Template->filesize = $this->getReadableSize($objFile->filesize);
 		$this->Template->icon = Image::getPath($objFile->icon);

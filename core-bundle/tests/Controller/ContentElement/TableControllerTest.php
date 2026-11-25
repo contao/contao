@@ -24,7 +24,8 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['foo', 'bar'], ['foobar', "baz\nbaz"],
+                    ['foo', 'bar'],
+                    ['foobar', "baz\nbaz"],
                 ]),
                 'summary' => 'My caption',
                 'sortable' => true,
@@ -65,7 +66,9 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['header1', 'header2'], ['foo', '<a href="foo">bar</a>'], ['footer1', 'footer2'],
+                    ['header1', 'header2'],
+                    ['foo', '<a href="foo">bar</a>'],
+                    ['footer1', 'footer2'],
                 ]),
                 'thead' => true,
                 'tfoot' => true,

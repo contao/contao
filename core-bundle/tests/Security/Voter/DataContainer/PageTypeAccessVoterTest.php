@@ -154,7 +154,6 @@ class PageTypeAccessVoterTest extends TestCase
             ->method('fetchFirstColumn')
             ->willReturn($rootIds ?? [])
         ;
-
         $connection
             ->expects(null === $rootTypes ? $this->never() : $this->once())
             ->method('fetchAllNumeric')

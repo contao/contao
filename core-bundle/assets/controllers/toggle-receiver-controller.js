@@ -49,7 +49,7 @@ export default class extends Controller {
     documentClick(event) {
         if (
             !this.isOpen() ||
-            this.contaoToggleSenderOutlets.filter((t) => t.element.contains(event.target)).length > 0 ||
+            this.contaoToggleSenderOutlets.some((t) => t.element.contains(event.target)) ||
             this.element.contains(event.target)
         ) {
             return;
@@ -95,7 +95,7 @@ export default class extends Controller {
 
         setTimeout(() => {
             if (state) {
-                this.element.focus();
+                this.element.focus({ preventScroll: true });
             } else if (this.hasContaoToggleSenderOutlet) {
                 this.contaoToggleSenderOutlet.element.focus();
             }

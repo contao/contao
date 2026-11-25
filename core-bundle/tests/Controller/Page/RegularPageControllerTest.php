@@ -54,12 +54,8 @@ class RegularPageControllerTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub(
-            [
-                LayoutModel::class => $layoutAdapter,
-            ],
-            [
-                FrontendIndex::class => $frontendIndex,
-            ],
+            [LayoutModel::class => $layoutAdapter],
+            [FrontendIndex::class => $frontendIndex],
         );
 
         $controller = $this->getRegularPageController(

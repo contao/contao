@@ -285,13 +285,15 @@ class Newsletter extends Backend
 		$strToken = bin2hex(random_bytes(16));
 		$objSession->set('tl_newsletter_send', $strToken);
 		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' <%s>' : '%s';
+		$user = System::getContainer()->get('security.helper')->getUser();
+		$email = $user instanceof BackendUser ? $user->email : '';
 
 		// Preview newsletter
 		$return = Message::generate() . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="' . System::getContainer()->get('router')->generate('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
+<form action="' . System::getContainer()->get('router')->generate('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get" data-turbo="false">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . Input::get('do') . '">
 <input type="hidden" name="table" value="' . Input::get('table') . '">
@@ -342,7 +344,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . StringUtil::specialchars(Idna::decodeEmail(BackendUser::getInstance()->email)) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . StringUtil::specialchars(Idna::decodeEmail($email)) . '" class="tl_text" data-action="focus->contao--scroll-offset#store">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -354,7 +356,7 @@ class Newsletter extends Backend
 <div class="tl_formbody_submit" data-controller="contao--sticky-observer">
 <div class="tl_submit_container">
 <button type="submit" name="preview" class="tl_submit" accesskey="p">' . $GLOBALS['TL_LANG']['tl_newsletter']['preview'] . '</button>
-<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
+<button type="submit" id="send" class="tl_submit" accesskey="s" onclick="return confirm(\'' . str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['tl_newsletter']['sendConfirm']) . '\')">' . $GLOBALS['TL_LANG']['tl_newsletter']['send'][0] . '</button>
 </div>
 </div>
 
@@ -636,7 +638,7 @@ class Newsletter extends Backend
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
-<input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
+<input type="hidden" name="MAX_FILE_SIZE" value="' . System::getContainer()->get('contao.file.upload_size_provider')->getMaximumUploadSize() . '">
 
 <fieldset class="tl_tbox nolegend">
   <div class="widget w50">
@@ -900,11 +902,13 @@ class Newsletter extends Backend
 		$intUser = Input::get('id');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+		$user = null;
 
 		// Front end call
 		if ($isFrontend)
 		{
-			$intUser = FrontendUser::getInstance()->id;
+			$user = System::getContainer()->get('security.helper')->getUser();
+			$intUser = $user instanceof FrontendUser ? $user->id : 0;
 		}
 
 		// Return if there is no user (e.g. upon registration)
@@ -971,7 +975,10 @@ class Newsletter extends Backend
 				// Update the front end user object
 				if ($isFrontend)
 				{
-					FrontendUser::getInstance()->newsletter = $strNewsletters;
+					if ($user instanceof FrontendUser)
+					{
+						$user->newsletter = $strNewsletters;
+					}
 				}
 
 				// Check activation status

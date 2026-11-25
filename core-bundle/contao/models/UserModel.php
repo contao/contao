@@ -21,7 +21,6 @@ use Contao\Model\Collection;
  * @property string            $name
  * @property string            $email
  * @property string            $language
- * @property string            $backendTheme
  * @property string            $uploader
  * @property boolean           $showHelp
  * @property boolean           $thumbnails
@@ -68,8 +67,6 @@ use Contao\Model\Collection;
  * @method static UserModel|null findOneByName($val, array $opt=array())
  * @method static UserModel|null findOneByEmail($val, array $opt=array())
  * @method static UserModel|null findOneByLanguage($val, array $opt=array())
- * @method static UserModel|null findOneByBackendTheme($val, array $opt=array())
- * @method static UserModel|null findOneByFullscreen($val, array $opt=array())
  * @method static UserModel|null findOneByUploader($val, array $opt=array())
  * @method static UserModel|null findOneByShowHelp($val, array $opt=array())
  * @method static UserModel|null findOneByThumbnails($val, array $opt=array())
@@ -109,8 +106,6 @@ use Contao\Model\Collection;
  * @method static Collection<UserModel>|null findByTstamp($val, array $opt=array())
  * @method static Collection<UserModel>|null findByName($val, array $opt=array())
  * @method static Collection<UserModel>|null findByLanguage($val, array $opt=array())
- * @method static Collection<UserModel>|null findByBackendTheme($val, array $opt=array())
- * @method static Collection<UserModel>|null findByFullscreen($val, array $opt=array())
  * @method static Collection<UserModel>|null findByUploader($val, array $opt=array())
  * @method static Collection<UserModel>|null findByShowHelp($val, array $opt=array())
  * @method static Collection<UserModel>|null findByThumbnails($val, array $opt=array())
@@ -156,8 +151,6 @@ use Contao\Model\Collection;
  * @method static integer countByName($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
- * @method static integer countByBackendTheme($val, array $opt=array())
- * @method static integer countByFullscreen($val, array $opt=array())
  * @method static integer countByUploader($val, array $opt=array())
  * @method static integer countByShowHelp($val, array $opt=array())
  * @method static integer countByThumbnails($val, array $opt=array())

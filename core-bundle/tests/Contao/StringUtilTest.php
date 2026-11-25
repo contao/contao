@@ -286,6 +286,7 @@ class StringUtilTest extends TestCase
     public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request(['value' => $source]));
 
         $inputEncoded = Input::get('value');
@@ -539,6 +540,8 @@ class StringUtilTest extends TestCase
 
         $this->assertNotSame($array, $dereferenced);
         $this->assertNotSame($ref, $dereferenced[0]);
+
+        /** @phpstan-ignore method.alreadyNarrowedType */
         $this->assertSame($ref, $array[0]);
 
         $this->assertSame(
@@ -711,6 +714,11 @@ class StringUtilTest extends TestCase
         yield 'Array UUIDs' => [
             [StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720'), StringUtil::uuidToBin('0f07538b-ed26-11ee-a657-14ac60298720')],
             ['0f075374-ed26-11ee-a657-14ac60298720', '0f07538b-ed26-11ee-a657-14ac60298720'],
+        ];
+
+        yield 'Nested UUIDs' => [
+            ['foo' => ['bar' => StringUtil::uuidToBin('0f075374-ed26-11ee-a657-14ac60298720')]],
+            ['foo' => ['bar' => '0f075374-ed26-11ee-a657-14ac60298720']],
         ];
 
         yield 'Ignores regular string' => [

@@ -28,7 +28,6 @@ class OptInTest extends TestCase
             ->expects($this->once())
             ->method('save')
         ;
-
         $model
             ->expects($this->once())
             ->method('setRelatedRecords')
@@ -96,7 +95,6 @@ class OptInTest extends TestCase
             ->method('getRelatedRecords')
             ->willReturn(['tl_member' => 1])
         ;
-
         $token
             ->expects($this->once())
             ->method('delete')
@@ -146,7 +144,6 @@ class OptInTest extends TestCase
             ->method('getRelatedRecords')
             ->willReturn(['tl_member' => 1])
         ;
-
         $token
             ->expects($this->once())
             ->method('save')
@@ -197,7 +194,6 @@ class OptInTest extends TestCase
             ->expects($this->never())
             ->method('getRelatedRecords')
         ;
-
         $token
             ->expects($this->once())
             ->method('delete')
@@ -237,7 +233,6 @@ class OptInTest extends TestCase
             ->expects($this->never())
             ->method('getRelatedRecords')
         ;
-
         $token
             ->expects($this->never())
             ->method('delete')

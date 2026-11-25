@@ -31,7 +31,6 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
             ->method('getPrefix')
             ->willReturn('files')
         ;
-
         $storage
             ->method('get')
             ->willReturnMap([
@@ -48,13 +47,15 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
             ->expects($this->once())
             ->method('reindex')
             ->with($this->callback(
-                static fn (ReindexConfig $config) => ['contao.vfs.files' => [
-                    'foo', // created file
-                    'bar2', // renamed file (new)
-                    'bar', // renamed file (old)
-                    'meta', // file with updated metadata
-                    'baz', // deleted file
-                ]] === $config->getLimitedDocumentIds()->toArray(),
+                static fn (ReindexConfig $config) => [
+                    'contao.vfs.files' => [
+                        'foo', // created file
+                        'bar2', // renamed file (new)
+                        'bar', // renamed file (old)
+                        'meta', // file with updated metadata
+                        'baz', // deleted file
+                    ],
+                ] === $config->getLimitedDocumentIds()->toArray(),
             ))
         ;
 

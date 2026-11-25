@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Authentication;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
 use Contao\StringUtil;
 use Psr\Log\LoggerInterface;
@@ -59,7 +60,12 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
+        $preview = $session->get(self::SESSION_NAME);
+
+        $session->set(self::SESSION_NAME, [
+            'showUnpublished' => $showUnpublished,
+            'previewTime' => $preview['previewTime'] ?? null,
+        ]);
 
         return true;
     }
@@ -70,7 +76,30 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $session->set(self::SESSION_NAME, ['previewLinkId' => $previewLinkId, 'showUnpublished' => $showUnpublished]);
+        $preview = $session->get(self::SESSION_NAME);
+
+        $session->set(self::SESSION_NAME, [
+            'previewLinkId' => $previewLinkId,
+            'showUnpublished' => $showUnpublished,
+            'previewTime' => $preview['previewTime'] ?? null,
+        ]);
+
+        return true;
+    }
+
+    public function setPreviewTime(\DateTimeImmutable|null $previewTime): bool
+    {
+        if (!$session = $this->getSession()) {
+            return false;
+        }
+
+        if (!$preview = $session->get(self::SESSION_NAME)) {
+            return false;
+        }
+
+        $preview['previewTime'] = $previewTime?->getTimestamp();
+
+        $session->set(self::SESSION_NAME, $preview);
 
         return true;
     }
@@ -135,7 +164,7 @@ class FrontendPreviewAuthenticator
 
         // The front end user does not belong to a group that the back end user is
         // allowed to log in
-        if (!$this->security->isGranted('contao_user.amg', $frontendGroups)) {
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, $frontendGroups)) {
             return null;
         }
 

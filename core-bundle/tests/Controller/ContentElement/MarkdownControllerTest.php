@@ -49,6 +49,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 
@@ -73,6 +74,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 
@@ -96,6 +98,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $contentModel = $this->createClassWithPropertiesStub(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
+
         $contentModel->code = <<<'MARKDOWN'
             # Headline
 
@@ -111,6 +114,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 
@@ -118,6 +122,7 @@ class MarkdownControllerTest extends ContentElementTestCase
     {
         $fs = new Filesystem();
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
+
         $fs->dumpFile($tempTestFile, '# Headline');
 
         $filesModel = $this->createClassWithPropertiesMock(FilesModel::class);
@@ -136,6 +141,7 @@ class MarkdownControllerTest extends ContentElementTestCase
 
         $controller = new MarkdownController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
 
         $fs->remove($tempTestFile);

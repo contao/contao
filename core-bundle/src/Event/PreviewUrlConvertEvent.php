@@ -49,6 +49,7 @@ class PreviewUrlConvertEvent extends Event
     public function setResponse(Response $response): void
     {
         $this->response = $response;
+
         $this->stopPropagation();
     }
 }

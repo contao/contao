@@ -74,7 +74,6 @@ class JwtManagerTest extends ContaoTestCase
             ->method('getCookies')
             ->willReturn([Cookie::create(JwtManager::COOKIE_NAME, 'foobar')])
         ;
-
         $headerBag
             ->expects($this->never())
             ->method('setCookie')
@@ -100,6 +99,7 @@ class JwtManagerTest extends ContaoTestCase
     public function testIgnoresInvalidCookieData(): void
     {
         $request = Request::create('/');
+
         $jwtManager = new JwtManager(static::getTempDir());
         $result = $jwtManager->parseRequest($request);
 
@@ -114,7 +114,6 @@ class JwtManagerTest extends ContaoTestCase
             ->method('clearCookie')
             ->with(JwtManager::COOKIE_NAME)
         ;
-
         $headerBag
             ->expects($this->once())
             ->method('getCookies')
@@ -136,7 +135,6 @@ class JwtManagerTest extends ContaoTestCase
             ->method('clearCookie')
             ->with(JwtManager::COOKIE_NAME)
         ;
-
         $headerBag
             ->expects($this->once())
             ->method('getCookies')

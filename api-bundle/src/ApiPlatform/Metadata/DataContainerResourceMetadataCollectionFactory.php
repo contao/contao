@@ -16,31 +16,33 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\HttpOperation;
 use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\McpTool;
-use ApiPlatform\Metadata\McpToolCollection;
 use ApiPlatform\Metadata\Operations;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use ApiPlatform\Metadata\Resource\Factory\ResourceMetadataCollectionFactoryInterface;
 use ApiPlatform\Metadata\Resource\ResourceMetadataCollection;
 use Contao\ApiBundle\ApiPlatform\OpenApi\DataContainerOpenApiFactory;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProcessor;
-use Contao\ApiBundle\ApiPlatform\State\DataContainerStateProvider;
-use Contao\ApiBundle\Dto\DataContainerMcpRecord;
+use Contao\ApiBundle\DataContainer\DataContainerPage;
+use Contao\ApiBundle\Dto\DataContainerMove;
 use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DC_Table;
 
 final class DataContainerResourceMetadataCollectionFactory implements ResourceMetadataCollectionFactoryInterface
 {
+    private const ROUTE_PREFIX = '/dc';
+
     public function __construct(
         private readonly ResourceMetadataCollectionFactoryInterface $decorated,
         private readonly ContaoFramework $framework,
         private readonly ResourceFinderInterface $resourceFinder,
-        private readonly string $dataContainerApiPrefix,
     ) {
     }
 
@@ -52,72 +54,165 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
         $this->framework->initialize();
 
-        $apiResources = [];
+        $configs = [];
+        $dcas = [];
 
         foreach ($this->getTables() as $table) {
-            $config = $this->loadDcaConfig($table);
+            $dca = $this->loadDca($table);
+            $config = $dca['config'] ?? [];
 
             if (!is_a((string) ($config['dataContainer'] ?? ''), DC_Table::class, true)) {
                 continue;
             }
 
-            if (($config['closed'] ?? false) === true) {
+            $configs[$table] = $config;
+            $dcas[$table] = $dca;
+        }
+
+        $apiResources = array_map(fn (array $path): ApiResource => $this->createResource($path, $dcas[$path[array_key_last($path)]]), $this->getResourcePaths($configs));
+
+        return new ResourceMetadataCollection($resourceClass, $apiResources);
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     */
+    private function createResource(array $path, array $dca): ApiResource
+    {
+        $table = $path[array_key_last($path)];
+        $shortName = $this->getShortName($table);
+        $config = $dca['config'];
+
+        return new ApiResource()
+            ->withClass(DataContainerRecord::class)
+            ->withShortName($shortName)
+            ->withProvider('contao_api.api_platform.data_container_state_provider')
+            ->withProcessor('contao_api.api_platform.data_container_state_processor')
+            ->withRoutePrefix($this->getRoutePrefix($path))
+            ->withDefaults(['_scope' => 'backend'])
+            ->withStateless(true)
+            ->withSecurity("is_granted('ROLE_USER')")
+            ->withMcp([])
+            ->withExtraProperties($this->getExtraProperties($path))
+            ->withOperations($this->createOperations($path, $config, $dca['fields'] ?? []))
+        ;
+    }
+
+    private function createCollectionOperation(): GetCollection
+    {
+        $maximum = (int) $this->framework->getAdapter(Config::class)->get('maxResultsPerPage');
+
+        // Enforce a finite API page size to reduce the risk of resource exhaustion, even
+        // when the backend has no configured maximum
+        if ($maximum < 1) {
+            $maximum = DataContainerPage::DEFAULT_ITEMS_PER_PAGE;
+        }
+
+        return new GetCollection(
+            paginationEnabled: true,
+            paginationPartial: true, // Omit the total count and last page to avoid a separate count query
+            paginationClientEnabled: false, // Clients cannot disable pagination
+            paginationClientItemsPerPage: true, // Clients can choose the page size within the configured maximum
+            paginationItemsPerPage: min(DataContainerPage::DEFAULT_ITEMS_PER_PAGE, $maximum),
+            paginationMaximumItemsPerPage: $maximum,
+            parameters: ['sort' => new QueryParameter(key: 'sort')],
+        );
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     *
+     * @return Operations<HttpOperation>
+     */
+    private function createOperations(array $path, array $config, array $fields): Operations
+    {
+        $operations = [
+            'get_collection' => $this->createCollectionOperation(),
+            'get' => new Get(),
+            'patch' => new Patch(),
+        ];
+
+        if (!($config['notCreatable'] ?? false)) {
+            $operations['post'] = new Post();
+        }
+
+        if (!($config['notDeletable'] ?? false)) {
+            $operations['delete'] = new Delete();
+        }
+
+        if (!($config['notSortable'] ?? false) && !($config['notEditable'] ?? false) && (isset($fields['pid']) || isset($fields['sorting']))) {
+            $operations['move'] = new Post(input: DataContainerMove::class, read: false, status: 200, denormalizationContext: ['allow_extra_attributes' => false]);
+        }
+
+        return new Operations($this->configureOperations($operations, $path, $config));
+    }
+
+    /**
+     * @param array<string, HttpOperation> $operations
+     * @param non-empty-list<string>       $path
+     * @param array<string, mixed>         $config
+     *
+     * @return array<string, HttpOperation>
+     */
+    private function configureOperations(array $operations, array $path, array $config): array
+    {
+        $configured = [];
+
+        foreach ([false, true] as $recursive) {
+            $table = $path[array_key_last($path)];
+
+            if ($recursive && !\in_array($table, (array) ($config['ctable'] ?? []), true)) {
                 continue;
             }
 
-            $shortName = $this->getShortName($table);
-            $routePrefix = $this->getRoutePrefix($table);
-            $operations = [
-                'get_collection' => new GetCollection()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix)
-                    ->withDefaults(['_scope' => 'backend']),
-                'get' => new Get()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
-                    ->withDefaults(['_scope' => 'backend']),
-                'post' => new Post()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix)
-                    ->withDefaults(['_scope' => 'backend']),
-                'patch' => new Patch()
-                    ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
-                    ->withDefaults(['_scope' => 'backend']),
-            ];
+            foreach ($operations as $action => $operation) {
+                $item = 'move' === $action || (!$operation instanceof GetCollection && !$operation instanceof Post);
+                $suffix = ($recursive ? '/{nested}/'.$this->getResourceName($table) : '').($item ? '/{id}' : '').('move' === $action ? '/move' : '');
+                $name = 'contao_api_dc_'.implode('_', array_map($this->getResourceName(...), $path)).($recursive ? '_nested' : '').'_'.$action;
+                $extra = $this->getExtraProperties($path)['contao'] + ['action' => $action];
 
-            if (!($config['notDeletable'] ?? false)) {
-                $operations['delete'] = new Delete()
+                if ($recursive) {
+                    $extra['recursive_parent'] = ['table' => $table, 'parameter' => 'nested', 'segment' => $this->getResourceName($table)];
+                }
+
+                $configured[$name] = $operation
+                    ->withName($name)
                     ->withClass(DataContainerRecord::class)
-                    ->withShortName($shortName)
-                    ->withUriTemplate($routePrefix.'/{id}')
+                    ->withShortName($this->getShortName($table))
+                    ->withUriTemplate($this->getRoutePrefix($path).$suffix)
+                    ->withUriVariables($this->getUriVariables($path, $item, $recursive))
+                    ->withRequirements($recursive ? ['nested' => '.+'] : [])
+                    ->withProvider('contao_api.api_platform.data_container_state_provider')
+                    ->withProcessor('contao_api.api_platform.data_container_state_processor')
                     ->withDefaults(['_scope' => 'backend'])
+                    ->withStateless(true)
+                    ->withParameters($operation->getParameters() ?? [])
+                    ->withStrictQueryParameterValidation(true)
+                    ->withSecurity("is_granted('ROLE_USER')")
+                    ->withExtraProperties(['contao' => $extra])
                 ;
             }
-
-            $apiResources[] = new ApiResource()
-                ->withClass(DataContainerRecord::class)
-                ->withShortName($shortName)
-                ->withProvider(DataContainerStateProvider::class)
-                ->withProcessor(DataContainerStateProcessor::class)
-                ->withRoutePrefix($routePrefix)
-                ->withDefaults(['_scope' => 'backend'])
-                ->withMcp($this->createMcpOperations($table, $shortName, $routePrefix, !($config['notDeletable'] ?? false)))
-                ->withExtraProperties([
-                    'contao' => [
-                        'table' => $table,
-                        'schema_path' => DataContainerOpenApiFactory::getSchemaPath($table),
-                    ],
-                ])
-                ->withOperations(new Operations($operations))
-            ;
         }
 
-        return new ResourceMetadataCollection($resourceClass, $apiResources);
+        return $configured;
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     */
+    private function getExtraProperties(array $path): array
+    {
+        $table = $path[array_key_last($path)];
+
+        return [
+            'contao' => [
+                'table' => $table,
+                'resource' => implode('/', array_map($this->getResourceName(...), $path)),
+                'category' => $this->getShortName($path[0]),
+                'parents' => array_map(fn (string $parent): array => ['table' => $parent, 'parameter' => $this->getParameterName($parent)], \array_slice($path, 0, -1)),
+                'schema_path' => DataContainerOpenApiFactory::getSchemaPath($this->getResourceName($table)),
+            ],
+        ];
     }
 
     /**
@@ -138,102 +233,137 @@ final class DataContainerResourceMetadataCollectionFactory implements ResourceMe
 
     private function getShortName(string $table): string
     {
-        $shortName = preg_replace('/^tl_/', '', $table) ?? $table;
-
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $shortName)));
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $this->getResourceName($table))));
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function loadDcaConfig(string $table): array
+    private function loadDca(string $table): array
     {
         $this->framework->getAdapter(Controller::class)->loadDataContainer($table);
 
-        return $GLOBALS['TL_DCA'][$table]['config'] ?? [];
-    }
-
-    private function getRoutePrefix(string $table): string
-    {
-        return '/'.trim($this->dataContainerApiPrefix, '/').'/'.$table;
+        return $GLOBALS['TL_DCA'][$table] ?? [];
     }
 
     /**
-     * @return array<string, McpTool|McpToolCollection>
+     * @param non-empty-list<string> $path
      */
-    private function createMcpOperations(string $table, string $shortName, string $routePrefix, bool $deletable): array
+    private function getRoutePrefix(array $path): string
     {
-        $baseName = preg_replace('/^tl_/', '', $table) ?? $table;
+        $route = self::ROUTE_PREFIX;
 
-        $operations = [
-            $baseName.'_get_collection' => new McpToolCollection(
-                name: $baseName.'_get_collection',
-                description: 'List '.$shortName.' records',
-                method: 'GET',
-                uriTemplate: $routePrefix,
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_get' => new McpTool(
-                name: $baseName.'_get',
-                description: 'Fetch a '.$shortName.' record',
-                method: 'GET',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_post' => new McpTool(
-                name: $baseName.'_post',
-                description: 'Create a '.$shortName.' record',
-                method: 'POST',
-                uriTemplate: $routePrefix,
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-            $baseName.'_patch' => new McpTool(
-                name: $baseName.'_patch',
-                description: 'Update a '.$shortName.' record',
-                method: 'PATCH',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: ['class' => DataContainerRecord::class],
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            ),
-        ];
+        foreach ($path as $index => $table) {
+            $route .= '/'.$this->getResourceName($table);
 
-        if ($deletable) {
-            $operations[$baseName.'_delete'] = new McpTool(
-                name: $baseName.'_delete',
-                description: 'Delete a '.$shortName.' record',
-                method: 'DELETE',
-                uriTemplate: $routePrefix.'/{id}',
-                uriVariables: ['id' => new Link(fromClass: DataContainerMcpRecord::class)],
-                shortName: $shortName,
-                class: DataContainerRecord::class,
-                input: ['class' => DataContainerMcpRecord::class],
-                output: false,
-                provider: DataContainerStateProvider::class,
-                processor: DataContainerStateProcessor::class,
-            )->withStructuredContent(false)->withStatus(204);
+            if ($index < \count($path) - 1) {
+                $route .= '/{'.$this->getParameterName($table).'}';
+            }
         }
 
-        return $operations;
+        return $route;
+    }
+
+    /**
+     * @param array<string, array<string, mixed>> $configs
+     *
+     * @return list<non-empty-list<string>>
+     */
+    private function getResourcePaths(array $configs): array
+    {
+        $children = [];
+        $hasParent = [];
+
+        foreach ($configs as $table => $config) {
+            $parent = $config['ptable'] ?? null;
+
+            if (\is_string($parent) && $parent !== $table && isset($configs[$parent]) && !$this->isExtendedTreeMode($table)) {
+                if (!\in_array($table, $children[$parent] ?? [], true)) {
+                    $children[$parent][] = $table;
+                }
+
+                $hasParent[$table] = true;
+            }
+
+            foreach ((array) ($config['ctable'] ?? []) as $child) {
+                if ($child === $table || !isset($configs[$child]) || $this->isExtendedTreeMode($child)) {
+                    continue;
+                }
+
+                if (!\in_array($child, $children[$table] ?? [], true)) {
+                    $children[$table][] = $child;
+                }
+
+                $hasParent[$child] = true;
+            }
+        }
+
+        $paths = [];
+
+        foreach (array_keys($configs) as $table) {
+            if (!isset($hasParent[$table]) && !($configs[$table]['closed'] ?? false)) {
+                $this->appendResourcePaths([$table], $configs, $children, $paths);
+            }
+        }
+
+        return $paths;
+    }
+
+    private function isExtendedTreeMode(string $table): bool
+    {
+        return DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
+    }
+
+    /**
+     * @param non-empty-list<string>              $path
+     * @param array<string, array<string, mixed>> $configs
+     * @param array<string, list<string>>         $children
+     * @param list<non-empty-list<string>>        $paths
+     */
+    private function appendResourcePaths(array $path, array $configs, array $children, array &$paths): void
+    {
+        $table = $path[array_key_last($path)];
+        $paths[] = $path;
+
+        foreach ($children[$table] ?? [] as $child) {
+            if (!\in_array($child, $path, true) && !($configs[$child]['closed'] ?? false)) {
+                $this->appendResourcePaths([...$path, $child], $configs, $children, $paths);
+            }
+        }
+    }
+
+    private function getResourceName(string $table): string
+    {
+        return str_starts_with($table, 'tl_') ? substr($table, 3) : $table;
+    }
+
+    private function getParameterName(string $table): string
+    {
+        return $this->getResourceName($table).'_id';
+    }
+
+    /**
+     * @param non-empty-list<string> $path
+     *
+     * @return array<string, Link>
+     */
+    private function getUriVariables(array $path, bool $item, bool $recursive = false): array
+    {
+        $variables = [];
+
+        foreach (\array_slice($path, 0, -1) as $parent) {
+            $parameter = $this->getParameterName($parent);
+            $variables[$parameter] = new Link(parameterName: $parameter, fromClass: DataContainerRecord::class, identifiers: ['id']);
+        }
+
+        if ($recursive) {
+            $variables['nested'] = new Link(parameterName: 'nested', fromClass: DataContainerRecord::class, identifiers: ['id'], compositeIdentifier: true);
+        }
+
+        if ($item) {
+            $variables['id'] = new Link(parameterName: 'id', fromClass: DataContainerRecord::class, identifiers: ['id']);
+        }
+
+        return $variables;
     }
 }

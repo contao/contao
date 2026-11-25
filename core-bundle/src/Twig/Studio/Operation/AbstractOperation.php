@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
 use Twig\Environment;
@@ -67,7 +68,6 @@ abstract class AbstractOperation extends AbstractController implements Operation
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['twig'] = Environment::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
@@ -106,6 +106,19 @@ abstract class AbstractOperation extends AbstractController implements Operation
     public function getName(): string
     {
         return $this->name;
+    }
+
+    protected function render(string $view, array $parameters = [], Response|null $response = null): Response
+    {
+        // API sub requests expose the operation context instead of rendering a Turbo stream.
+        if (
+            $this->container->has('request_stack')
+            && $this->container->get('request_stack')->getCurrentRequest()?->attributes->getBoolean('_contao_api')
+        ) {
+            return new JsonResponse($parameters);
+        }
+
+        return parent::render($view, $parameters, $response);
     }
 
     protected function userTemplateExists(OperationContext $context, bool $exclusive = false): bool

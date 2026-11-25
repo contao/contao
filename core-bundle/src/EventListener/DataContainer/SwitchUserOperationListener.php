@@ -37,6 +37,7 @@ class SwitchUserOperationListener
         }
 
         $row = $operation->getRecord();
+
         $user = $this->security->getUser();
         $token = $this->security->getToken();
 

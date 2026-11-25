@@ -84,7 +84,7 @@ class DeferTokenParserTest extends TestCase
     private function getDefaultContext(): array
     {
         return [
-            'counter' => new class() {
+            'counter' => new class {
                 private int $value = 0;
 
                 public function increase(): void

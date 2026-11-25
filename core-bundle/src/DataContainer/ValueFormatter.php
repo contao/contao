@@ -56,10 +56,13 @@ class ValueFormatter implements ResetInterface
 
     public function format(string $table, string $field, mixed $value, mixed $dc): string
     {
-        return implode(', ', array_map(
-            fn ($v) => $this->getLabel($table, $field, $v, $dc),
-            (array) $this->getValues($table, $field, $value),
-        ));
+        return implode(
+            ', ',
+            array_map(
+                fn ($v) => $this->getLabel($table, $field, $v, $dc),
+                (array) $this->getValues($table, $field, $value),
+            ),
+        );
     }
 
     public function formatListing(string $table, string $field, array $row, DataContainer $dc): string|null
@@ -450,6 +453,7 @@ class ValueFormatter implements ResetInterface
         // Cannot use isset() because the value can be NULL
         if (!\array_key_exists($id, $this->foreignValueCache[$table][$field] ?? [])) {
             $dcaExtractor = $this->framework->createInstance(DcaExtractor::class, [$relationTable]);
+
             $fk = $dcaExtractor->getRelations()[$relationField]['field'] ?? 'id';
             $fk = $this->connection->quoteSingleIdentifier($fk);
 

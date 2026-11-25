@@ -37,10 +37,10 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement = $this->createMock(Statement::class);
         $statement
+            ->expects($this->once())
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
-
         $statement
             ->expects($this->once())
             ->method('executeQuery')
@@ -76,10 +76,10 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $statement = $this->createMock(Statement::class);
         $statement
+            ->expects($this->once())
             ->method('bindValue')
             ->with('dns', 'origin.com')
         ;
-
         $statement
             ->expects($this->once())
             ->method('executeQuery')
@@ -145,7 +145,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $connection
             ->expects($this->never())
             ->method('prepare')
@@ -172,7 +171,6 @@ class WebsiteRootsConfigProviderTest extends TestCase
             ->method('prepare')
             ->willReturn($statement)
         ;
-
         $connection
             ->expects($this->once())
             ->method('createSchemaManager')

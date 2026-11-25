@@ -1,0 +1,48 @@
+{% trans_default_domain 'ContaoOAuthServerBundle' -%}
+
+<!DOCTYPE html>
+<html lang="{{ app.locale|language_tag }}" data-turbo="false">
+<head>
+    <meta name="turbo-visit-control" content="reload">
+
+    {% block head %}
+        <meta charset="UTF-8">
+        <title>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }} | {{ app.request.host }}</title>
+
+        {% block meta %}
+            <meta name="generator" content="Contao Open Source CMS">
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+            <meta name="referrer" content="origin">
+            <meta name="robots" content="noindex,nofollow">
+        {% endblock %}
+
+        <link rel="stylesheet" href="{{ asset('login.css', 'contao_core') }}">
+        {{ stylesheets|default|raw }}
+
+        {{ javascripts|default|raw }}
+    {% endblock %}
+</head>
+<body{{ attrs(attributes|default).addClass('be_oauth_server_consent') }}>
+
+    {% block container %}
+        <div id="container">
+            <main id="main">
+                <form class="tl_login_form" method="post">
+                    <div class="formbody">
+                        <input type="hidden" name="request_key" value="{{ request_key }}">
+                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                        <h1>{{ 'oauth_server_title'|trans({'%client_name%': client_name}) }}</h1>
+                        <p>{{ 'oauth_server_connect'|trans({'%username%': user.username|e})|raw }}</p>
+                        <p>{{ 'oauth_server_redirect'|trans({'%client_host%': client_host|e, '%redirect_host%': redirect_host|e})|raw }}</p>
+                        <div class="submit_container">
+                            <button type="submit" class="tl_submit" name="decision" value="allow">{{ 'oauth_server_allow'|trans }}</button>
+                            <button type="submit" class="tl_submit" name="decision" value="deny">{{ 'oauth_server_deny'|trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            </main>
+        </div>
+    {% endblock %}
+
+</body>
+</html>

@@ -71,7 +71,7 @@ class Versions extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			throw new \InvalidArgumentException(\sprintf('"%s" is not a valid table', StringUtil::specialchars($strTable)));
+			throw new \InvalidArgumentException(\sprintf('"%s" is not a valid table', $strTable));
 		}
 
 		$this->strTable = $strTable;
@@ -661,7 +661,7 @@ class Versions extends Controller
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
-<a href="' . StringUtil::ampersand(Backend::addToUrl('versions=1&popup=1')) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
+<a href="' . StringUtil::ampersand(Backend::addToUrl('versions=1&popup=1')) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $this->intPid, $this->strTable))) . '\',\'url\':this.href});return false">' . Image::getHtml('diff.svg', $GLOBALS['TL_LANG']['MSC']['showDifferences']) . '</a>
 </div>
 </form>
 
@@ -677,14 +677,21 @@ class Versions extends Controller
 	public static function addToTemplate(BackendTemplate $objTemplate)
 	{
 		$arrVersions = array();
+		$params = array();
 
-		$objUser = BackendUser::getInstance();
-		$params = $objUser->isAdmin ? array() : array($objUser->id);
+		$security = System::getContainer()->get('security.helper');
+		$isAdmin = $security->isGranted('ROLE_ADMIN');
+
+		if (!$isAdmin)
+		{
+			$user = $security->getUser();
+			$params[] = $user instanceof BackendUser ? $user->id : 0;
+		}
 
 		$objDatabase = Database::getInstance();
 
 		// Get the total number of versions
-		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
+		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$isAdmin ? " AND userid=?" : ""))
 								->execute(...$params);
 
 		$pagination = System::getContainer()->get('contao.pagination.factory')->create(
@@ -699,7 +706,7 @@ class Versions extends Controller
 		$objTemplate->pagination = System::getContainer()->get('twig')->render('@Contao/backend/component/_pagination.html.twig', array('pagination' => $pagination));
 
 		// Get the versions
-		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
+		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
 								   ->limit(15, $intOffset)
 								   ->execute(...$params);
 
@@ -711,7 +718,7 @@ class Versions extends Controller
 		while ($objVersions->next())
 		{
 			// Hide profile changes if the user does not have access to the "user" module (see #1309)
-			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
+			if ($objVersions->fromTable == 'tl_user' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
 			{
 				continue;
 			}
@@ -820,8 +827,10 @@ class Versions extends Controller
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
+			$user = System::getContainer()->get('security.helper')->getUser();
+
 			$pairs['do'] = 'user';
-			$pairs['id'] = BackendUser::getInstance()->id;
+			$pairs['id'] = $user instanceof BackendUser ? $user->id : 0;
 		}
 
 		if (isset($pairs['act']))

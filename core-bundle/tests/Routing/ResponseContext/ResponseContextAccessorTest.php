@@ -51,6 +51,7 @@ class ResponseContextAccessorTest extends TestCase
 
         $cspParser = new CspParser(new PolicyManager());
         $directives = $cspParser->parseHeader("script-src 'self'");
+
         $responseContext->add(new CspHandler($directives));
 
         $accessor->setResponseContext($responseContext);

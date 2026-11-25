@@ -15,6 +15,7 @@ namespace Contao\Tools\ServiceLinter;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
@@ -72,6 +73,13 @@ class LintServiceIdsCommand
     ];
 
     /**
+     * @var array<string, string>
+     */
+    private static array $renameChunks = [
+        'o_auth' => 'oauth',
+    ];
+
+    /**
      * Strip these prefixes from the last chunk of the service ID.
      *
      * @var array<string>
@@ -90,14 +98,7 @@ class LintServiceIdsCommand
     private static array $generalServiceClasses = [
         ResourceFinder::class,
         MemoryTokenStorage::class,
-    ];
-
-    /**
-     * @var array<string>
-     */
-    private static array $exceptions = [
-        'contao.listener.menu.backend',
-        'contao.migration.version_400.version_400_update',
+        PermissionCheckingVirtualFilesystem::class,
     ];
 
     /**
@@ -174,14 +175,17 @@ class LintServiceIdsCommand
             ->name('*.yaml')
             ->name('*.yml')
             ->in([
+                $this->projectDir.'/api-bundle/config',
                 $this->projectDir.'/calendar-bundle/config',
                 $this->projectDir.'/comments-bundle/config',
                 $this->projectDir.'/core-bundle/config',
                 $this->projectDir.'/faq-bundle/config',
                 $this->projectDir.'/maker-bundle/config',
                 $this->projectDir.'/manager-bundle/config',
+                $this->projectDir.'/mcp-bundle/config',
                 $this->projectDir.'/news-bundle/config',
                 $this->projectDir.'/newsletter-bundle/config',
+                $this->projectDir.'/oauth-server-bundle/config',
             ])
         ;
 
@@ -235,11 +239,12 @@ class LintServiceIdsCommand
                     && !isset($config['alias'])
                     && str_contains($serviceId, '\\')
                     && !str_ends_with($serviceId, 'Controller')
+                    && !str_ends_with($serviceId, 'Repository')
                 ) {
-                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.', $serviceId, $fileName);
+                    $this->error('The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers and repositories.', $serviceId, $fileName);
                 }
 
-                if (!isset($config['class'])) {
+                if (!isset($config['class']) || \in_array($config['class'], $ignoreClasses, true)) {
                     continue;
                 }
 
@@ -269,14 +274,6 @@ class LintServiceIdsCommand
                     $serviceIds[] = $serviceId;
                 }
 
-                if (\in_array($config['class'], $ignoreClasses, true)) {
-                    continue;
-                }
-
-                if (\in_array($serviceId, self::$exceptions, true)) {
-                    continue;
-                }
-
                 if (($id = $this->getServiceIdFromClass($config['class'])) && $id !== $serviceId) {
                     $this->error('The "%s" service defined in the %s file should have the ID "%s".', $serviceId, $fileName, $id);
                 }
@@ -284,12 +281,14 @@ class LintServiceIdsCommand
 
             $sortedIds = $serviceIds;
             usort($sortedIds, strnatcasecmp(...));
+
             $sortedIds = array_values($sortedIds);
 
             if ($serviceIds !== $sortedIds) {
                 $this->hasError = true;
 
                 $this->error('The services in the %s file are not sorted correctly.', $fileName);
+
                 $this->io->writeln(new \Diff($serviceIds, $sortedIds)->render(new \Diff_Renderer_Text_Unified()));
             }
         }
@@ -315,6 +314,12 @@ class LintServiceIdsCommand
 
         foreach ($chunks as &$chunk) {
             $chunk = preg_replace('(^([a-z]+)(\d+)(.*)$)', '$1_$2$3', $chunk);
+
+            foreach (self::$renameChunks as $search => $replace) {
+                if (str_contains($search, 'o_auth')) {
+                    $chunk = str_replace($search, $replace, $chunk);
+                }
+            }
         }
 
         unset($chunk);

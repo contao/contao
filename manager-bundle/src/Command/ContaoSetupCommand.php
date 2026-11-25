@@ -51,7 +51,11 @@ class ContaoSetupCommand extends Command
     ) {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = new PhpExecutableFinder()->find();
-        $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
+
+        // Prefer Composer's proxy so it initializes its runtime globals in child processes
+        $binDir = $GLOBALS['_composer_bin_dir'] ?? __DIR__.'/../../bin';
+        $consolePath = Path::join($binDir, 'contao-console');
+        $this->consolePath = is_file($consolePath) ? $consolePath : Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
         $this->createProcessHandler = $createProcessHandler ?? static fn (array $command) => new Process($command);
 

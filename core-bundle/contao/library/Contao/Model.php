@@ -529,7 +529,7 @@ abstract class Model
 			return;
 		}
 
-		$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-infos.php');
+		$path = Path::join(System::getContainer()->getParameter('kernel.build_dir'), 'contao/config/column-infos.php');
 
 		if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
 		{

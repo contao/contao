@@ -13,18 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Util\UrlUtil;
-use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -36,8 +36,7 @@ class BackendFavoritesListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly Connection $connection,
-        private readonly TranslatorInterface $translator,
+        private readonly Hierarchy $hierarchy,
     ) {
     }
 
@@ -69,47 +68,22 @@ class BackendFavoritesListener
             'mtg' => 'favorites',
         ];
 
-        $bag = $this->requestStack->getSession()->getBag('contao_backend');
-
-        if (!$bag instanceof AttributeBagInterface) {
-            return;
-        }
-
-        $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
-
         $tree = $factory
             ->createItem('favorites')
             ->setAttribute('id', 'favorites-menu')
-            ->setLabel($this->translator->trans('MSC.favorites', [], 'contao_default'))
+            ->setLabel('MSC.favorites')
             ->setUri($this->router->generate('contao_backend', $params))
-            ->setLinkAttribute('class', 'group-favorites')
-            ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
-            ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
-            ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
-            ->setLinkAttribute('data-turbo-prefetch', 'false')
-            ->setLinkAttribute('aria-controls', 'favorites')
-            ->setExtra('translation_domain', false)
+            ->setExtra('translation_domain', 'contao_default')
         ;
-
-        if ($collapsed) {
-            $tree->setAttribute('class', 'collapsed');
-        } else {
-            $tree->setLinkAttribute('aria-expanded', 'true');
-        }
 
         $requestUri = UrlUtil::getNormalizePathAndQuery($request->getRequestUri());
 
-        $this->buildTree($tree, $factory, $requestUri, $user->id);
+        $items = $this->createFavoriteItems($factory, $requestUri, $user->id);
+
+        $this->buildTree($tree, $items);
 
         if (!$tree->hasChildren()) {
             return;
-        }
-
-        foreach ($tree->getChildren() as $children) {
-            if ($children->hasChildren()) {
-                $children->setAttribute('class', 'has-children');
-            }
         }
 
         $event->getTree()->addChild($tree);
@@ -118,37 +92,51 @@ class BackendFavoritesListener
         new MenuManipulator()->moveToFirstPosition($tree);
     }
 
-    private function buildTree(ItemInterface $tree, FactoryInterface $factory, string $requestUri, int $user, int $pid = 0): void
+    /**
+     * @return array<int, array<int, ItemInterface>>
+     */
+    private function createFavoriteItems(FactoryInterface $factory, string $requestUri, int $user): array
     {
-        $nodes = $this->connection->fetchAllAssociative(
-            'SELECT * FROM tl_favorites WHERE pid = :pid AND user = :user ORDER BY sorting',
-            [
-                'pid' => $pid,
-                'user' => $user,
-            ],
+        // Ignore drafts and their descendants
+        $options = new ChildTraversalOptions()
+            ->withColumns('title', 'url')
+            ->withOrderBy('sorting')
+            ->withWhere('tstamp > 0')
+        ;
+
+        $nodes = $this->hierarchy->getChildRows(
+            [0],
+            new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScopes(['user' => $user]),
+            $options,
         );
 
-        foreach ($nodes as $node) {
-            // Ignore drafts
-            if ($node['tstamp'] < 1) {
-                continue;
-            }
+        $items = [];
 
+        foreach ($nodes as $node) {
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
                 ->setAttribute('id', 'favorites-menu-'.$node['id'])
                 ->setLabel($node['title'])
                 ->setUri($node['url'])
-                ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', $node['title'])
-                ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
                 ->setCurrent($node['url'] === $requestUri)
                 ->setExtra('translation_domain', false)
             ;
 
+            $items[(int) $node['pid']][(int) $node['id']] = $item;
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param array<int, array<int, ItemInterface>> $items
+     */
+    private function buildTree(ItemInterface $tree, array $items, int $pid = 0): void
+    {
+        foreach ($items[$pid] ?? [] as $id => $item) {
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $requestUri, $user, (int) $node['id']);
+            $this->buildTree($item, $items, $id);
         }
     }
 }

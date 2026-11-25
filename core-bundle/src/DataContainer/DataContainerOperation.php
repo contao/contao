@@ -36,7 +36,7 @@ class DataContainerOperation implements \ArrayAccess
         private readonly array|null $record,
         private readonly DataContainer $dataContainer,
     ) {
-        $id = null === $record ? null : StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
+        $id = null === $record ? null : rawurldecode((string) ($record['id'] ?? ''));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
         $operation = StringUtil::resolveReferences($operation);
@@ -50,6 +50,11 @@ class DataContainerOperation implements \ArrayAccess
             }
         } else {
             $operation['label'] = $operation['title'] = $name;
+        }
+
+        // Encode for usage in attributes (JS encoding followed by HTML encoding)
+        if (null !== $id) {
+            $id = StringUtil::specialchars(str_replace(['\\', "'", '"'], ['\\\\', "\\'", '\\"'], $id));
         }
 
         foreach (['attributes', 'listAttributes', 'iconAttributes'] as $key) {

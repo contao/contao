@@ -1,4 +1,5 @@
-import manifest from '../../public/icons/manifest.json';
+const context = require.context('../icons', false, /\.svg$/);
+const icons = Object.fromEntries(context.keys().map((name) => [name, context(name)]));
 
 /**
  * Create an icon template for the given name. You can call "getHtml()"
@@ -52,7 +53,7 @@ function _getImage(source, attributes, colorScheme = null) {
 }
 
 export function getSource(name, darkScheme = false) {
-    const fileName = `${name}${darkScheme ? '--dark' : ''}.svg`;
+    const fileName = `./${name}${darkScheme ? '--dark' : ''}.svg`;
 
-    return Object.hasOwn(manifest, fileName) ? manifest[fileName] : null;
+    return Object.hasOwn(icons, fileName) ? icons[fileName] : null;
 }

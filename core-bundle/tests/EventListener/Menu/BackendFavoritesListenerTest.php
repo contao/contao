@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Doctrine\DBAL\ChildTraversalOptions;
+use Contao\CoreBundle\Doctrine\DBAL\Hierarchy;
+use Contao\CoreBundle\Doctrine\DBAL\HierarchyDefinition;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendFavoritesListenerTest extends TestCase
 {
@@ -48,15 +47,13 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
-            $this->createStub(Connection::class),
-            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Hierarchy::class),
         );
 
         $listener($event);
     }
 
-    #[DataProvider('getCollapsedStatus')]
-    public function testAddsTheMainMenu(bool $collapsed): void
+    public function testAddsTheMainMenu(): void
     {
         $user = $this->createClassWithPropertiesStub(BackendUser::class, ['id' => 2]);
 
@@ -74,49 +71,36 @@ class BackendFavoritesListenerTest extends TestCase
             ->willReturn('/contao?do=pages&mtg=favorites')
         ;
 
-        $session = $this->mockSession();
-        $bag = $session->getBag('contao_backend');
-
-        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
-
-        $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
-
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
-        $request->setSession($session);
 
         $requestStack = new RequestStack([$request]);
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(3))
-            ->method('fetchAllAssociative')
-            ->willReturnOnConsecutiveCalls(
-                [
-                    [
-                        'id' => 7,
-                        'pid' => 0,
-                        'tstamp' => 1671538397,
-                        'title' => 'Edit page 3',
-                        'url' => '/contao?do=pages&act=edit&id=3',
-                    ],
-                    [
-                        'id' => 8,
-                        'pid' => 7,
-                        'tstamp' => 1671538402,
-                        'title' => 'Edit "fe_page"',
-                        'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
-                    ],
-                ],
-                [],
-                [],
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getChildRows')
+            ->with(
+                [0],
+                new HierarchyDefinition('tl_favorites', 'id', 'pid')->withScopes(['user' => 2]),
+                new ChildTraversalOptions()->withColumns('title', 'url')->withOrderBy('sorting')->withWhere('tstamp > 0'),
             )
-        ;
-
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->exactly(2))
-            ->method('trans')
-            ->willReturnOnConsecutiveCalls('Favorites', $collapsed ? 'Expand node' : 'Collapse node')
+            ->willReturn([
+                [
+                    'id' => 7,
+                    'pid' => 0,
+                    'tstamp' => 1671538397,
+                    'title' => 'Edit page 3',
+                    'url' => '/contao?act=edit&do=pages&id=3',
+                ],
+                [
+                    'id' => 8,
+                    'pid' => 7,
+                    'tstamp' => 1671538402,
+                    'title' => 'Edit "fe_page"',
+                    'url' => '/contao?do=files&act=source&id=files%2Fapp.scss',
+                ],
+                ['id' => 9, 'pid' => 0, 'tstamp' => 1, 'title' => 'Second root', 'url' => '/contao?do=article'],
+            ])
         ;
 
         $factory = new MenuFactory();
@@ -130,8 +114,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $router,
             $requestStack,
-            $connection,
-            $translator,
+            $hierarchy,
         );
 
         $listener($event);
@@ -140,61 +123,39 @@ class BackendFavoritesListenerTest extends TestCase
 
         $this->assertCount(2, $children);
         $this->assertSame('favorites', $children[0]->getName());
-        $this->assertSame('Favorites', $children[0]->getLabel());
+        $this->assertSame('MSC.favorites', $children[0]->getLabel());
         $this->assertSame('/contao?do=pages&mtg=favorites', $children[0]->getUri());
 
-        $linkAttributes = [
-            'class' => 'group-favorites',
-            'title' => $collapsed ? 'Expand node' : 'Collapse node',
-            'data-action' => 'contao--toggle-navigation#toggle:prevent',
-            'data-contao--toggle-navigation-category-param' => 'favorites',
-            'data-contao--tooltips-target' => 'tooltip',
-            'data-turbo-prefetch' => 'false',
-            'aria-controls' => 'favorites',
-        ];
-
-        if (!$collapsed) {
-            $linkAttributes['aria-expanded'] = 'true';
-        }
-
-        $this->assertSame($linkAttributes, $children[0]->getLinkAttributes());
+        $this->assertSame([], $children[0]->getLinkAttributes());
+        $this->assertSame(['id' => 'favorites-menu'], $children[0]->getAttributes());
+        $this->assertSame(['translation_domain' => 'contao_default'], $children[0]->getExtras());
 
         $grandChildren = array_values($children[0]->getChildren());
 
         $this->assertCount(2, $grandChildren);
         $this->assertSame('favorite_7', $grandChildren[0]->getName());
         $this->assertSame('Edit page 3', $grandChildren[0]->getLabel());
-        $this->assertSame('/contao?do=pages&act=edit&id=3', $grandChildren[0]->getUri());
+        $this->assertSame('/contao?act=edit&do=pages&id=3', $grandChildren[0]->getUri());
 
-        $this->assertSame(
-            [
-                'class' => 'navigation',
-                'title' => 'Edit page 3',
-                'data-contao--tooltips-target' => 'tooltip',
-            ],
-            $grandChildren[0]->getLinkAttributes(),
-        );
+        $this->assertSame([], $grandChildren[0]->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $grandChildren[0]->getExtras());
 
-        $this->assertSame('favorite_8', $grandChildren[1]->getName());
-        $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
-        $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5', $grandChildren[1]->getUri());
+        $this->assertTrue($grandChildren[0]->isCurrent());
+        $this->assertSame('favorite_9', $grandChildren[1]->getName());
+        $this->assertSame('Second root', $grandChildren[1]->getLabel());
 
-        $this->assertSame(
-            [
-                'class' => 'navigation',
-                'title' => 'Edit "fe_page"',
-                'data-contao--tooltips-target' => 'tooltip',
-            ],
-            $grandChildren[1]->getLinkAttributes(),
-        );
+        $nestedChildren = array_values($grandChildren[0]->getChildren());
+
+        $this->assertCount(1, $nestedChildren);
+        $this->assertSame('favorite_8', $nestedChildren[0]->getName());
+        $this->assertSame('Edit "fe_page"', $nestedChildren[0]->getLabel());
+        $this->assertSame('/contao?do=files&act=source&id=files%2Fapp.scss', $nestedChildren[0]->getUri());
+        $this->assertFalse($nestedChildren[0]->isCurrent());
+
+        $this->assertSame([], $nestedChildren[0]->getLinkAttributes());
+        $this->assertSame(['translation_domain' => false], $nestedChildren[0]->getExtras());
 
         $this->assertSame('content', $children[1]->getName());
-    }
-
-    public static function getCollapsedStatus(): iterable
-    {
-        yield [false];
-        yield [true];
     }
 
     public function testDoesNotAddTheMainMenuIfThereIsNoRequest(): void
@@ -216,7 +177,6 @@ class BackendFavoritesListenerTest extends TestCase
             ->method('getTree')
             ->willReturn($factory->createItem('mainMenu'))
         ;
-
         $event
             ->expects($this->never())
             ->method('getFactory')
@@ -226,8 +186,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $this->createStub(RouterInterface::class),
             $this->createStub(RequestStack::class),
-            $this->createStub(Connection::class),
-            $this->createStub(TranslatorInterface::class),
+            $this->createStub(Hierarchy::class),
         );
 
         $listener($event);
@@ -258,18 +217,11 @@ class BackendFavoritesListenerTest extends TestCase
 
         $requestStack = new RequestStack([$request]);
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $hierarchy = $this->createMock(Hierarchy::class);
+        $hierarchy
             ->expects($this->once())
-            ->method('fetchAllAssociative')
+            ->method('getChildRows')
             ->willReturn([])
-        ;
-
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->exactly(2))
-            ->method('trans')
-            ->willReturnOnConsecutiveCalls('Favorites', 'Collapse node')
         ;
 
         $factory = new MenuFactory();
@@ -283,8 +235,7 @@ class BackendFavoritesListenerTest extends TestCase
             $security,
             $router,
             $requestStack,
-            $connection,
-            $translator,
+            $hierarchy,
         );
 
         $listener($event);

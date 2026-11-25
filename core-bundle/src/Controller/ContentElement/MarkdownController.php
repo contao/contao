@@ -40,7 +40,6 @@ class MarkdownController extends AbstractContentElementController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['contao.insert_tag.parser'] = InsertTagParser::class;
 
         return $services;

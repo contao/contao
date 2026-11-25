@@ -20,8 +20,17 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-final class CreateOperation extends AbstractOperation
+final class CreateOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Create a user override of an existing template using generated default content. Only available when no user
+            override exists in the selected theme context. No parameters are required. After creation, use save to
+            replace the generated content.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         return !$this->userTemplateExists($context);

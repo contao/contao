@@ -29,7 +29,9 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     {
         $schema = $this->getSchema();
         $typeRegistry = Type::getTypeRegistry();
+
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -186,6 +188,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -205,6 +208,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_member');
 
         $this->assertSame($expectedEngine, $table->getOption('engine'));
@@ -259,9 +263,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
-        $table = $schema->getTable('tl_member');
 
+        $table = $schema->getTable('tl_member');
         $primaryKeys = $table->getPrimaryKeyConstraint()->getColumnNames();
+
         $this->assertCount(1, $primaryKeys);
         $this->assertSame('id', $primaryKeys[0]->getIdentifier()->getValue());
 
@@ -322,7 +327,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 },
             )
         ;
-
         $connection
             ->method('fetchOne')
             ->willReturnMap([['SELECT @@version', $version]])
@@ -330,6 +334,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -509,6 +514,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_foo');
 
         for ($i = 1; $i <= 3; ++$i) {
@@ -549,7 +555,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ->method('fetchAssociative')
             ->willReturn(['Value' => null])
         ;
-
         $connection
             ->method('fetchOne')
             ->willReturnMap([['SELECT @@version', 'foo']])
@@ -557,6 +562,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         $schema = $this->getSchema();
         $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
+
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));

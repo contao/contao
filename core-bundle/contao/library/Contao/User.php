@@ -23,22 +23,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * functions as abstract parent class for the "BackendUser" and "FrontendUser"
  * classes of the core.
  *
- * Usage:
- *
- *     $user = BackendUser::getInstance();
- *
- *     if ($user->findBy('username', 'leo'))
- *     {
- *         echo $user->name;
- *     }
- *
  * @property integer           $id
  * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
  * @property string            $language
- * @property string            $backendTheme
  * @property integer           $backendWidth
  * @property string            $uploader
  * @property boolean           $showHelp
@@ -112,13 +102,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $intId;
 
 	/**
-	 * IP address
-	 * @var string
-	 * @deprecated Deprecated since Contao 6.0, to be removed in Contao 7.
-	 */
-	protected $strIp;
-
-	/**
 	 * Table
 	 * @var string
 	 */
@@ -135,6 +118,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * @var array
 	 */
 	protected $roles = array();
+
+	/**
+	 * Two-factor fingerprint used for session invalidation
+	 * @var string|false|null
+	 */
+	private $twoFactorFingerprint;
 
 	/**
 	 * Prevent cloning of the object (Singleton)
@@ -394,18 +383,26 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'password' => $this->password,
 			'disable' => $this->disable,
 			'start' => $this->start,
-			'stop' => $this->stop
+			'stop' => $this->stop,
+			'twoFactorFingerprint' => $this->getTwoFactorFingerprint(),
 		);
 	}
 
 	public function __unserialize(array $data): void
 	{
-		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
+		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop', 'twoFactorFingerprint'))
 		{
-			return;
+			// Backwards compatibility
+			if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
+			{
+				return;
+			}
+
+			// Invalidate old sessions
+			$data['twoFactorFingerprint'] = 'invalidate';
 		}
 
-		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop) = array_values($data);
+		list($this->id, $this->username, $this->password, $this->disable, $this->start, $this->stop, $this->twoFactorFingerprint) = array_values($data);
 	}
 
 	/**
@@ -450,6 +447,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
+		if ($this->getTwoFactorFingerprint() !== $user->getTwoFactorFingerprint())
+		{
+			return false;
+		}
+
 		return true;
 	}
 
@@ -461,5 +463,20 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public function getPasskeyUserHandle(): string
 	{
 		throw new \BadMethodCallException(\sprintf('%s not implemented in %s.', __FUNCTION__, self::class));
+	}
+
+	private function getTwoFactorFingerprint(): false|string
+	{
+		if (null !== $this->twoFactorFingerprint)
+		{
+			return $this->twoFactorFingerprint;
+		}
+
+		if (!$this->useTwoFactor)
+		{
+			return false;
+		}
+
+		return hash('sha256', $this->secret);
 	}
 }

@@ -41,9 +41,14 @@ class BackendHelperRuntimeTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->icon(
-            'icon.svg', 'alt', $attributes,
-        ));
+        $this->assertSame(
+            'icon HTML',
+            new BackendHelperRuntime($framework)->icon(
+                'icon.svg',
+                'alt',
+                $attributes,
+            ),
+        );
     }
 
     public function testReturnsDefaultIconForNoMimeType(): void
@@ -60,9 +65,14 @@ class BackendHelperRuntimeTest extends TestCase
 
         $framework = $this->createContaoFrameworkStub([Image::class => $imageAdapter]);
 
-        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
-            $this->createStub(FilesystemItem::class), 'alt', $attributes,
-        ));
+        $this->assertSame(
+            'icon HTML',
+            new BackendHelperRuntime($framework)->fileIcon(
+                $this->createStub(FilesystemItem::class),
+                'alt',
+                $attributes,
+            ),
+        );
     }
 
     public function testReturnsIconForMimeType(): void
@@ -88,9 +98,14 @@ class BackendHelperRuntimeTest extends TestCase
 
         $GLOBALS['TL_MIME'] = ['jpg' => ['image/jpeg', 'image.svg']];
 
-        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
-            $fileitem, 'alt', $attributes,
-        ));
+        $this->assertSame(
+            'icon HTML',
+            new BackendHelperRuntime($framework)->fileIcon(
+                $fileitem,
+                'alt',
+                $attributes,
+            ),
+        );
     }
 
     public function testReturnsDefaultIconForMissingRegisteredMimeType(): void
@@ -114,8 +129,13 @@ class BackendHelperRuntimeTest extends TestCase
             ->willReturn('image/jpeg')
         ;
 
-        $this->assertSame('icon HTML', new BackendHelperRuntime($framework)->fileIcon(
-            $fileitem, 'alt', $attributes,
-        ));
+        $this->assertSame(
+            'icon HTML',
+            new BackendHelperRuntime($framework)->fileIcon(
+                $fileitem,
+                'alt',
+                $attributes,
+            ),
+        );
     }
 }

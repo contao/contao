@@ -12,9 +12,10 @@ declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Fixer\ChainedMethodBlockFixer;
 use Contao\EasyCodingStandard\Fixer\CommentLengthFixer;
+use Contao\EasyCodingStandard\Fixer\MultilineCallArgumentsFixer;
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
+use Contao\EasyCodingStandard\Fixer\StatementGroupingFixer;
 use Contao\EasyCodingStandard\Set\SetList;
-use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\Alias\ModernizeStrposFixer;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesPositionFixer;
@@ -70,8 +71,18 @@ return ECSConfig::configure()
     ->withSkip([
         '*/languages/*',
         '*/templates/*',
-        '*/themes/*',
-        BinaryOperatorSpacesFixer::class,
+        BinaryOperatorSpacesFixer::class => [
+            '*-bundle/contao/classes',
+            '*-bundle/contao/controllers',
+            '*-bundle/contao/drivers',
+            '*-bundle/contao/elements',
+            '*-bundle/contao/forms',
+            '*-bundle/contao/library',
+            '*-bundle/contao/models',
+            '*-bundle/contao/modules',
+            '*-bundle/contao/pages',
+            '*-bundle/contao/widgets',
+        ],
         ChainedMethodBlockFixer::class,
         CommentLengthFixer::class,
         DeclareStrictTypesFixer::class,
@@ -82,6 +93,7 @@ return ECSConfig::configure()
         MethodChainingIndentationFixer::class,
         ModernizeStrposFixer::class,
         ModifierKeywordsFixer::class,
+        MultilineCallArgumentsFixer::class,
         MultiLineLambdaFunctionArgumentsFixer::class,
         MultilineWhitespaceBeforeSemicolonsFixer::class,
         NoSpacesAfterFunctionNameFixer::class,
@@ -94,6 +106,7 @@ return ECSConfig::configure()
         PsrAutoloadingFixer::class,
         ReturnAssignmentFixer::class,
         SingleQuoteFixer::class,
+        StatementGroupingFixer::class,
         StatementIndentationFixer::class => [
             'core-bundle/contao/library/Contao/Config.php',
             'core-bundle/contao/library/Contao/Image.php',
@@ -106,13 +119,13 @@ return ECSConfig::configure()
         UseArrowFunctionsFixer::class,
         UselessParenthesesSniff::class,
         UselessVariableSniff::class,
-        UseSprintfInExceptionsSniff::class,
         VoidReturnFixer::class,
         YodaStyleFixer::class,
     ])
     ->withParallel()
     ->withSpacing(Option::INDENTATION_TAB, "\n")
     ->withConfiguredRule(ArraySyntaxFixer::class, ['syntax' => 'long'])
+    ->withConfiguredRule(BinaryOperatorSpacesFixer::class, ['default' => BinaryOperatorSpacesFixer::AT_LEAST_SINGLE_SPACE])
     ->withConfiguredRule(BracesPositionFixer::class, ['control_structures_opening_brace' => BracesPositionFixer::NEXT_LINE_UNLESS_NEWLINE_AT_SIGNATURE_END])
     ->withConfiguredRule(ConcatSpaceFixer::class, ['spacing' => 'one'])
     ->withConfiguredRule(ControlStructureContinuationPositionFixer::class, ['position' => ControlStructureContinuationPositionFixer::NEXT_LINE])

@@ -110,7 +110,7 @@ class ModuleArticleList extends Module
 			$articles[] = array
 			(
 				'link' => $objArticles->title,
-				'title' => StringUtil::specialchars($objArticles->title),
+				'title' => $objArticles->title,
 				'id' => ($cssID[0] ?? null) ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id,
 				'href' => $href

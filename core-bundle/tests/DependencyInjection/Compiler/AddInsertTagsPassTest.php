@@ -203,17 +203,14 @@ class AddInsertTagsPassTest extends TestCase
         $container = new ContainerBuilder();
         $container->setDefinition(
             'contao.insert_tag.parser',
-            new Definition(
-                InsertTagParser::class,
-                [
-                    new Reference('contao.framework'),
-                    new Reference('monolog.logger.contao.error'),
-                    new Reference('fragment.handler'),
-                    new Reference('request_stack'),
-                    null,
-                    ['*'],
-                ],
-            ),
+            new Definition(InsertTagParser::class, [
+                new Reference('contao.framework'),
+                new Reference('monolog.logger.contao.error'),
+                new Reference('fragment.handler'),
+                new Reference('request_stack'),
+                null,
+                ['*'],
+            ]),
         );
 
         return $container;

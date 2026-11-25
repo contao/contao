@@ -203,7 +203,7 @@ abstract class ModuleNews extends Module
 				// set by the news list and news archive modules (see #5851).
 				if ($intCount > 0 && !$figure->getLinkHref())
 				{
-					$linkTitle = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+					$linkTitle = StringUtil::stripInsertTags(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline));
 
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)

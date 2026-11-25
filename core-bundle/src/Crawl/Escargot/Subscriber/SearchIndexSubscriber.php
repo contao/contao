@@ -258,7 +258,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         return $result;
     }
 
-    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
+    public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface|null $response): void
     {
         $this->logWarning($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }

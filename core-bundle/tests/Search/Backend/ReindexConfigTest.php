@@ -24,8 +24,10 @@ class ReindexConfigTest extends TestCase
         $this->assertNull($config->getUpdateSince());
 
         $since = new \DateTimeImmutable();
+
         $config = new ReindexConfig();
         $config = $config->limitToDocumentsNewerThan($since);
+
         $this->assertSame($since, $config->getUpdateSince());
     }
 
@@ -36,6 +38,7 @@ class ReindexConfigTest extends TestCase
 
         $config = new ReindexConfig();
         $config = $config->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['42']]));
+
         $this->assertSame(['foo' => ['42']], $config->getLimitedDocumentIds()->toArray());
     }
 

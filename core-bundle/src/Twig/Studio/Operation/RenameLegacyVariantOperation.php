@@ -20,8 +20,20 @@ use Symfony\Component\HttpFoundation\Response;
  * @internal
  */
 #[AsOperationForTemplateStudioElement]
-final class RenameLegacyVariantOperation extends AbstractOperation
+final class RenameLegacyVariantOperation extends AbstractOperation implements OperationDescriptionInterface
 {
+    public function getDescription(): string
+    {
+        return <<<'MARKDOWN'
+            Rename a legacy user template variant outside a theme context. Only available when the user template is the
+            sole template for its identifier. Provide identifier_fragment as a non-empty string without the template
+            prefix or file extension (for example, {"identifier_fragment": "compact"}). The fragment is joined to the
+            legacy prefix with "_"; slashes are replaced with hyphens. Choose an unused name. Omit the fragment to
+            obtain the prefix, current fragment and allowed_identifier_fragment_pattern without renaming the file.
+            Database references are not updated. The response contains old_identifier and new_identifier.
+            MARKDOWN;
+    }
+
     public function canExecute(OperationContext $context): bool
     {
         if ($context->isThemeContext()) {

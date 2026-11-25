@@ -105,8 +105,10 @@ class ClipboardManager
     public function clear(string $table): void
     {
         $session = $this->requestStack->getSession();
+
         $clipboard = $session->get(self::SESSION_KEY);
         $clipboard[$table] = [];
+
         $session->set(self::SESSION_KEY, $clipboard);
     }
 

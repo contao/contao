@@ -117,7 +117,7 @@ class Message
 
 		if ($strMessages)
 		{
-			$strMessages = '<div class="tl_message">' . $strMessages . '</div>';
+			$strMessages = '<div class="tl_message" data-turbo-temporary>' . $strMessages . '</div>';
 		}
 
 		return $strMessages;

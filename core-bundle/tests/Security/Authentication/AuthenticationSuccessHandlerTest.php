@@ -294,17 +294,11 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/failure')
         ;
 
-        $user = $this->createPartialMock(FrontendUser::class, ['save']);
-        $user
-            ->expects($this->once())
-            ->method('save')
-        ;
-
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn($user)
+            ->willReturn($this->createStub(FrontendUser::class))
         ;
 
         $response = $this->getHandler()->onAuthenticationSuccess($request, $token);
@@ -337,7 +331,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
-
         $twoFactorToken
             ->expects($this->once())
             ->method('getAuthenticatedToken')
@@ -364,22 +357,18 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUri')
             ->willReturn('http://localhost/failure')
         ;
-
         $request
             ->method('getSession')
             ->willReturn($session)
         ;
-
         $request
             ->method('hasSession')
             ->willReturn(true)
         ;
-
         $request
             ->method('isMethodSafe')
             ->willReturn(true)
         ;
-
         $request
             ->method('isXmlHttpRequest')
             ->willReturn(false)
@@ -391,7 +380,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUser')
             ->willReturn($this->createStub(FrontendUser::class))
         ;
-
         $token
             ->expects($this->once())
             ->method('getFirewallName')
@@ -421,7 +409,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('getUser')
             ->willReturn($this->createStub(BackendUser::class))
         ;
-
         $token
             ->expects($this->once())
             ->method('getFirewallName')

@@ -1,48 +1,114 @@
 {% trans_default_domain 'contao_default' %}
 
+{% set actions = ['contao--sortable:update->contao--list-wizard#update'] %}
+
+{% if rte|default %}
+    {% set actions = actions|merge([
+        'input->contao--inline-rte#update',
+        'contao--inline-rte:navigate->contao--list-wizard#navigate',
+        'turbo:before-cache@document->contao--inline-rte#disconnect',
+    ]) %}
+{% endif %}
+
 {% set list_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
-    .set('data-controller', 'contao--row-wizard contao--sortable')
-    .set('data-contao--row-wizard-name-value', id)
+    .set('data-controller', rte|default ? 'contao--list-wizard contao--sortable contao--inline-rte' : 'contao--list-wizard contao--sortable')
+    .set('data-contao--list-wizard-name-value', id)
+    .set('data-contao--list-wizard-allow-nesting-value', allow_nesting)
     .set('data-contao--sortable-handle-value', '.drag-handle')
-    .set('data-contao--row-wizard-target', 'body')
+    .set('data-contao--sortable-group-value', "list-wizard-#{id}", allow_nesting)
+    .set('data-contao--sortable-swap-threshold-value', '1', allow_nesting)
+    .set('data-action', actions|join(' '))
     .addClass('tl_listwizard')
+    .addClass('is-nested', allow_nesting)
 %}
 <ul{{ list_attributes }}>
-    {% for value in rows %}
-        {% set item_attributes = attrs()
-            .set('data-contao--row-wizard-target', 'row')
-        %}
-        <li{{ item_attributes }}>
-            {# Drag row #}
-            {% set drag_handle_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'keydown->contao--sortable#move')
-                .addClass('drag-handle')
-            %}
-            <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
-            {% set value_attributes = attrs()
-                .set('type', 'text')
-                .set('name', "#{id}[]")
-                .set('value', value|default)
-                .addClass('tl_text')
-            %}
-            <input{{ value_attributes }}>
-
-            {# Controls #}
-            {# Copy row #}
-            {% set copy_button_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'contao--row-wizard#copy contao--scroll-offset#store')
-            %}
-            <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
-
-            {# Delete row #}
-            {% set delete_button_attributes = attrs()
-                .set('type', 'button')
-                .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
-            %}
-            <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
-        </li>
+    {% for row in rows %}
+        {{ _self.row(id, allow_nesting ? "#{id}[#{loop.index0}]" : "#{id}[]", row, true, loop.first, allow_nesting, rte|default) }}
     {% endfor %}
 </ul>
+
+{% macro row(id, prefix, row, root, first, allow_nesting, rte) %}
+    {% set item_attributes = attrs()
+        .set('data-contao--list-wizard-target', 'row')
+    %}
+    <li{{ item_attributes }}>
+        {# Drag row #}
+        {% set drag_handle_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'keydown->contao--sortable#move')
+            .addClass('drag-handle')
+        %}
+        <button{{ drag_handle_attributes }}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+
+        {% set value = allow_nesting ? row.item|default : row %}
+        {% set value_attributes = attrs()
+            .set('type', rte ? 'hidden' : 'text')
+            .set('name', allow_nesting ? "#{prefix}[item]" : prefix)
+            .set('value', value)
+            .set('data-action', 'keydown->contao--list-wizard#navigate', not rte)
+            .addClass('tl_text', not rte)
+        %}
+        <input{{ value_attributes }}>
+
+        {% if rte %}
+            {% set editor_attributes = attrs()
+                .addClass(['tl_text', 'inline-rte'])
+                .set('tabindex', '0')
+                .set('data-contao--inline-rte-target', 'editor')
+                .set('data-action', 'focusin->contao--inline-rte#activate keydown->contao--inline-rte#navigate keydown->contao--list-wizard#navigate pointerdown->contao--inline-rte#click click->contao--inline-rte#click')
+            %}
+            <div{{ editor_attributes }}>{{ value|raw }}</div>
+        {% endif %}
+
+        {# Controls #}
+        {% if allow_nesting %}
+            {# Outdent row #}
+            {% set outdent_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--list-wizard#outdent')
+                .set('disabled', '', root)
+                .addClass('outdent')
+            %}
+            <button{{ outdent_button_attributes }}>{{ backend_icon('movel.svg', 'MSC.outdent'|trans) }}</button>
+
+            {# Indent row #}
+            {% set indent_button_attributes = attrs()
+                .set('type', 'button')
+                .set('data-action', 'contao--list-wizard#indent')
+                .set('disabled', '', first)
+                .addClass('indent')
+            %}
+            <button{{ indent_button_attributes }}>{{ backend_icon('mover.svg', 'MSC.indent'|trans) }}</button>
+        {% endif %}
+
+        {# Copy row #}
+        {% set copy_button_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'contao--list-wizard#copy contao--scroll-offset#store')
+        %}
+        <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
+
+        {# Delete row #}
+        {% set delete_button_attributes = attrs()
+            .set('type', 'button')
+            .set('data-action', 'contao--list-wizard#delete contao--scroll-offset#store')
+        %}
+        <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
+
+        {% if allow_nesting %}
+            {# Nested lists #}
+            {% set sub_list_attributes = attrs()
+                .set('data-controller', 'contao--sortable')
+                .set('data-contao--sortable-handle-value', '.drag-handle')
+                .set('data-contao--sortable-group-value', "list-wizard-#{id}")
+                .set('data-contao--sortable-swap-threshold-value', '1')
+            %}
+            <ul{{ sub_list_attributes }}>
+                {% for list_item in row.list|default([]) %}
+                    {{ _self.row(id, "#{prefix}[list][#{loop.index0}]", list_item, false, loop.first, allow_nesting, rte) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}

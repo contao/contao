@@ -17,6 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddCrossEnvCachePass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
@@ -31,6 +32,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RegisterVirtualFilesystemsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -44,8 +46,10 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
+use Symfony\Component\Cache\DependencyInjection\CachePoolPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
@@ -70,6 +74,7 @@ class ContaoCoreBundleTest extends TestCase
         $passes = [
             AddEventAliasesPass::class,
             MakeServicesPublicPass::class,
+            AddCrossEnvCachePass::class,
             AddAssetsPackagesPass::class,
             AddResourcesPathsPass::class,
             TaggedMigrationsPass::class,
@@ -89,6 +94,7 @@ class ContaoCoreBundleTest extends TestCase
             IntlInstalledLocalesAndCountriesPass::class,
             LoggerChannelPass::class,
             ConfigureFilesystemPass::class,
+            RegisterVirtualFilesystemsPass::class,
             AddInsertTagsPass::class,
             AccessDecisionStrategyPass::class,
             RegisterTwigExtensionsPass::class,
@@ -127,7 +133,6 @@ class ContaoCoreBundleTest extends TestCase
                 },
             ))
         ;
-
         $container
             ->expects($this->once())
             ->method('getExtension')
@@ -137,6 +142,23 @@ class ContaoCoreBundleTest extends TestCase
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);
+    }
+
+    public function testAddsCrossEnvCacheAfterSymfonyCachePoolPass(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.debug', false);
+        $container->registerExtension(new SecurityExtension());
+
+        new ContaoCoreBundle()->build($container);
+        new FrameworkBundle()->build($container);
+
+        $classes = array_map(static fn (CompilerPassInterface $pass): string => $pass::class, $container->getCompilerPassConfig()->getPasses());
+
+        $this->assertGreaterThan(
+            array_search(CachePoolPass::class, $classes, true),
+            array_search(AddCrossEnvCachePass::class, $classes, true),
+        );
     }
 
     public function testAddsFragmentsPassBeforeHooksPass(): void

@@ -77,13 +77,16 @@ class SimpleTokenParser implements LoggerAwareInterface
                 $ifStack[] = $expression;
             } elseif (str_starts_with($decodedTag, '{elseif ')) {
                 $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens);
+
                 array_pop($stack);
                 array_pop($ifStack);
+
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
                 $ifStack[] = $currentIf || $expression;
             } elseif (str_starts_with($decodedTag, '{else}')) {
                 array_pop($stack);
                 array_pop($ifStack);
+
                 $stack[] = !$currentIf && $stack[\count($stack) - 1];
                 $ifStack[] = true;
             } elseif (str_starts_with($decodedTag, '{endif}')) {

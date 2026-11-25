@@ -293,7 +293,6 @@ class ContaoSetupCommandTest extends ContaoTestCase
                 ->method('isSuccessful')
                 ->willReturn($successful)
             ;
-
             $process
                 ->method('run')
                 ->willReturnCallback(
@@ -304,7 +303,6 @@ class ContaoSetupCommandTest extends ContaoTestCase
                     },
                 )
             ;
-
             $process
                 ->method('getErrorOutput')
                 ->willReturn('<error>')

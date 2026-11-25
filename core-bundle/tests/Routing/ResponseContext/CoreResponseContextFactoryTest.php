@@ -291,7 +291,6 @@ class CoreResponseContextFactoryTest extends TestCase
             ->with('uuid')
             ->willReturnSelf()
         ;
-
         $figureBuilder
             ->expects($this->once())
             ->method('buildIfResourceExists')

@@ -229,6 +229,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             $record['path'] = $itemToUpdate->getNewPath();
             unset($this->records[$path]);
+
             $this->records[$itemToUpdate->getNewPath()] = $record;
 
             $this->pathById[array_search($path, $this->pathById, true)] = $itemToUpdate->getNewPath();
@@ -543,7 +544,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 return null;
             }
 
-            return $allUuidsByPath[$parentPath];
+            return $allUuidsByPath[$parentPath] ?? null;
         };
 
         $allLastModifiedUpdatesByPath = [];
@@ -965,9 +966,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         );
 
         $defaultFields = [
-            'id', 'pid', 'uuid', 'path',
-            'hash', 'lastModified', 'type',
-            'extension', 'found', 'name', 'tstamp',
+            'id',
+            'pid',
+            'uuid',
+            'path',
+            'hash',
+            'lastModified',
+            'type',
+            'extension',
+            'found',
+            'name',
+            'tstamp',
         ];
 
         return array_diff($columns, $defaultFields);

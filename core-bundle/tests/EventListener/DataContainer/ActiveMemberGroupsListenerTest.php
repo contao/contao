@@ -135,7 +135,6 @@ class ActiveMemberGroupsListenerTest extends TestCase
     private function mockMemberGroup(array $data): MemberGroupModel
     {
         $ref = new \ReflectionClass(MemberGroupModel::class);
-
         $group = $ref->newInstanceWithoutConstructor();
 
         $ref->getProperty('arrData')->setValue($group, $data);

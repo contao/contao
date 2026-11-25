@@ -22,6 +22,8 @@ use Contao\BackendPopup;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,11 +40,16 @@ class BackendController extends AbstractController
     #[Route('', name: 'contao_backend')]
     public function mainAction(): Response
     {
+        $this->container->get('contao.routing.response_context_factory')->createWebpageResponseContext();
+
         $this->initializeContaoFramework();
 
         $controller = new BackendMain();
+        $response = $controller->run();
 
-        return $controller->run();
+        $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
+
+        return $response;
     }
 
     #[Route('/login', name: 'contao_backend_login')]
@@ -180,9 +187,10 @@ class BackendController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
         $services['uri_signer'] = UriSigner::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
 
         return $services;
     }

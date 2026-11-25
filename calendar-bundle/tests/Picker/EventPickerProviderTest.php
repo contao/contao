@@ -44,6 +44,7 @@ class EventPickerProviderTest extends ContaoTestCase
 
         $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'eventPicker'));
+
         $uri = 'contao_backend?do=calendar&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
         $this->assertSame('Event picker', $item->getLabel());
@@ -112,9 +113,7 @@ class EventPickerProviderTest extends ContaoTestCase
         );
 
         $this->assertSame(
-            [
-                'fieldType' => 'radio',
-            ],
+            ['fieldType' => 'radio'],
             $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }

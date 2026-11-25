@@ -150,7 +150,6 @@ class TitleTagListenerTest extends TestCase
             'layout' => 1,
             'rootTitle' => 'Example Website',
         ]);
-
         $page
             ->expects($this->once())
             ->method('loadDetails')

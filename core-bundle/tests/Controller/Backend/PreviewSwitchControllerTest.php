@@ -94,7 +94,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('isXmlHttpRequest')
             ->willReturn(true)
         ;
-
         $request
             ->method('isMethod')
             ->willReturnMap([['GET', true]])
@@ -130,7 +129,7 @@ class PreviewSwitchControllerTest extends TestCase
             ->willReturnMap([
                 [
                     'contao_backend',
-                    ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'],
+                    ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'previewTime' => null, 'rt' => 'csrf', 'nb' => '1'],
                     '/_contao/preview/1',
                 ],
                 ['contao_backend_switch', '/contao/preview_switch'],
@@ -153,7 +152,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('isXmlHttpRequest')
             ->willReturn(true)
         ;
-
         $request
             ->method('isMethod')
             ->willReturnMap([['GET', true]])
@@ -207,6 +205,54 @@ class PreviewSwitchControllerTest extends TestCase
         yield ['k.jones', 'authenticateFrontendUser'];
     }
 
+    #[DataProvider('providePreviewTimeScenarios')]
+    public function testProcessesThePreviewTime(string $previewTime, string $unpublished, \DateTimeImmutable|null $expect): void
+    {
+        $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
+        $frontendPreviewAuthenticator
+            ->expects($this->once())
+            ->method('setPreviewTime')
+            ->with($expect)
+            ->willReturn(true)
+        ;
+
+        $controller = new PreviewSwitchController(
+            $frontendPreviewAuthenticator,
+            $this->mockTokenChecker(),
+            $this->createStub(Connection::class),
+            $this->mockSecurity(),
+            $this->getTwigMock(),
+            $this->mockRouter(),
+            $this->mockTokenManager(),
+            $this->mockTranslator(),
+        );
+
+        $request = new Request(
+            request: [
+                'FORM_SUBMIT' => 'tl_switch',
+                'user' => '',
+                'unpublished' => $unpublished,
+                'previewTime' => $previewTime,
+            ],
+            server: ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST'],
+        );
+
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    public static function providePreviewTimeScenarios(): iterable
+    {
+        yield 'Setting a time' => ['2027-06-01T12:00', 'hide', new \DateTimeImmutable('2027-06-01 12:00:00')];
+
+        yield 'Resetting the time' => ['', 'hide', null];
+
+        yield 'Unpublished should always show all' => ['2027-06-01T12:00', 'show', null];
+
+        yield 'Ignore invalid date values' => ['foobar', 'hide', null];
+    }
+
     public function testReturnsErrorWithInvalidUsername(): void
     {
         $controller = new PreviewSwitchController(
@@ -244,7 +290,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('executeQuery')
             ->willReturn($resultStatement)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())
@@ -336,17 +381,20 @@ class PreviewSwitchControllerTest extends TestCase
         return $router;
     }
 
-    private function mockTokenChecker(string|null $frontendUsername = null): Stub&TokenChecker
+    private function mockTokenChecker(string|null $frontendUsername = null, \DateTimeImmutable|null $previewTime = null): Stub&TokenChecker
     {
         $tokenChecker = $this->createStub(TokenChecker::class);
         $tokenChecker
             ->method('getFrontendUsername')
             ->willReturn($frontendUsername)
         ;
-
         $tokenChecker
             ->method('isPreviewMode')
             ->willReturn(true)
+        ;
+        $tokenChecker
+            ->method('getPreviewTime')
+            ->willReturn($previewTime)
         ;
 
         return $tokenChecker;
@@ -429,7 +477,6 @@ class PreviewSwitchControllerTest extends TestCase
             ->method('authenticateFrontendUser')
             ->willReturnCallback(static fn (string $user): bool => 'member' === $user)
         ;
-
         $authenticator
             ->method('authenticateFrontendGuest')
             ->willReturn(true)

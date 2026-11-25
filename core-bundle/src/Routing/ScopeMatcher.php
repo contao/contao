@@ -24,7 +24,9 @@ class ScopeMatcher
      */
     public function __construct(
         private readonly RequestMatcherInterface $backendMatcher,
+        private readonly RequestMatcherInterface $backendApiMatcher,
         private readonly RequestMatcherInterface $frontendMatcher,
+        private readonly RequestMatcherInterface $frontendApiMatcher,
         private readonly RequestStack $requestStack,
     ) {
     }
@@ -59,7 +61,29 @@ class ScopeMatcher
             return false;
         }
 
+        return $this->backendMatcher->matches($request) || $this->backendApiMatcher->matches($request);
+    }
+
+    public function isBackendUiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
         return $this->backendMatcher->matches($request);
+    }
+
+    public function isBackendApiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->backendApiMatcher->matches($request);
     }
 
     public function isFrontendRequest(Request|null $request = null): bool
@@ -70,6 +94,28 @@ class ScopeMatcher
             return false;
         }
 
+        return $this->frontendMatcher->matches($request) || $this->frontendApiMatcher->matches($request);
+    }
+
+    public function isFrontendUiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
         return $this->frontendMatcher->matches($request);
+    }
+
+    public function isFrontendApiRequest(Request|null $request = null): bool
+    {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (!$request) {
+            return false;
+        }
+
+        return $this->frontendApiMatcher->matches($request);
     }
 }

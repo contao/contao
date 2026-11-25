@@ -106,6 +106,7 @@ class ImageFactoryTest extends TestCase
 
         $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesAdapter]);
+
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -158,6 +159,7 @@ class ImageFactoryTest extends TestCase
         $filesModel = $this->createClassWithPropertiesStub(FilesModel::class);
         $filesAdapter = $this->createConfiguredAdapterStub(['findByPath' => $filesModel]);
         $framework = $this->createContaoFrameworkStub([FilesModel::class => $filesAdapter]);
+
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, ['', '', '']);
 
@@ -286,6 +288,7 @@ class ImageFactoryTest extends TestCase
         ];
 
         $framework = $this->createContaoFrameworkStub($adapters);
+
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, 1, Path::join($this->getTempDir(), 'target/path.jpg'));
 
@@ -316,6 +319,7 @@ class ImageFactoryTest extends TestCase
         ;
 
         $framework = $this->createContaoFrameworkStub($adapters);
+
         $imageFactory = $this->getImageFactory($resizer, null, null, null, $framework);
         $image = $imageFactory->create($path, 1);
 
@@ -439,10 +443,13 @@ class ImageFactoryTest extends TestCase
                 ),
                 $this->callback(
                     function (ResizeOptions $options): bool {
-                        $this->assertSame([
-                            'jpeg_quality' => 80,
-                            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-                        ], $options->getImagineOptions());
+                        $this->assertSame(
+                            [
+                                'jpeg_quality' => 80,
+                                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+                            ],
+                            $options->getImagineOptions(),
+                        );
 
                         $this->assertSame(Path::join($this->getTempDir(), 'target/path.jpg'), $options->getTargetPath());
 
@@ -462,6 +469,7 @@ class ImageFactoryTest extends TestCase
     public function testCreatesAnImageObjectFromAnImageObjectWithAnEmptyResizeConfiguration(): void
     {
         $imageMock = $this->createStub(ImageInterface::class);
+
         $imageFactory = $this->getImageFactory();
         $image = $imageFactory->create($imageMock, new ResizeConfiguration());
 
@@ -497,7 +505,6 @@ class ImageFactoryTest extends TestCase
             ->onlyMethods(['exists'])
             ->getMock()
         ;
-
         $filesystem
             ->expects($this->exactly(2))
             ->method('exists')

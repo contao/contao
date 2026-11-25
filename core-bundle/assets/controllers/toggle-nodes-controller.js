@@ -120,7 +120,7 @@ export default class extends Controller {
             this.expandToggler(el);
 
             // HOOK (see #6752)
-            window.fireEvent('ajax_change');
+            document.dispatchEvent(new CustomEvent('ajax_change', { bubbles: true }));
         }
 
         this.loadToggler(el, false);
@@ -199,16 +199,16 @@ export default class extends Controller {
 
         for (const operationTarget of this.operationTargets) {
             if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
-                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.textContent = this.collapseAllValue;
                 operationTarget.title = this.collapseAllTitleValue;
             } else {
-                operationTarget.innerText = this.expandAllValue;
+                operationTarget.textContent = this.expandAllValue;
                 operationTarget.title = this.expandAllTitleValue;
             }
         }
     }
 
     hasExpandedRoot() {
-        return !!this.rootChildTargets.find((el) => el.style.display !== 'none');
+        return this.rootChildTargets.some((el) => el.style.display !== 'none');
     }
 }

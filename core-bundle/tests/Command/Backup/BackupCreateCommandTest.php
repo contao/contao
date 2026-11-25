@@ -39,6 +39,7 @@ class BackupCreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+
         $normalizedOutput = preg_replace('/\\s\\s+/', ' ', $commandTester->getDisplay(true));
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
@@ -91,6 +92,7 @@ class BackupCreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
@@ -117,7 +119,6 @@ class BackupCreateCommandTest extends TestCase
             ->method('getFilename')
             ->willReturn('test__20211101141254.sql.gz')
         ;
-
         $backup
             ->method('toArray')
             ->willReturn([
@@ -133,7 +134,6 @@ class BackupCreateCommandTest extends TestCase
             ->method('createCreateConfig')
             ->willReturn(new CreateConfig($backup))
         ;
-
         $backupManager
             ->expects($this->once())
             ->method('create')

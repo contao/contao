@@ -45,7 +45,6 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $parentCatalogue
             ->expects($this->once())
             ->method('getDomains')
@@ -57,7 +56,6 @@ class MessageCatalogueTest extends TestCase
             ->method('name')
             ->willReturn($finder)
         ;
-
         $finder
             ->method('getIterator')
             ->willReturn(new \ArrayIterator([
@@ -87,7 +85,6 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('has')
@@ -120,7 +117,6 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('defines')
@@ -153,7 +149,6 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('get')

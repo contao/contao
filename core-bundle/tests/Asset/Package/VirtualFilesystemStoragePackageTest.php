@@ -41,7 +41,6 @@ class VirtualFilesystemStoragePackageTest extends TestCase
                 ['some/empty-version', new Uri('https://base-url/some/empty-version?'.AbstractPublicUriProvider::VERSION_QUERY_PARAMETER.'=')],
             ])
         ;
-
         $storage
             ->expects($this->exactly(2))
             ->method('getLastModified')

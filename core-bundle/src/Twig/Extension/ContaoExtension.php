@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\String\RecordingHtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -66,7 +67,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     ) {
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
-
         $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
         $escaperRuntime->addSafeClass(DataContainerOperationsBuilder::class, ['html', 'contao_html']);
@@ -133,7 +133,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             ),
             new TwigFunction(
                 'attrs',
-                static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
+                static fn (HtmlAttributes|iterable|string|null $attributes = null): RecordingHtmlAttributes => new RecordingHtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'figure',

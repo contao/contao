@@ -51,6 +51,10 @@ class FilesystemConfiguration
      */
     public function addVirtualFilesystem(string $name, string $prefix, bool $readonly = false): Definition
     {
+        if ('' === $name || str_contains($name, '/')) {
+            throw new InvalidConfigurationException(\sprintf('The virtual filesystem name "%s" must be non-empty and must not contain "/".', $name));
+        }
+
         if (null !== $this->getVirtualFilesystem($name)) {
             throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
         }
@@ -250,7 +254,7 @@ class FilesystemConfiguration
     {
         foreach ($this->container->findTaggedServiceIds('contao.virtual_filesystem') as $id => $tags) {
             foreach ($tags as $tag) {
-                if ($tag['name'] === $name) {
+                if (($tag['name'] ?? null) === $name) {
                     return [$id, $tag['prefix']];
                 }
             }

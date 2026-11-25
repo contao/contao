@@ -1,0 +1,181 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\ApiBundle\DataContainer;
+
+use Contao\ApiBundle\Dto\DataContainerRecord;
+use Contao\ApiBundle\Exception\InvalidInputException;
+use Contao\ApiBundle\Relation\RelationResolverInterface;
+use Contao\ApiBundle\Schema\DataContainerSchemaFactory;
+use Contao\ApiBundle\Widget\WidgetConverterRegistry;
+
+/**
+ * Each mapping method builds the schema first, which initializes the framework
+ * and loads the DCA before accessing its field configuration. The caller provides
+ * the request and DC_Table context for onload callbacks.
+ */
+final class DataContainerRecordMapper
+{
+    public function __construct(
+        private readonly DataContainerSchemaFactory $schemaFactory,
+        private readonly WidgetConverterRegistry $converters,
+        private readonly RelationResolverInterface $relationResolver,
+        private readonly DataContainerRelationDefinitionFactory $relationDefinitionFactory,
+    ) {
+    }
+
+    public function fromRow(string $table, array $row): DataContainerRecord
+    {
+        $data = [];
+
+        foreach ($this->schemaFactory->create($table)['properties'] as $field => $schema) {
+            if ('id' === $field || !\array_key_exists($field, $row) || ($schema['writeOnly'] ?? false)) {
+                continue;
+            }
+
+            $config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? [];
+            $converter = $this->converters->get($config);
+            $fieldContext = new DataContainerFieldContext($config, $table, (string) $field);
+
+            if ($converter) {
+                $value = $converter->convertToApiValue($row[$field], $config, $schema);
+            } elseif (!isset($config['inputType']) && \in_array($field, DataContainerRecord::METADATA_FIELDS, true)) {
+                $value = match (true) {
+                    null === $row[$field] => null,
+                    'ptable' === $field => (string) $row[$field],
+                    'tstamp' === $field => $row[$field] ? date(\DateTimeInterface::ATOM, (int) $row[$field]) : null,
+                    default => (int) $row[$field],
+                };
+            } else {
+                continue;
+            }
+
+            $relation = $this->relationDefinitionFactory->create($fieldContext, $row);
+            $data[$field] = $relation ? $this->relationResolver->resolveToReference($value, $relation) : $value;
+        }
+
+        return new DataContainerRecord($table, $data, $row['id']);
+    }
+
+    public function toFormValues(string $table, array $values): array
+    {
+        $form = [];
+        $properties = $this->schemaFactory->createOperationSchemas($table)['update']['properties'] ?? [];
+
+        foreach ($values as $field => $value) {
+            $schema = $properties[$field] ?? null;
+
+            if (!$schema || ($schema['readOnly'] ?? false)) {
+                throw new InvalidInputException('Field "'.$field.'" is not writable through the update operation. Check the resource description for supported operations.');
+            }
+
+            $config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? [];
+            $converter = $this->converters->get($config);
+
+            if (!$converter) {
+                throw new InvalidInputException('Field "'.$field.'" has no API-capable widget.');
+            }
+
+            $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($config, $table, (string) $field));
+            $value = $relation ? $this->relationResolver->resolveToIdentifier($value, $relation) : $value;
+            $form[$field] = $converter->convertToFormValue($value, $config, $schema);
+        }
+
+        return $form;
+    }
+
+    /**
+     * @param list<string> $tables
+     *
+     * @return array{table: string, id: int}
+     */
+    public function toRecordIdentifier(string $iri, array $tables): array
+    {
+        foreach ($tables as $table) {
+            try {
+                $id = $this->relationResolver->resolveToIdentifier($iri, new DataContainerRelationDefinition($table));
+            } catch (InvalidInputException) {
+                continue;
+            }
+
+            if (false !== ($id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]))) {
+                return ['table' => $table, 'id' => $id];
+            }
+        }
+
+        throw new InvalidInputException(\sprintf('The IRI "%s" does not reference a record of %s.', $iri, implode(' or ', $tables)));
+    }
+
+    /**
+     * Resolves the parent reference of a new record to its identifier.
+     */
+    public function toParentIdentifier(string $table, mixed $value): int
+    {
+        $config = $GLOBALS['TL_DCA'][$table]['fields']['pid'] ?? [];
+        $relation = $this->relationDefinitionFactory->create(new DataContainerFieldContext($config, $table, 'pid'));
+        $value = $relation ? $this->relationResolver->resolveToIdentifier($value, $relation) : $value;
+
+        if (\is_array($value)) {
+            $value = $value['id'] ?? null;
+        }
+
+        $id = filter_var($value, FILTER_VALIDATE_INT);
+
+        if (false === $id || $id < 0) {
+            throw new InvalidInputException('Field "pid" must reference an existing parent record.');
+        }
+
+        return $id;
+    }
+
+    public function toFormDefaults(string $table, array $row, array $fields): array
+    {
+        $form = [];
+        $properties = $this->schemaFactory->createOperationSchemas($table)['update']['properties'] ?? [];
+
+        foreach ($fields as $field) {
+            $config = $GLOBALS['TL_DCA'][$table]['fields'][$field] ?? [];
+            $schema = $properties[$field] ?? null;
+            $converter = $this->converters->get($config);
+
+            if (($config['eval']['readonly'] ?? false) || ($config['eval']['disabled'] ?? false)) {
+                continue;
+            }
+
+            if (!$converter && ($config['eval']['mandatory'] ?? false)) {
+                throw new InvalidInputException('Required field "'.$field.'" has no API-capable widget.');
+            }
+
+            if (null === $schema || !$converter) {
+                continue;
+            }
+
+            // Never submit a stored secret as a new password or other write-only value
+            if ($schema['writeOnly'] ?? false) {
+                $form[$field] = $converter->convertToFormValue(null, $config, $schema);
+
+                continue;
+            }
+
+            $value = $converter->convertToFormValue($converter->convertToApiValue($row[$field] ?? null, $config, $schema), $config, $schema);
+
+            // Keep an optional NULL or empty list as stored instead of submitting its API value
+            if (!($config['eval']['mandatory'] ?? false) && (null === ($row[$field] ?? null) || [] === $value)) {
+                continue;
+            }
+
+            $form[$field] = $value;
+        }
+
+        return $form;
+    }
+}

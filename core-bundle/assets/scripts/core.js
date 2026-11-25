@@ -660,7 +660,7 @@ window.Backend =
 	},
 
 	/**
-	 * Open a TinyMCE file browser in a modal window
+	 * Open a HugeRTE file browser in a modal window
 	 *
 	 * @param {string} field_name The field name
 	 * @param {string} url        The URL
@@ -940,6 +940,8 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeDragAndDrop: function(ul, options) {
+		console.warn('Backend.enableFileTreeDragAndDrop() is deprecated. Please use the Stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -1155,6 +1157,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	tableWizard: function(id) {
+		console.warn('Backend.tableWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var table = $(id),
 			thead = table.getElement('thead'),
 			tbody = table.getElement('tbody'),
@@ -1348,6 +1352,8 @@ window.Backend =
 	 * @param {float} [factor] The resize factor
 	 */
 	tableWizardResize: function(factor) {
+		console.warn('Backend.tableWizardResize() is deprecated. Please use the Stimulus controller instead.');
+
 		var size = window.localStorage.getItem('contao_table_wizard_cell_size');
 
 		if (factor !== undefined) {
@@ -1375,6 +1381,9 @@ window.Backend =
 	tableWizardSetWidth: function() {
 		var wrap = $('tl_tablewizard');
 		if (!wrap) return;
+
+		console.warn('Backend.tableWizardSetWidth() is deprecated. Please use the Stimulus controller instead.');
+
 		wrap.setStyle('width', Math.round(wrap.getParent('.tl_formbody_edit').getComputedSize().width * 0.96));
 	},
 
@@ -1633,44 +1642,15 @@ window.Backend =
 	},
 
 	/**
-	 * Update the fields of the imageSize widget upon change
-	 */
-	enableImageSizeWidgets: function() {
-		$$('.tl_image_size').each(function(el) {
-			var select = el.getElement('select'),
-				widthInput = el.getChildren('input')[0],
-				heightInput = el.getChildren('input')[1],
-				update = function() {
-					if (select.get('value') === '' || select.get('value').indexOf('_') === 0 || select.get('value').toInt().toString() === select.get('value')) {
-						widthInput.readOnly = true;
-						heightInput.readOnly = true;
-						var dimensions = $(select.getSelected()[0]).get('text');
-						dimensions = dimensions.split('(').length > 1
-							? dimensions.split('(').getLast().split(')')[0].split('x')
-							: ['', ''];
-						widthInput.set('value', '').set('placeholder', dimensions[0] * 1 || '');
-						heightInput.set('value', '').set('placeholder', dimensions[1] * 1 || '');
-					} else {
-						widthInput.set('placeholder', '');
-						heightInput.set('placeholder', '');
-						widthInput.readOnly = false;
-						heightInput.readOnly = false;
-					}
-				}
-			;
-
-			update();
-			select.addEvent('change', update);
-			select.addEvent('keyup', update);
-		});
-	},
-
-	/**
 	 * Allow to mark the important part of an image
 	 *
 	 * @param {object} el The DOM element
 	 */
 	editPreviewWizard: function(el) {
+		if (window.console) {
+			console.warn('Backend.editPreviewWizard() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		el = $(el);
 		var imageElement = el.getElement('img'),
 			inputElements = {},
@@ -1758,6 +1738,9 @@ window.Backend =
 				isDrawing = false;
 			},
 			init = function() {
+				if (el.editPreviewWizardInitialized) {
+					return;
+				}
 				el.getParent('.tl_tbox,.tl_box').getElements('input[name^="importantPart"]').each(function(input) {
 					['x', 'y', 'width', 'height'].each(function(key) {
 						if (input.get('name').substr(13, key.length) === key.capitalize()) {
@@ -1768,10 +1751,13 @@ window.Backend =
 				if (Object.getLength(inputElements) !== 4) {
 					return;
 				}
+				el.editPreviewWizardInitialized = true;
 				Object.each(inputElements, function(input) {
 					input.getParent().setStyle('display', 'none');
 				});
 				el.addClass('tl_edit_preview_enabled');
+				// Remove the element restored from the Turbo cache (see #10509)
+				el.getElements('.tl_edit_preview_important_part').destroy();
 				partElement = new Element('div', {
 					'class': 'tl_edit_preview_important_part'
 				}).inject(el);
@@ -1802,11 +1788,14 @@ window.Backend =
 	 * @param {object} options An optional options object
 	 */
 	enableFileTreeUpload: function(wrap, options) {
+		console.warn('Backend.enableFileTreeUpload() is deprecated. Please use the Stimulus controllers instead.');
+
 		wrap = $(wrap);
 
 		var fallbackUrl = options.url,
 			dzElement = new Element('div', {
 				'class': 'dropzone dropzone-filetree',
+				'data-turbo-temporary': '',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;
@@ -1895,15 +1884,11 @@ window.Backend =
 	}
 };
 
+// Set the classes on the root element, which Turbo does not replace
+document.documentElement.classList.add('js');
+
 // Initialize the back end script
 window.addEvent('domready', function() {
-	$(document.body).addClass('js');
-
-	// Mark touch devices (see #5563)
-	if (Browser.Features.Touch) {
-		$(document.body).addClass('touch');
-	}
-
 	Backend.tableWizardSetWidth();
 });
 

@@ -8,6 +8,8 @@ export default class extends Controller {
     #pollInterval = null;
     #timer = null;
     #etag = null;
+    #connected = false;
+    #lastPollStartedAt = null;
 
     static values = {
         pendingJobsUrl: String,
@@ -20,9 +22,11 @@ export default class extends Controller {
     static targets = ['count', 'list'];
 
     connect() {
+        this.#connected = true;
         this.#pollInterval = this.defaultIntervalValue;
         this.#timer = null;
         this.#etag = null;
+        this.#lastPollStartedAt = Date.now();
 
         if (this.enabledValue) {
             this.enable();
@@ -30,12 +34,15 @@ export default class extends Controller {
     }
 
     disconnect() {
+        this.#connected = false;
         clearTimeout(this.#timer);
         this.#timer = null;
+        this.#turboStreamConnection.abortPending();
     }
 
     enable() {
         clearTimeout(this.#timer);
+        this.#timer = null;
         this.#poll();
     }
 
@@ -44,7 +51,7 @@ export default class extends Controller {
         clearTimeout(this.#timer);
 
         if ('0' === el.dataset.jobs) {
-            this.countTarget.innerText = '';
+            this.countTarget.textContent = '';
 
             if (this.#runningJobs) {
                 // ALl pending jobs have been processed
@@ -55,7 +62,7 @@ export default class extends Controller {
             // Continuously increase interval if there are no results
             this.#pollInterval = Math.min(this.maximumIntervalValue, this.#pollInterval * 2);
         } else {
-            this.countTarget.innerText = el.dataset.jobs;
+            this.countTarget.textContent = el.dataset.jobs;
             this.#runningJobs = true;
 
             this.#pollInterval = this.defaultIntervalValue;
@@ -65,6 +72,11 @@ export default class extends Controller {
     }
 
     #waitAndPoll() {
+        if (!this.#connected) {
+            return;
+        }
+
+        clearTimeout(this.#timer);
         this.#timer = setTimeout(() => {
             this.#timer = null;
             this.#poll();
@@ -72,14 +84,39 @@ export default class extends Controller {
     }
 
     async #poll() {
+        if (!this.#connected) {
+            return;
+        }
+
+        const startedAt = Date.now();
+
+        // Include response time and delayed timers so completed jobs are not missed
+        const range = Math.max(this.#pollInterval, startedAt - this.#lastPollStartedAt);
+
         const result = await this.#turboStreamConnection.get(
             this.pendingJobsUrlValue,
-            { range: this.#pollInterval },
+            { range },
             true,
             this.#etag ? { 'If-None-Match': this.#etag } : {},
         );
 
+        if (!this.#connected || result.aborted) {
+            return;
+        }
+
+        if (result.ok) {
+            this.#lastPollStartedAt = startedAt;
+        }
+
         this.#etag = result.response?.headers.get('etag') || this.#etag;
+
+        // Stop watching unchanged results when there are no jobs left to display
+        if (304 === result.response?.status && (!this.hasListTarget || '0' === this.listTarget.dataset.jobs)) {
+            clearTimeout(this.#timer);
+            this.#timer = null;
+
+            return;
+        }
 
         // If no Turbo stream update happened (e.g. 204 no changes), schedule
         // the next poll here.

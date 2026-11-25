@@ -46,10 +46,16 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with($expectedRenderedTemplateName, [...$defaultData, ...[
-                'id' => 'prefooter',
-                'content' => '<content>',
-            ]])
+            ->with(
+                $expectedRenderedTemplateName,
+                [
+                    ...$defaultData,
+                    ...[
+                        'id' => 'prefooter',
+                        'content' => '<content>',
+                    ],
+                ],
+            )
             ->willReturn('<result>')
         ;
 
@@ -100,17 +106,23 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with($expectedRenderedTemplateName, [...$defaultData, ...[
-                'matches' => [
-                    'prefooter' => [
-                        'title' => 'prefooter',
-                        'id' => 'prefooter',
-                        'template' => 'block_foo',
-                        'position' => 'after',
-                        'content' => '<content>',
+            ->with(
+                $expectedRenderedTemplateName,
+                [
+                    ...$defaultData,
+                    ...[
+                        'matches' => [
+                            'prefooter' => [
+                                'title' => 'prefooter',
+                                'id' => 'prefooter',
+                                'template' => 'block_foo',
+                                'position' => 'after',
+                                'content' => '<content>',
+                            ],
+                        ],
                     ],
                 ],
-            ]])
+            )
             ->willReturn('<result>')
         ;
 

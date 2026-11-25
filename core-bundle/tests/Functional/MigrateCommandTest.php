@@ -83,6 +83,7 @@ class MigrateCommandTest extends FunctionalTestCase
 
         $application = new Application($kernel);
         $application->setAutoExit(false);
+
         $applicationArgs[] = '--with-deletes';
         $exitCode = $application->run(new ArgvInput($applicationArgs), $output);
         $commandOutput = $output->fetch();

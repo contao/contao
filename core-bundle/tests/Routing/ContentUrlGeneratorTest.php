@@ -226,7 +226,6 @@ class ContentUrlGeneratorTest extends TestCase
             [$content, ContentUrlResult::resolve($target)],
             [$target, null],
         );
-
         $resolver
             ->expects($this->once())
             ->method('getParametersForContent')
@@ -255,7 +254,6 @@ class ContentUrlGeneratorTest extends TestCase
             [$content, ContentUrlResult::resolve($target)],
             [$target, null],
         );
-
         $resolver
             ->expects($this->once())
             ->method('getParametersForContent')

@@ -52,7 +52,7 @@ class IfLanguageInsertTag implements BlockInsertTagResolverNestedResolvedInterfa
                 return true;
             }
 
-            if (str_ends_with($lang, '*') && 0 === strncmp($pageLanguage, $lang, \strlen((string) $lang) - 1)) {
+            if (str_ends_with($lang, '*') && 0 === strncmp($pageLanguage, $lang, \strlen($lang) - 1)) {
                 return true;
             }
         }

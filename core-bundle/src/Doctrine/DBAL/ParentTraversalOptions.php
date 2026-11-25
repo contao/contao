@@ -16,6 +16,9 @@ final class ParentTraversalOptions extends AbstractTraversalOptions
 {
     private bool $includeBoundary = false;
 
+    /**
+     * Includes the first row that fails any scope condition, then stops that parent trail.
+     */
     public function withBoundaryRow(): self
     {
         $clone = clone $this;

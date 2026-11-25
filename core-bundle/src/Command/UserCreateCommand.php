@@ -100,6 +100,7 @@ class UserCreateCommand extends Command
 
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength');
+
         $username = $input->getOption('username');
 
         $passwordCallback = static function ($value) use ($minLength, $username): string {

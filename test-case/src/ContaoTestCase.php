@@ -22,6 +22,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\Clock;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBag;
@@ -105,9 +106,11 @@ abstract class ContaoTestCase extends TestCase
             $cachedContainers[$projectDir]->setParameter('kernel.charset', 'UTF-8');
             $cachedContainers[$projectDir]->setParameter('kernel.default_locale', 'en');
             $cachedContainers[$projectDir]->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+            $cachedContainers[$projectDir]->setParameter('kernel.build_dir', $projectDir.'/var/cache');
             $cachedContainers[$projectDir]->setParameter('kernel.project_dir', $projectDir);
             $cachedContainers[$projectDir]->setParameter('kernel.root_dir', $projectDir.'/app');
             $cachedContainers[$projectDir]->setDefinition('request_stack', new Definition(RequestStack::class));
+            $cachedContainers[$projectDir]->setDefinition('clock', new Definition(Clock::class));
 
             // Load the default configuration
             $extension = new ContaoCoreExtension();
@@ -356,7 +359,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('getUser')
             ->willReturn($this->createStub($class))
         ;
-
         $token
             ->method('getRoleNames')
             ->willReturn([is_a($class, BackendUser::class, true) ? 'ROLE_USER' : 'ROLE_MEMBER'])
@@ -459,7 +461,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('isComplete')
             ->willReturn(true)
         ;
-
         $adapter
             ->method('get')
             ->willReturnCallback(static fn (string $key) => $GLOBALS['TL_CONFIG'][$key] ?? null)
@@ -499,7 +500,6 @@ abstract class ContaoTestCase extends TestCase
             ->method('isInitialized')
             ->willReturn(true)
         ;
-
         $object
             ->method('getAdapter')
             ->willReturnCallback(static fn (string $key): Adapter|null => $adapters[$key] ?? null)

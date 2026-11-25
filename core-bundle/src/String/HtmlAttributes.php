@@ -15,11 +15,24 @@ namespace Contao\CoreBundle\String;
 use Contao\StringUtil;
 
 /**
- * @implements \IteratorAggregate<string, string>
+ * @implements \IteratorAggregate<string, string|false>
  * @implements \ArrayAccess<string, \Stringable|bool|float|int|string|null>
  */
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
+    private const ATTRIBUTE_SEPARATORS = [
+        'accept' => ', ',
+        'exportparts' => ', ',
+        'imagesizes' => ', ',
+        'imagesrcset' => ', ',
+        'media' => ', ',
+        'sizes' => ', ',
+        'srcset' => ', ',
+        'allow' => '; ',
+        'csp' => '; ',
+        'coords' => ',',
+    ];
+
     private const ESCAPED_VALUE_CACHE_LIMIT = 4096;
 
     private const VALIDATED_NAME_CACHE_LIMIT = 256;
@@ -61,6 +74,12 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
+        if ($attributes instanceof RecordingHtmlAttributes) {
+            $attributes->replay($this);
+
+            return $this;
+        }
+
         if ($attributes instanceof self) {
             foreach ($attributes->attributes as $name => $value) {
                 $this->mergeAttribute((string) $name, $value, true);
@@ -97,8 +116,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function set(string $name, \Stringable|bool|float|int|string|null $value = true, mixed $condition = true): self
     {
-        static $validatedNames = [];
-
         if (!$this->test($condition)) {
             return $this;
         }
@@ -113,17 +130,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        if (!isset($validatedNames[$name])) {
-            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
-                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
-            }
-
-            $validatedNames[$name] = true;
-
-            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
-                unset($validatedNames[array_key_first($validatedNames)]);
-            }
-        }
+        $this->validateAttributeName($name);
 
         // Unset if value is set to false
         if (false === $value) {
@@ -176,6 +183,127 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         unset($this->attributes[strtolower($name)]);
 
         return $this;
+    }
+
+    /**
+     * Adds $values to a list in the property $name. The used separator depends on the
+     * attribute name and defaults to a single space character. Class and style use
+     * their respective syntax.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param \Stringable|array<string>|float|int|string|null $values
+     */
+    public function add(string $name, \Stringable|array|float|int|string|null $values = null, mixed $condition = true, string|null $separator = null): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_float($values)) {
+            try {
+                $values = StringUtil::numberToString($values);
+            } catch (\InvalidArgumentException) {
+                return $this;
+            }
+        }
+
+        $name = strtolower($name);
+
+        $this->validateAttributeName($name);
+
+        $values = \is_array($values) ? $values : (string) $values;
+
+        if ('' === $values || [] === $values) {
+            return $this;
+        }
+
+        if ('class' === $name) {
+            return $this->addClass($values);
+        }
+
+        if ('style' === $name) {
+            return $this->addStyle($values);
+        }
+
+        $separator ??= self::ATTRIBUTE_SEPARATORS[$name] ?? ' ';
+
+        if ('' !== ($previousValue = $this->attributes[$name] ?? '')) {
+            $previousValue .= $separator;
+        }
+
+        if (\is_array($values)) {
+            $values = implode($separator, $values);
+        }
+
+        return $this->set($name, "$previousValue$values");
+    }
+
+    /**
+     * Removes $values from a list in the property $name. The used separator depends
+     * on the attribute name and defaults to a single space character. Class and style
+     * use their respective syntax. Empty attributes get unset.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param \Stringable|array<string>|float|int|string|null $values
+     */
+    public function remove(string $name, \Stringable|array|float|int|string|null $values = null, mixed $condition = true, string|null $separator = null): self
+    {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_float($values)) {
+            try {
+                $values = StringUtil::numberToString($values);
+            } catch (\InvalidArgumentException) {
+                return $this;
+            }
+        }
+
+        $name = strtolower($name);
+
+        $this->validateAttributeName($name);
+
+        $values = \is_array($values) ? $values : (string) $values;
+
+        if ('' === $values || [] === $values) {
+            return $this;
+        }
+
+        if ('class' === $name) {
+            return $this->removeClass($values);
+        }
+
+        if ('style' === $name) {
+            return $this->removeStyle($values);
+        }
+
+        $listValue = $this->attributes[$name] ?? '';
+        $separator ??= self::ATTRIBUTE_SEPARATORS[$name] ?? ' ';
+        $separatorTrimmed = trim($separator);
+
+        if ('' === $separatorTrimmed || $separatorTrimmed === $separator) {
+            $separatorRegex = preg_quote($separator, '/');
+        } else {
+            $separatorRegex = '\s*'.preg_quote($separatorTrimmed, '/').'\s*';
+        }
+
+        if (!\is_array($values)) {
+            $values = preg_split("/$separatorRegex/", $values, -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        foreach ($values as $item) {
+            $item = preg_quote($item, '/');
+            $listValue = preg_replace("/$separatorRegex$item(?=$separatorRegex|$)|(?:^|\\G)$item(?:$separatorRegex|$)/", '', $listValue);
+        }
+
+        if ('' === $listValue) {
+            $listValue = false;
+        }
+
+        return $this->set($name, $listValue);
     }
 
     /**
@@ -367,7 +495,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * @return \Generator<string, string>
+     * @return \Generator<string, string|false>
      */
     public function getIterator(): \Generator
     {
@@ -406,10 +534,27 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return (object) $this->attributes;
     }
 
+    protected function validateAttributeName(string $name): void
+    {
+        static $validatedNames = [];
+
+        if (!isset($validatedNames[$name])) {
+            if (!preg_match('(^[^>\t\n\r\f /\x00][^>\t\n\r\f /\x00=]*$)u', $name)) {
+                throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+            }
+
+            $validatedNames[$name] = true;
+
+            if (\count($validatedNames) > self::VALIDATED_NAME_CACHE_LIMIT) {
+                unset($validatedNames[array_key_first($validatedNames)]);
+            }
+        }
+    }
+
     /**
      * Returns true if the argument is truthy.
      */
-    private function test(mixed $condition): bool
+    protected function test(mixed $condition): bool
     {
         if ($condition instanceof \Stringable) {
             $condition = (string) $condition;
@@ -428,11 +573,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     private function mergeAttribute(string $name, \Stringable|bool|float|int|string|null $value, bool $trusted = false): void
     {
-        if ('class' === $name && (!$trusted || isset($this->attributes[$name]))) {
+        if ('class' === $name && false !== $value && (!$trusted || isset($this->attributes[$name]))) {
             $this->addClass((string) $value);
-        } elseif ('style' === $name && (!$trusted || isset($this->attributes[$name]))) {
+        } elseif ('style' === $name && false !== $value && (!$trusted || isset($this->attributes[$name]))) {
             $this->addStyle((string) $value);
-        } elseif ($trusted) {
+        } elseif ($trusted && false !== $value) {
             $this->attributes[$name] = (string) $value;
         } else {
             $this->set($name, $value);

@@ -66,6 +66,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
 
         $connection = $this->createMock(Connection::class);
         $matcher = $this->exactly(\count($expectedStatements));
+
         $connection
             ->expects($matcher)
             ->method('executeStatement')

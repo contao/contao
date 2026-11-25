@@ -26,11 +26,11 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['newsletter'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'options_callback'        => array(Newsletter::class, 'getNewsletters'),
-	'eval'                    => array('multiple'=>true, 'feEditable'=>true, 'feGroup'=>'newsletter'),
+	'eval'                    => array('multiple' => true, 'feEditable' => true, 'feGroup' => 'newsletter'),
 	'save_callback' => array
 	(
 		array(Newsletter::class, 'synchronize')
 	),
-	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+	'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+	'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 );

@@ -25,7 +25,7 @@ class CommandCompilerTest extends TestCase
 {
     public function testRunsAllCompiledCommands(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $executedCommands = [];
 
             public function __construct()
@@ -50,7 +50,7 @@ class CommandCompilerTest extends TestCase
 
     public function testRetriesFailedCommandsAfterAnotherCommandSucceeds(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $attemptedCommands = [];
 
             private bool $columnExists = false;
@@ -83,7 +83,7 @@ class CommandCompilerTest extends TestCase
 
     public function testCompilesAgainAfterExecutingCommands(): void
     {
-        $compiler = new class() extends CommandCompiler {
+        $compiler = new class extends CommandCompiler {
             public array $executedCommands = [];
 
             public function __construct()
@@ -162,12 +162,10 @@ class CommandCompilerTest extends TestCase
             ->createTable('tl_foo')
             ->addOption('engine', 'InnoDB')
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -198,12 +196,10 @@ class CommandCompilerTest extends TestCase
             ->createTable('tl_foo')
             ->addOption('engine', 'InnoDB')
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -224,12 +220,10 @@ class CommandCompilerTest extends TestCase
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
         ;
-
         $fromSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $fromSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -240,12 +234,10 @@ class CommandCompilerTest extends TestCase
             ->createTable('tl_foo')
             ->addOption('engine', 'InnoDB')
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -266,12 +258,10 @@ class CommandCompilerTest extends TestCase
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
         ;
-
         $fromSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $fromSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -280,14 +270,13 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
+            ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addIndex(['foo'], 'foo_idx')
@@ -406,6 +395,76 @@ class CommandCompilerTest extends TestCase
         $this->assertEmpty($installer->compileCommands());
     }
 
+    public function testDoesNotChangeTheEngineIfTheTargetTableHasNoExplicitEngineOption(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+
+        $this->assertEmpty($installer->compileCommands());
+    }
+
+    public function testChangesTheEngineIfTheTargetTableHasNoExplicitEngineOptionButTheConnectionDefaultDoes(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'MyISAM')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_unicode_ci')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+        $commands = $installer->compileCommands();
+
+        $this->assertContains('ALTER TABLE tl_message_queue ENGINE = InnoDB ROW_FORMAT = DYNAMIC', $commands);
+    }
+
+    public function testChangesTheCollationIfTheTargetTableHasNoExplicitCollationOptionButTheConnectionDefaultDoes(): void
+    {
+        $fromSchema = new Schema();
+        $fromSchema
+            ->createTable('tl_message_queue')
+            ->addOption('engine', 'InnoDB')
+            ->addOption('row_format', 'DYNAMIC')
+            ->addOption('charset', 'utf8mb4')
+            ->addOption('collate', 'utf8mb4_bin')
+            ->addColumn('id', 'integer')
+        ;
+
+        $toSchema = new Schema();
+        $toSchema
+            ->createTable('tl_message_queue')
+            ->addColumn('id', 'integer')
+        ;
+
+        $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_message_queue']);
+        $commands = $installer->compileCommands();
+
+        $this->assertContains('ALTER TABLE tl_message_queue CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci', $commands);
+    }
+
     public function testReturnsTheDropColumnCommands(): void
     {
         $fromSchema = new Schema();
@@ -416,7 +475,6 @@ class CommandCompilerTest extends TestCase
             ->addOption('collate', 'utf8_unicode_ci')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $fromSchema
             ->getTable('tl_foo')
             ->addColumn('bar', 'string')
@@ -450,7 +508,6 @@ class CommandCompilerTest extends TestCase
             ->createTable('tl_foo')
             ->addColumn('foo', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('bar', 'string', ['length' => 255])
@@ -521,17 +578,14 @@ class CommandCompilerTest extends TestCase
             ->createTable('tl_foo')
             ->addColumn('foo1', 'string', ['length' => 255])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo2', 'integer')
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo3', 'decimal', ['precision' => 9, 'scale' => 2])
         ;
-
         $toSchema
             ->getTable('tl_foo')
             ->addColumn('foo4', 'string', ['length' => 255, 'default' => ','])
@@ -592,12 +646,10 @@ class CommandCompilerTest extends TestCase
             ->method('introspectSchema')
             ->willReturn($fromSchema)
         ;
-
         $schemaManager
             ->method('createComparator')
             ->willReturn($comparator)
         ;
-
         $schemaManager
             ->method('listTableNames')
             ->willReturn($tables)
@@ -608,12 +660,10 @@ class CommandCompilerTest extends TestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
-
         $connection
             ->method('getDatabasePlatform')
             ->willReturn($platform)
         ;
-
         $connection
             ->method('fetchAssociative')
             ->willReturnCallback(
@@ -644,10 +694,20 @@ class CommandCompilerTest extends TestCase
                 },
             )
         ;
-
         $connection
             ->method('getConfiguration')
             ->willReturn($this->createStub(Configuration::class))
+        ;
+        $connection
+            ->method('getParams')
+            ->willReturn([
+                'defaultTableOptions' => [
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_unicode_ci',
+                    'engine' => 'InnoDB',
+                    'row_format' => 'DYNAMIC',
+                ],
+            ])
         ;
 
         $schemaProvider = $this->createStub(SchemaProvider::class);

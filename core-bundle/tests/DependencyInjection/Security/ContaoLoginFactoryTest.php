@@ -28,6 +28,7 @@ class ContaoLoginFactoryTest extends TestCase
     public function testConfiguresTheContainerServices(): void
     {
         $container = new ContainerBuilder();
+
         $factory = new ContaoLoginFactory();
 
         $authenticatorId = $factory->createAuthenticator(

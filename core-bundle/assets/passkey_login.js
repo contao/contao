@@ -42,7 +42,7 @@ const init = (element) => {
         const optionsJSON = await resp.json();
 
         if ('error' === optionsJSON.status) {
-            elemError.innerText = config.assertionFailure;
+            elemError.textContent = config.assertionFailure;
 
             return;
         }
@@ -52,7 +52,7 @@ const init = (element) => {
         try {
             attResp = await startAuthentication({ optionsJSON });
         } catch (error) {
-            elemError.innerText = config.assertionFailure;
+            elemError.textContent = config.assertionFailure;
 
             throw error;
         }
@@ -66,7 +66,7 @@ const init = (element) => {
         const verificationJSON = await verificationResp.json();
 
         if ('error' === verificationJSON.status) {
-            elemError.innerText = config.assertionFailure;
+            elemError.textContent = config.assertionFailure;
 
             return;
         }

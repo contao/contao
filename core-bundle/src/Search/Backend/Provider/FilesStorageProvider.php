@@ -21,7 +21,7 @@ use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -31,19 +31,14 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
 {
     public const TYPE = 'contao.vfs.files';
 
-    private readonly PermissionCheckingVirtualFilesystem $permissionCheckingFilesStorage;
-
     public function __construct(
         private readonly VirtualFilesystem $filesStorage,
-        Security $security,
+        private readonly Security $security,
         private readonly Studio $studio,
         private readonly RouterInterface $router,
         private readonly TranslatorInterface $translator,
         private readonly string $uploadPath,
     ) {
-        $this->permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
-            $this->filesStorage, $security,
-        );
     }
 
     public function supportsType(string $type): bool
@@ -133,11 +128,15 @@ class FilesStorageProvider implements ProviderInterface, TagProvidingProviderInt
         return $hit;
     }
 
-    public function isDocumentGranted(TokenInterface $token, Document $document): bool
+    public function isDocumentGranted(UserInterface $user, Document $document): bool
     {
-        return $this->permissionCheckingFilesStorage->canAccessLocation(
-            $document->getMetadata()['path'] ?? '',
+        $permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
+            $this->filesStorage,
+            $this->security,
+            $user,
         );
+
+        return $permissionCheckingFilesStorage->canAccessLocation($document->getMetadata()['path'] ?? '');
     }
 
     public function convertTypeToVisibleType(string $type): string

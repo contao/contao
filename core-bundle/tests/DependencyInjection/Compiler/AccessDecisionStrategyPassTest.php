@@ -30,7 +30,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with('security.access.decision_manager')
             ->willReturn(false)
         ;
-
         $container
             ->expects($this->never())
             ->method('getDefinition')
@@ -52,7 +51,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with(1)
             ->willReturn($strategy)
         ;
-
         $definition
             ->expects($this->once())
             ->method('replaceArgument')
@@ -62,8 +60,9 @@ class AccessDecisionStrategyPassTest extends TestCase
                     static fn (Definition $definition) => $definition->getArgument(0) === $strategy
                         && $definition->getArgument(1) instanceof Definition
                         && PriorityStrategy::class === $definition->getArgument(1)->getClass()
-                        && 'request_stack' === (string) $definition->getArgument(2)
-                        && 'security.firewall.map' === (string) $definition->getArgument(3),
+                        && 'security.helper' === (string) $definition->getArgument(2)
+                        && 'request_stack' === (string) $definition->getArgument(3)
+                        && 'security.firewall.map' === (string) $definition->getArgument(4),
                 ),
             )
         ;
@@ -75,7 +74,6 @@ class AccessDecisionStrategyPassTest extends TestCase
             ->with('security.access.decision_manager')
             ->willReturn(true)
         ;
-
         $container
             ->expects($this->once())
             ->method('getDefinition')

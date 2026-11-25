@@ -72,6 +72,7 @@ class HtmlDecoderTest extends TestCase
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request(['value' => $expected]));
 
         $inputEncoded = Input::get('value');
@@ -111,6 +112,7 @@ class HtmlDecoderTest extends TestCase
         Config::set('allowedTags', '<script><style>'.Config::get('allowedTags'));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
+
         $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
 
         $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], Input::postHtml('value', true));

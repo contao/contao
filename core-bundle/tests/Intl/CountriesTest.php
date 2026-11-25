@@ -72,7 +72,6 @@ class CountriesTest extends TestCase
             ->method('getCatalogue')
             ->willReturnMap([['de', $catalogue]])
         ;
-
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -168,6 +167,7 @@ class CountriesTest extends TestCase
 
         $codes = array_values(array_diff(SymfonyCountries::getCountryCodes(), ['AT']));
         $codes[] = 'AT-9';
+
         sort($codes);
 
         yield [

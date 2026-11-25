@@ -48,7 +48,6 @@ class JwtManager
         }
 
         $config ??= Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
-
         $this->config = $config->withValidationConstraints(new SignedWith($config->signer(), $config->signingKey()));
     }
 

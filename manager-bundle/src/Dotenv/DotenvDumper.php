@@ -60,6 +60,7 @@ class DotenvDumper
     public function unsetParameter(string $name): void
     {
         unset($this->setParameters[$name]);
+
         $this->unsetParameters[] = $name;
     }
 

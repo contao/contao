@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Api\Widget\CoreWidgetConverter;
 use Contao\CoreBundle\Controller\Backend\SearchController;
 use Contao\CoreBundle\Controller\Backend\TemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
@@ -49,6 +50,38 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
+    public function testConfiguresTheMaximumFileUploadSize(): void
+    {
+        $container = $this->getContainerBuilder(['contao' => ['max_file_upload_size' => 1234]]);
+
+        $this->assertSame(1234, $container->getParameter('contao.max_file_upload_size'));
+    }
+
+    public function testRegistersApiWidgetsWhenTheApiBundleIsEnabled(): void
+    {
+        $container = new ContainerBuilder(new ParameterBag([
+            'kernel.debug' => false,
+            'kernel.charset' => 'UTF-8',
+            'kernel.project_dir' => $this->getTempDir(),
+            'kernel.default_locale' => 'en',
+            'kernel.bundles' => ['ContaoApiBundle' => true],
+        ]));
+
+        new ContaoCoreExtension()->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.api.widget_converter'));
+
+        $definition = $container->getDefinition('contao.api.widget_converter');
+
+        $this->assertSame(CoreWidgetConverter::class, $definition->getClass());
+        $this->assertSame([['priority' => -100]], $definition->getTag('contao.api.widget_converter'));
+    }
+
+    public function testDoesNotRegisterApiWidgetsWithoutTheApiBundle(): void
+    {
+        $this->assertFalse($this->getContainerBuilder()->hasDefinition('contao.api.widget_converter'));
+    }
+
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();
@@ -335,7 +368,8 @@ class ContaoCoreExtensionTest extends TestCase
         // Forcing it to true should disable auto mode, no cron job should be configured
         $definition = $container->findDefinition('contao.listener.command_scheduler');
 
-        $this->assertFalse($definition->getArgument(3));
+        $this->assertFalse($definition->getArgument('$autoMode'));
+        $this->assertSame('%fragment.path%', $definition->getArgument(3));
         $this->assertCount(0, $container->findDefinition('contao.cron')->getMethodCalls());
 
         $extension->load(
@@ -352,7 +386,8 @@ class ContaoCoreExtensionTest extends TestCase
         // Auto should also configure the minutely cron job
         $definition = $container->findDefinition('contao.listener.command_scheduler');
 
-        $this->assertTrue($definition->getArgument(3));
+        $this->assertTrue($definition->getArgument('$autoMode'));
+        $this->assertSame('%fragment.path%', $definition->getArgument(3));
         $this->assertCount(1, $container->findDefinition('contao.cron')->getMethodCalls());
         $this->assertSame('addCronJob', $container->findDefinition('contao.cron')->getMethodCalls()[0][0]);
 
@@ -459,6 +494,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.listener.search_index.default_rate_limiter'), $definition->getArgument('$rateLimiterFactory'));
 
         $rateLimiterDefinition = $container->getDefinition('contao.listener.search_index.default_rate_limiter');
+
         $this->assertSame(
             [
                 'id' => 'contao.listener.search_index.default_rate_limiter',
@@ -524,7 +560,7 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
-    public function testReadsTheIconManifestJson(): void
+    public function testReadsTheIconsFromTheSharedManifestJson(): void
     {
         $container = $this->getContainerBuilder();
 
@@ -532,6 +568,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $icons = $container->getParameter('contao.backend.icons');
 
+        $this->assertArrayNotHasKey('backend.js', $icons);
+        $this->assertArrayNotHasKey('images/help.svg', $icons);
+        $this->assertArrayNotHasKey('icons/help.svg', $icons);
         $this->assertArrayHasKey('help.svg', $icons);
         $this->assertMatchesRegularExpression('~^/bundles/contaocore/icons/help\.[a-f0-9]{8}\.svg$~', $icons['help.svg']['path']);
         $this->assertSame('14', $icons['help.svg']['width']);
@@ -602,6 +641,7 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $matcher = $this->exactly(4);
+
         $expected = [
             ['upload/path', 'upload/path', 'files'],
             ['var/backups', 'backups', 'backups'],
@@ -639,6 +679,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(31536000, $listener->getArgument(1));
 
@@ -656,6 +697,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
+
         $listener = $container->findDefinition('contao.listener.transport_security_header');
         $this->assertSame(500, $listener->getArgument(1));
 
@@ -693,6 +735,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'backend_search' => [
                         'dsn' => 'whatever://search-adapter-you-like',
                         'index_name' => 'my_backend_search_index',
+                        'facets' => [
+                            'max_groups' => 42,
+                        ],
                     ],
                 ],
             ],
@@ -700,13 +745,21 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.search_backend.adapter'));
+
         $adapter = $container->getDefinition('contao.search_backend.adapter');
         $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
 
         $this->assertTrue($container->hasDefinition('contao.search.backend'));
         $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
+
         $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
         $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
+
+        $allowedGroupsResolver = $container->getDefinition('contao.search.backend.security.document_allowed_groups_resolver');
+        $this->assertSame(42, $allowedGroupsResolver->getArgument('$maxGroups'));
+
+        $documentAccessEvaluator = $container->getDefinition('contao.search.backend.security.document_access_evaluator');
+        $this->assertSame('contao.search.security.virtual_backend_user_factory', (string) $documentAccessEvaluator->getArgument(0));
     }
 
     public function testCspConfiguration(): void
@@ -714,6 +767,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(
@@ -749,6 +803,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
+
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));
@@ -767,6 +822,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition(TemplateStudioController::class));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -776,6 +833,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(TemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.cache_invalidator'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_snapshots'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

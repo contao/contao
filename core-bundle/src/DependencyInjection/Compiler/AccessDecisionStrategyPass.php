@@ -36,6 +36,7 @@ class AccessDecisionStrategyPass implements CompilerPassInterface
         $strategy = new Definition(ContaoStrategy::class, [
             $originalStrategy,
             new Definition(PriorityStrategy::class),
+            new Reference('security.helper'),
             new Reference('request_stack'),
             new Reference('security.firewall.map'),
         ]);

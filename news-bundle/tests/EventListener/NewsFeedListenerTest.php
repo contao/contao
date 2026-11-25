@@ -136,7 +136,6 @@ class NewsFeedListenerTest extends ContaoTestCase
                 'files/bar.jpg',
             )
         ;
-
         $image
             ->method('getPath')
             ->willReturnOnConsecutiveCalls(
@@ -144,7 +143,6 @@ class NewsFeedListenerTest extends ContaoTestCase
                 $imageDir.'/bar.jpg',
             )
         ;
-
         $image
             ->method('getUrl')
             ->willReturnOnConsecutiveCalls(
@@ -197,7 +195,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->with($element)
             ->willReturn($content)
         ;
-
         $controller
             ->expects($this->once())
             ->method('convertRelativeUrls')

@@ -197,7 +197,8 @@ final class CspHandler
 
     private function logCspHeaderExceeded(int $headerLength, array $removedStyleSrc, array $removedScriptSrc): void
     {
-        $this->logger?->critical(\sprintf('Allowed CSP header size of %d bytes exceeded (tried to write %d bytes). Removed style-src hashes: %s. Removed script-src hashes: %s.',
+        $this->logger?->critical(\sprintf(
+            'Allowed CSP header size of %d bytes exceeded (tried to write %d bytes). Removed style-src hashes: %s. Removed script-src hashes: %s.',
             $this->maxHeaderLength,
             $headerLength,
             [] === $removedStyleSrc ? 'none' : implode(', ', $removedStyleSrc),

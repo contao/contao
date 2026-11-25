@@ -287,7 +287,6 @@ class FrontendModuleControllerTest extends TestCase
     private function getTestController(array $fragmentOptions = []): TestController
     {
         $controller = new TestController();
-
         $controller->setContainer($this->container);
         $controller->setFragmentOptions($fragmentOptions);
 

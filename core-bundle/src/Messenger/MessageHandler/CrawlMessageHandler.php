@@ -91,8 +91,10 @@ class CrawlMessageHandler
 
         // Commit the result on the lazy queue
         $queue->commit($escargotJobId);
+
         $pending = $queue->countPending($escargotJobId);
         $all = $queue->countAll($escargotJobId);
+
         $finished = 0 === $pending;
 
         $job = $job->withProgressFromAmounts($pending, $all);
@@ -100,6 +102,7 @@ class CrawlMessageHandler
 
         if ($finished) {
             $this->finishJob($job, $message->subscribers);
+
             $queue->deleteJobId($escargotJobId);
 
             return;
@@ -127,6 +130,7 @@ class CrawlMessageHandler
         foreach ($this->factory->getSubscribers($activeSubscribers) as $subscriber) {
             $subscriberHandler = new CrawlCsvLogHandler($this->getSubscriberLogFilePath($job, $subscriber->getName()), Level::Info);
             $subscriberHandler->setFilterSource($subscriber::class);
+
             $handlers[] = $subscriberHandler;
         }
 
@@ -167,6 +171,7 @@ class CrawlMessageHandler
         if ($this->fs->exists($this->getDebugLogPath($job))) {
             $fh = fopen($this->getDebugLogPath($job), 'r');
             $this->jobs->addAttachment($job, 'debug_log.csv', $fh);
+
             fclose($fh);
         }
 
@@ -179,6 +184,7 @@ class CrawlMessageHandler
 
             $fh = fopen($logFile, 'r');
             $this->jobs->addAttachment($job, $subscriber->getName().'_log.csv', $fh);
+
             fclose($fh);
         }
 

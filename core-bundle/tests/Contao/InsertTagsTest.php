@@ -381,6 +381,30 @@ class InsertTagsTest extends TestCase
                 $defaultTemplate,
             ],
         ];
+
+        yield 'JavaScript URL' => [
+            '{{figure::123?metadata[link]=javascript:alert(1)}}',
+            [
+                '123',
+                null,
+                [
+                    'metadata' => ['link' => 'javascript%3Aalert(1)'],
+                ],
+                $defaultTemplate,
+            ],
+        ];
+
+        yield 'JavaScript attribute' => [
+            '{{figure::1000?size=5&options[attr][onload]=alert(1)&options[attr][class]=foo&options[attr][href]=javascript:alert(1)&options[link_attr][href]=javascript:alert(1)}}',
+            [
+                '1000',
+                5,
+                [
+                    'options' => ['attr' => ['class' => 'foo'], 'link_attr' => ['href' => 'javascript%3Aalert(1)']],
+                ],
+                $defaultTemplate,
+            ],
+        ];
     }
 
     #[DataProvider('provideInvalidFigureInsertTags')]
@@ -406,15 +430,18 @@ class InsertTagsTest extends TestCase
     public static function provideInvalidFigureInsertTags(): iterable
     {
         yield 'missing resource' => [
-            '{{figure}}', false,
+            '{{figure}}',
+            false,
         ];
 
         yield 'too many arguments' => [
-            '{{figure::5?size=1::other}}', false,
+            '{{figure::5?size=1::other}}',
+            false,
         ];
 
         yield 'invalid configuration' => [
-            '{{figure::1?foo=bar}}', true,
+            '{{figure::1?foo=bar}}',
+            true,
         ];
     }
 
@@ -431,7 +458,7 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame($expected, $output);
 
-        $plainInsertTag = new class() {
+        $plainInsertTag = new class {
             public function __invoke(ResolvedInsertTag $tag): InsertTagResult
             {
                 return new InsertTagResult(substr($tag->getParameters()->serialize(), 2));
@@ -737,8 +764,8 @@ class InsertTagsTest extends TestCase
         ;
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
-
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
         $insertTagParser = new InsertTagParser($this->createContaoFrameworkStub(), $this->createStub(LoggerInterface::class), $this->createStub(FragmentHandler::class), $insertTags);
 
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
@@ -1066,7 +1093,12 @@ class InsertTagsTest extends TestCase
 
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
+        if (!\ini_get('pcre.jit') || 'off' === strtolower((string) \ini_get('pcre.jit'))) {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+        } else {
+            $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
+        }
 
         InsertTags::reset();
 
@@ -1095,6 +1127,7 @@ class InsertTagsTest extends TestCase
         $insertTag = '{{'.str_repeat('a', 1024).'::replaced}}';
 
         $backtrackLimit = \ini_get('pcre.backtrack_limit');
+
         ini_set('pcre.backtrack_limit', '0');
 
         $this->expectException(\RuntimeException::class);

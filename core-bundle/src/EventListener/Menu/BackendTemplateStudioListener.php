@@ -19,7 +19,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -31,7 +30,6 @@ class BackendTemplateStudioListener
         private readonly Security $security,
         private readonly RouterInterface $router,
         private readonly RequestStack $requestStack,
-        private readonly TranslatorInterface $translator,
         private readonly bool $templateStudioEnabled,
     ) {
     }
@@ -63,10 +61,8 @@ class BackendTemplateStudioListener
             ->createItem('template-studio')
             ->setLabel('MOD.template_studio.0')
             ->setExtra('translation_domain', 'contao_modules')
+            ->setExtra('title', 'MOD.template_studio.1')
             ->setUri($this->router->generate('contao_template_studio'))
-            ->setLinkAttribute('class', 'navigation template-studio')
-            ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
-            ->setLinkAttribute('data-contao--tooltips-target', 'tooltip')
             ->setCurrent(TemplateStudioController::class === $request->attributes->get('_controller'))
         ;
 

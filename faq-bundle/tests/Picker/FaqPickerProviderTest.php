@@ -44,6 +44,7 @@ class FaqPickerProviderTest extends ContaoTestCase
 
         $picker = $this->getPicker();
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'faqPicker'));
+
         $uri = 'contao_backend?do=faq&popup=1&picker='.urlencode(strtr(base64_encode($config), '+/=', '-_,'));
 
         $this->assertSame('Faq picker', $item->getLabel());
@@ -112,9 +113,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         );
 
         $this->assertSame(
-            [
-                'fieldType' => 'radio',
-            ],
+            ['fieldType' => 'radio'],
             $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }

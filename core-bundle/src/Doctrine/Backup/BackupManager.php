@@ -81,6 +81,7 @@ class BackupManager
             }
 
             $this->updateBackupWithSize($backup);
+
             $backups[] = $backup;
         }
 
@@ -208,6 +209,7 @@ class BackupManager
         }
 
         $this->backupsStorage->writeStream($backup->getFilename(), $fileHandle);
+
         fclose($fileHandle);
 
         $this->updateBackupWithSize($backup);
@@ -225,6 +227,7 @@ class BackupManager
         $handle = fopen($tmpFile, 'w');
         stream_copy_to_stream($this->backupsStorage->readStream($backup->getFilename()), $handle);
         fclose($handle);
+
         $handle = gzopen($tmpFile, 'r');
 
         $currentQuery = '';
@@ -252,6 +255,7 @@ class BackupManager
             // Current query ends
             if (str_ends_with($currentQuery, ';')) {
                 $this->executeWrappedQuery($currentQuery);
+
                 $currentQuery = '';
             }
         }

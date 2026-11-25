@@ -31,7 +31,6 @@ abstract class AbstractController extends SymfonyAbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-
         $services['contao.framework'] = ContaoFramework::class;
         $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
         $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;

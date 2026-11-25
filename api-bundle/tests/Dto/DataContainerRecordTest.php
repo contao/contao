@@ -24,6 +24,7 @@ final class DataContainerRecordTest extends TestCase
 
         $this->assertSame('tl_content', $record->table);
         $this->assertSame(17, $record->id);
+
         $this->assertSame(
             [
                 'id' => 17,

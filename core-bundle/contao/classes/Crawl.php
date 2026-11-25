@@ -12,7 +12,10 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Messenger\Message\CrawlMessage;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Maintenance module "crawl".
@@ -74,7 +77,15 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 				{
 					$template->invalidUser = true;
 					$objAuthenticator->removeFrontendAuthentication();
-					System::getContainer()->get('request_stack')?->getMainRequest()->attributes->set('_contao_widget_error', true);
+					$request = System::getContainer()->get('request_stack')?->getMainRequest();
+
+					if ($request !== null)
+					{
+						$errors = $request->attributes->get('_contao_widget_errors', new ConstraintViolationList());
+						$message = \sprintf($GLOBALS['TL_LANG']['ERR']['previewSwitchInvalidUsername'], $user);
+						$errors->add(new ConstraintViolation($message, $message, array(), null, 'crawl_member', $user));
+						$request->attributes->set('_contao_widget_errors', $errors);
+					}
 
 					return $template->parse();
 				}
@@ -181,17 +192,21 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 	private function getMembersDataList(): array
 	{
-		$security = System::getContainer()->get('security.helper');
 		$connection = System::getContainer()->get('database_connection');
+		$security = System::getContainer()->get('security.helper');
 
-		$andWhereGroups = '';
+		$groups = array_filter(
+			$connection->fetchFirstColumn('SELECT id FROM tl_member_group'),
+			static fn ($groupId): bool => $security->isGranted(ContaoCorePermissions::USER_CAN_USE_MEMBER_GROUP_IN_PREVIEW, $groupId)
+		);
 
-		if (!$security->isGranted('ROLE_ADMIN'))
+		if (empty($groups))
 		{
-			$amg = StringUtil::deserialize(BackendUser::getInstance()->amg);
-			$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $amg);
-			$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
+			return array();
 		}
+
+		$groups = array_map(static fn ($groupId): string => '%"' . (int) $groupId . '"%', $groups);
+		$andWhereGroups = "AND (`groups` LIKE '" . implode("' OR `groups` LIKE '", $groups) . "')";
 
 		$time = Date::floorToMinute();
 

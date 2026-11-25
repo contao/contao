@@ -35,7 +35,7 @@ use Doctrine\DBAL\ArrayParameterType;
  * @property string         $inputName
  * @property string         $palette
  * @property array          $rootIds
- * @property int            $currentPid
+ * @property int|null       $currentPid
  */
 abstract class DataContainer extends Backend
 {
@@ -335,6 +335,11 @@ abstract class DataContainer extends Backend
 	protected bool $treeRecordLimitReached = false;
 
 	/**
+	 * Toggle API mode
+	 */
+	private bool $apiMode = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -439,7 +444,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -712,8 +717,8 @@ abstract class DataContainer extends Backend
 			$objTemplate->readonly = (bool) ($arrAttributes['readonly'] ?? false);
 			$objTemplate->enableAce = $GLOBALS['TL_CONFIG']['useCE'] ?? false;
 			$objTemplate->aceType = Backend::getAceType($type);
-			$objTemplate->enableTinyMce = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
-			$objTemplate->tinyMceLanguage = Backend::getTinyMceLanguage();
+			$objTemplate->enableHugeRte = $GLOBALS['TL_CONFIG']['useRTE'] ?? false;
+			$objTemplate->hugeRteLanguage = Backend::getHugeRteLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -721,7 +726,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrAttributes['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif (($arrAttributes['multiple'] ?? null) && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard' || ($arrData['inputType'] ?? null) == 'pageTree' || ($arrData['inputType'] ?? null) == 'fileTree') && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
@@ -1373,7 +1378,7 @@ abstract class DataContainer extends Backend
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-		$label = preg_replace('/<[^\/!][^>]+>\s*<\/[^>]+>/', '', $label);
+		$label = preg_replace('/<([a-z][a-z0-9]*)\b[^>]*>\s*<\/\1>/i', '', $label);
 
 		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 		$showColumns = ($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED));
@@ -1458,6 +1463,11 @@ abstract class DataContainer extends Backend
 	 */
 	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
+		if (!preg_match('/^[a-z][a-z0-9_]*$/i', $table))
+		{
+			throw new \InvalidArgumentException(\sprintf('Invalid $table parameter "%s".', $table));
+		}
+
 		if (!\count($ids))
 		{
 			return;
@@ -1571,6 +1581,16 @@ abstract class DataContainer extends Backend
 		}
 	}
 
+	public function setApiMode(bool $apiMode = true): void
+	{
+		$this->apiMode = $apiMode;
+	}
+
+	public function isApiMode(): bool
+	{
+		return $this->apiMode;
+	}
+
 	protected function canRenderTreeRecord(): bool
 	{
 		if ($this->treeRecordLimitReached)
@@ -1600,7 +1620,8 @@ abstract class DataContainer extends Backend
 
 	protected function getTreeRecordLimit(): int
 	{
-		if (Input::get('act') == 'select')
+		// Backend bulk selection is unlimited, but API listings must retain the configured tree limit
+		if (Input::get('act') == 'select' && !$this->isApiMode())
 		{
 			return 0;
 		}

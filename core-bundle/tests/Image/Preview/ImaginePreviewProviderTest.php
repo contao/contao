@@ -54,12 +54,10 @@ class ImaginePreviewProviderTest extends TestCase
             ->method('layers')
             ->willReturn($layers)
         ;
-
         $image
             ->method('getSize')
             ->willReturn(new Box(1024, 1024))
         ;
-
         $image
             ->expects($this->exactly(2))
             ->method('resize')
@@ -83,7 +81,6 @@ class ImaginePreviewProviderTest extends TestCase
             ->method('has')
             ->willReturnMap([[0, true], [1, true]])
         ;
-
         $layers
             ->expects($this->exactly(2))
             ->method('get')

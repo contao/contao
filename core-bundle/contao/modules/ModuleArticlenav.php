@@ -94,7 +94,7 @@ class ModuleArticlenav extends Module
 				(
 					'isActive' => true,
 					'href' => $urlGenerator->generate($objArticle),
-					'title' => StringUtil::specialchars($objArticle->title, true),
+					'title' => StringUtil::stripInsertTags($objArticle->title),
 					'link' => $intCount
 				);
 
@@ -108,7 +108,7 @@ class ModuleArticlenav extends Module
 				(
 					'isActive' => false,
 					'href' => $urlGenerator->generate($objArticle),
-					'title' => StringUtil::specialchars($objArticle->title, true),
+					'title' => StringUtil::stripInsertTags($objArticle->title),
 					'link' => $intCount
 				);
 			}

@@ -545,7 +545,8 @@ class StringUtil
 
 	/**
 	 * Converts binary UUIDs to string if detected.
-	 * Also supports serialized arrays (e.g. from the fileTree widget).
+	 * Also supports serialized arrays (e.g. from the fileTree widget),
+	 * even when they are nested (e.g. from the rowWizard widget).
 	 */
 	public static function ensureStringUuids(mixed $data): mixed
 	{
@@ -558,9 +559,9 @@ class StringUtil
 
 		if (\is_array($deserialized))
 		{
-			$deserialized = array_map(static fn (mixed $v) => Validator::isBinaryUuid($v) ? self::binToUuid($v) : $v, $deserialized);
+			$processed = array_map(self::ensureStringUuids(...), $deserialized);
 
-			return \is_string($data) ? serialize($deserialized) : $deserialized;
+			return \is_string($data) ? serialize($processed) : $processed;
 		}
 
 		return Validator::isBinaryUuid($data) ? self::binToUuid($data) : $data;

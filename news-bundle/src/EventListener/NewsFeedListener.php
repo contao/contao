@@ -186,6 +186,7 @@ class NewsFeedListener
             if ($size && $file->isImage) {
                 $image = $this->imageFactory->create(Path::join($this->projectDir, $file->path), $size);
                 $fileUrl = $baseUrl.'/'.$image->getUrl($this->projectDir);
+
                 $file = new File(Path::makeRelative($image->getPath(), $this->projectDir));
                 $fileSize = $file->exists() ? $file->filesize : null;
             }

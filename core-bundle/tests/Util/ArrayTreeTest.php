@@ -20,7 +20,6 @@ class ArrayTreeTest extends TestCase
     public function testSetAndGetTree(): void
     {
         $tree = new ArrayTree();
-
         $tree->addContentNode('A');
         $tree->enterChildNode('B');
         $tree->addContentNode('B1');
@@ -69,7 +68,6 @@ class ArrayTreeTest extends TestCase
     public function testReturnsReferenceToSubTree(): void
     {
         $tree = new ArrayTree();
-
         $tree->enterChildNode('foo');
         $tree->addContentNode(1);
 
@@ -109,7 +107,6 @@ class ArrayTreeTest extends TestCase
     public function testAllowsEnteringAChildNodeMultipleTimes(): void
     {
         $tree = new ArrayTree();
-
         $tree->enterChildNode('foo');
         $tree->addContentNode(1);
 
@@ -124,7 +121,6 @@ class ArrayTreeTest extends TestCase
     public function testThrowsExceptionIfTryingToExceedTheRootLevel(): void
     {
         $tree = new ArrayTree();
-
         $tree->enterChildNode();
         $tree->up();
 

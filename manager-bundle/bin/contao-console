@@ -19,7 +19,10 @@ set_time_limit(0);
 @ini_set('zlib.output_compression', '0');
 @ini_set('display_errors', '0');
 
-if (file_exists(__DIR__.'/../autoload.php')) {
+if (isset($_composer_autoload_path)) {
+    $_composer_autoload_path = realpath($_composer_autoload_path) ?: $_composer_autoload_path;
+    $projectDir = \dirname($_composer_autoload_path, 2);
+} elseif (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);
 } elseif (file_exists(__DIR__.'/../../../autoload.php')) {
     $projectDir = \dirname(__DIR__, 4);
@@ -36,7 +39,7 @@ if ('contao:cron' === ($_SERVER['argv'][1] ?? null) && file_exists($projectDir.'
     exit;
 }
 
-require $projectDir.'/vendor/autoload.php';
+require $_composer_autoload_path ?? $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();
 $kernel = ContaoKernel::fromInput($projectDir, $input);

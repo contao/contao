@@ -71,6 +71,7 @@ class SitemapController extends AbstractController
 
             $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
+
             $urlSet->appendChild($urlEl);
         }
 

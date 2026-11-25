@@ -1,0 +1,134 @@
+tl_user_group:
+    editors:
+        tstamp: 1709064282
+        name: Editors
+        modules:
+            - page
+            - article
+            - files
+            - news
+            - calendar
+        elements:
+            - code
+            - headline
+            - html
+            - list
+            - markdown
+            - table
+            - text
+            - hyperlink
+            - toplink
+            - download
+            - downloads
+            - image
+            - gallery
+            - player
+            - vimeo
+            - youtube
+            - article
+            - alias
+            - form
+            - module
+            - comments
+            - teaser
+            - accordionSingle
+            - accordionStart
+            - accordionStop
+            - sliderStart
+            - sliderStop
+        fields:
+            - explanation
+            - html
+            - fieldsetStart
+            - fieldsetStop
+            - text
+            - password
+            - textarea
+            - select
+            - radio
+            - checkbox
+            - upload
+            - range
+            - hidden
+            - captcha
+            - submit
+        alpty:
+            - regular
+            - forward
+            - redirect
+        fop:
+            - f1
+            - f2
+            - f3
+        imageSizes:
+            - crop
+            - proportional
+            - box
+        disable: 0
+
+tl_user:
+    kevin_jones:
+        tstamp: 1709063739
+        username: k.jones
+        name: Kevin Jones
+        email: k.jones@example.com
+        language: en
+        uploader: FileUpload
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: backend
+        admin: 1
+        disable: 0
+        dateAdded: 1257428510
+    james_wilson:
+        tstamp: 1709063927
+        username: j.wilson
+        name: James Wilson
+        email: j.wilson@example.com
+        language: en
+        uploader: DropZone
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: backend
+        groups: ['@editors']
+        inherit: extend
+        disable: 0
+        dateAdded: 1259754527
+    helen_lewis:
+        tstamp: 1709063875
+        username: h.lewis
+        name: Helen Lewis
+        email: h.lewis@example.com
+        language: en
+        uploader: DropZone
+        showHelp: 1
+        thumbnails: 1
+        useRTE: 1
+        useCE: 1
+        password: backend
+        groups: ['@editors']
+        inherit: extend
+        disable: 0
+        dateAdded: 1259754527
+
+# All backend fixture users have a PAT with the test-only secret "e2e".
+personal_access_token:
+    kevin_jones_token: &backend_token_defaults
+        id: !!binary 2TQMBchKUI67kly2rxxBxg==
+        userId: '@kevin_jones'
+        scope: backend
+        createdAt: '2026-10-12 12:00:00'
+        name: E2E
+        secret: bYdJxP4At1fBvBw3apnzHRvTi0ItRPW2qi1qbF6XXLo=
+    james_wilson_token:
+        <<: *backend_token_defaults
+        id: !!binary so8/3JtLXwyj8npPSy+Qiw==
+        userId: '@james_wilson'
+    helen_lewis_token:
+        <<: *backend_token_defaults
+        id: !!binary vxGDc4YKWqahXpGcfa+7OA==
+        userId: '@helen_lewis'

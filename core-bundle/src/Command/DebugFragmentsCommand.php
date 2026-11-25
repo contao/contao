@@ -94,6 +94,7 @@ class DebugFragmentsCommand extends Command
                 $v = Yaml::dump($v, indent: 2);
                 $v = explode("\n", $v);
                 array_walk($v, static fn (&$vv, $i) => $vv = $i > 0 ? str_repeat(' ', $length + 3).$vv : $vv);
+
                 $v = implode("\n", $v);
             }
 

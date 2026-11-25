@@ -45,6 +45,7 @@ class DeferTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         $block->setNode('body', $body);
+
         $this->parser->popBlockStack();
         $this->parser->popLocalScope();
 

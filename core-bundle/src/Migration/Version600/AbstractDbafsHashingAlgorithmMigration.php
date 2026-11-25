@@ -39,8 +39,8 @@ class AbstractDbafsHashingAlgorithmMigration extends AbstractMigration
 
         $allHashesByPath = $dbafs->getMethod('getDatabaseEntries')->invoke($this->dbafs, [''], [])[1];
         $storage = $dbafs->getProperty('filesystem')->getValue($this->dbafs);
-
         $currentHashGenerator = $dbafs->getProperty('hashGenerator')->getValue($this->dbafs);
+
         $previousHashGenerator = new HashGenerator($this->oldHashingAlgorithm, false);
 
         // Detect used hashing algorithm

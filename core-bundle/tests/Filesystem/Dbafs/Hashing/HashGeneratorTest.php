@@ -56,11 +56,13 @@ class HashGeneratorTest extends TestCase
     public static function provideExpectedHashes(): iterable
     {
         yield 'md5' => [
-            'md5', 'f6f5f8cd0cb63668898ba29025ae824e',
+            'md5',
+            'f6f5f8cd0cb63668898ba29025ae824e',
         ];
 
         yield 'sha1' => [
-            'sha1', 'e2c300a39311a2dfcaff799528415cb74c19317f',
+            'sha1',
+            'e2c300a39311a2dfcaff799528415cb74c19317f',
         ];
     }
 
@@ -68,6 +70,7 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
+
         $context = new Context('fallback', $lastModified);
 
         $generator = new HashGenerator('md5', true);
@@ -91,6 +94,7 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
+
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', true);
@@ -104,6 +108,7 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
+
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', false);

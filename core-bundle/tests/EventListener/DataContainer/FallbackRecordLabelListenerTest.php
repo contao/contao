@@ -66,7 +66,6 @@ class FallbackRecordLabelListenerTest extends TestCase
             ->method('getCatalogue')
             ->willReturn($catalogue)
         ;
-
         $translator
             ->expects($this->once())
             ->method('trans')

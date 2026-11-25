@@ -23,9 +23,10 @@ class ForeignKeyParserTest extends TestCase
     public function testParse(string $foreignKeyDefinition, bool $expectsQuotingCall, string $expectedTableName, string $expectedColumnExpression, string|null $expectedColumnName = null, string|null $expectedKey = null): void
     {
         $connection = $this->mockConnection($expectsQuotingCall);
-        $util = new ForeignKeyParser($connection);
 
+        $util = new ForeignKeyParser($connection);
         $expression = $util->parse($foreignKeyDefinition);
+
         $this->assertSame($expectedTableName, $expression->getTableName());
         $this->assertSame($expectedColumnExpression, $expression->getColumnExpression());
         $this->assertSame($expectedColumnName, $expression->getColumnName());

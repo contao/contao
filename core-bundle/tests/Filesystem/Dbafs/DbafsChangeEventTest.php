@@ -52,7 +52,6 @@ class DbafsChangeEventTest extends TestCase
             ->method('getPrefix')
             ->willReturn('files')
         ;
-
         $storage
             ->method('get')
             ->willReturnMap([

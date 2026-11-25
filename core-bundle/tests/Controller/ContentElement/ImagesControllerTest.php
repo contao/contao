@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\ImagesController;
-use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Pagination\Pagination;
 use Contao\CoreBundle\Pagination\PaginationFactoryInterface;
@@ -229,29 +228,21 @@ class ImagesControllerTest extends ContentElementTestCase
     {
         $security = $this->createStub(Security::class);
 
-        $items = [
-            new FilesystemItem(true, 'image1.jpg', null, null, 'image/jpeg'),
-            new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
-        ];
-
         $pagination = $this->createMock(Pagination::class);
         $pagination
             ->expects($this->once())
             ->method('getPages')
             ->willReturn([1, 2])
         ;
-
         $pagination
             ->expects($this->exactly(2))
             ->method('getPageCount')
             ->willReturn(2)
         ;
-
         $pagination
             ->method('getCurrent')
             ->willReturn(1)
         ;
-
         $pagination
             ->expects($this->exactly(2))
             ->method('getUrlForPage')

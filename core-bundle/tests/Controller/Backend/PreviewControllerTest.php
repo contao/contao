@@ -249,7 +249,6 @@ class PreviewControllerTest extends TestCase
             ->method('isGranted')
             ->willReturn($granted)
         ;
-
         $security
             ->method('getUser')
             ->willReturn($user)

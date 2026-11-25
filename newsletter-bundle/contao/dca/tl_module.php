@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DataContainer;
@@ -29,48 +28,48 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 (
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+	'eval'                    => array('multiple' => true),
+	'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+	'relation'                => array('type' => 'hasMany', 'load' => 'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 (
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
-	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false),
-	'relation'                => array('table'=>'tl_newsletter_channel', 'type'=>'hasMany', 'load'=>'lazy')
+	'eval'                    => array('multiple' => true, 'mandatory' => true),
+	'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+	'relation'                => array('table' => 'tl_newsletter_channel', 'type' => 'hasMany', 'load' => 'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 (
 	'inputType'               => 'textarea',
-	'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
+	'eval'                    => array('rte' => 'tinyMCE', 'basicEntities' => true, 'helpwizard' => true),
 	'explanation'             => 'insertTags',
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 (
 	'inputType'               => 'checkbox',
-	'sql'                     => array('type'=>'boolean', 'default'=>false)
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'eval'                    => array('style' => 'height:120px'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
 	'default'                 => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1] ?? null,
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px'),
-	'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+	'eval'                    => array('style' => 'height:120px'),
+	'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
@@ -79,8 +78,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 	'options_callback' => static function () {
 		return Controller::getTemplateGroup('nl_');
 	},
-	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => array('type'=>'string', 'length'=>64, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+	'eval'                    => array('includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50'),
+	'sql'                     => array('type' => 'string', 'length' => 64, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 );
 
 /**
@@ -97,17 +96,10 @@ class tl_module_newsletter extends Backend
 	 */
 	public function getChannels(DataContainer $dc)
 	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !is_array($user->newsletters))
-		{
-			return array();
-		}
-
 		$strQuery = "SELECT id, title FROM tl_newsletter_channel";
 
 		// Show only channels with a redirect page in the web modules
-		if (in_array($dc->activeRecord->type, array('newsletterlist', 'newsletterreader')))
+		if (in_array($dc->activeRecord?->type, array('newsletterlist', 'newsletterreader')))
 		{
 			$strQuery .= " WHERE jumpTo>0";
 		}

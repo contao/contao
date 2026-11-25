@@ -43,7 +43,11 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event) || $event->getRequest()->query->has('popup')) {
+        if (
+            $event->getRequest()->attributes->getBoolean('_stateless')
+            || !$this->scopeMatcher->isContaoMainRequest($event)
+            || $event->getRequest()->query->has('popup')
+        ) {
             return;
         }
 

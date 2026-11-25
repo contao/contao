@@ -26,9 +26,7 @@ final class AddNode extends Node implements NodeCaptureInterface
     public function __construct(string $extensionName, Node $body, string|null $identifier, DocumentLocation $location, int $lineno)
     {
         parent::__construct(
-            [
-                'body' => $body,
-            ],
+            ['body' => $body],
             [
                 'extension_name' => $extensionName,
                 'identifier' => $identifier,

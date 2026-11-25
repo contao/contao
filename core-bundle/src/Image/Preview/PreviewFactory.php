@@ -290,7 +290,7 @@ class PreviewFactory
             $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
                 $predefinedSize['width'] ?? 0,
                 $predefinedSize['height'] ?? 0,
-                $predefinedSize['densities'],
+                $predefinedSize['densities'] ?? '',
             );
 
             foreach ($predefinedSize['items'] ?? [] as $sizeItem) {

@@ -72,11 +72,12 @@ class ModuleBooknav extends Module
 		}
 
 		$groups = array();
+		$user = System::getContainer()->get('security.helper')->getUser();
 
 		// Get all groups of the current front end user
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		if ($user instanceof FrontendUser)
 		{
-			$groups = FrontendUser::getInstance()->groups;
+			$groups = $user->groups;
 		}
 
 		// Get all book pages
@@ -141,8 +142,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasPrev = true;
 				$this->Template->prevHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->prevTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->prevPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->prevTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->prevPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 				$this->Template->prevLink = $this->arrPages[$intKey]->title;
 			}
 		}
@@ -167,8 +168,8 @@ class ModuleBooknav extends Module
 			{
 				$this->Template->hasNext = true;
 				$this->Template->nextHref = $this->arrPages[$intKey]->getFrontendUrl();
-				$this->Template->nextTitle = StringUtil::specialchars($this->arrPages[$intKey]->title, true);
-				$this->Template->nextPageTitle = StringUtil::specialchars($this->arrPages[$intKey]->pageTitle, true);
+				$this->Template->nextTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->title);
+				$this->Template->nextPageTitle = StringUtil::stripInsertTags($this->arrPages[$intKey]->pageTitle);
 				$this->Template->nextLink = $this->arrPages[$intKey]->title;
 			}
 		}

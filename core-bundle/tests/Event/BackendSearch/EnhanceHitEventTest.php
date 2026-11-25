@@ -28,6 +28,7 @@ class EnhanceHitEventTest extends TestCase
 
         $hit = $hit->withMetadata(['something-on-top-for-my-template' => 'foobar']);
         $this->assertSame([], $event->getHit()->getMetadata());
+
         $event->setHit($hit);
         $this->assertSame(['something-on-top-for-my-template' => 'foobar'], $event->getHit()->getMetadata());
     }
@@ -35,8 +36,10 @@ class EnhanceHitEventTest extends TestCase
     public function testCanRemoveHitCompletelyFromResults(): void
     {
         $hit = new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com');
+
         $event = new EnhanceHitEvent($hit);
         $event->setHit(null);
+
         $this->assertNull($event->getHit());
     }
 }

@@ -73,9 +73,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
         ;
 
         $framework = $this->createContaoFrameworkStub(
-            [
-                CalendarModel::class => $calendarAdapter,
-            ],
+            [CalendarModel::class => $calendarAdapter],
             [
                 ModuleModel::class => $this->createStub(ModuleModel::class),
                 ModuleEventlist::class => $this->createStub(ModuleEventlist::class),
@@ -148,7 +146,6 @@ class CalendarFeedListenerTest extends ContaoTestCase
                 'files/bar.jpg',
             )
         ;
-
         $image
             ->method('getPath')
             ->willReturnOnConsecutiveCalls(
@@ -156,7 +153,6 @@ class CalendarFeedListenerTest extends ContaoTestCase
                 $imageDir.'/bar.jpg',
             )
         ;
-
         $image
             ->method('getUrl')
             ->willReturnOnConsecutiveCalls(
@@ -211,7 +207,6 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->with($element)
             ->willReturn($content)
         ;
-
         $controller
             ->expects($this->once())
             ->method('convertRelativeUrls')

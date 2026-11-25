@@ -145,7 +145,7 @@ class ModuleNewsMenu extends ModuleNews
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strUrl . '?year=' . $intDate;
-			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
+			$arrItems[$intYear]['title'] = $intYear . ' (' . $quantity . ')';
 			$arrItems[$intYear]['isActive'] = Input::get('year') == $intDate;
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
@@ -197,7 +197,7 @@ class ModuleNewsMenu extends ModuleNews
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
-				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
+				$arrItems[$intYear][$intMonth]['title'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')';
 				$arrItems[$intYear][$intMonth]['isActive'] = Input::get('month') == $intDate;
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}
@@ -368,7 +368,7 @@ class ModuleNewsMenu extends ModuleNews
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
 			$arrDays[$strWeekClass][$i]['href'] = $this->strUrl . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['news_items']), $arrData[$intKey]);
+			$arrDays[$strWeekClass][$i]['title'] = \sprintf($GLOBALS['TL_LANG']['MSC']['news_items'], $arrData[$intKey]);
 		}
 
 		return $arrDays;

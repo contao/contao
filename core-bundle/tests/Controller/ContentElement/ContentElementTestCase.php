@@ -197,6 +197,7 @@ abstract class ContentElementTestCase extends TestCase
         }
 
         $controller->setContainer($container);
+
         System::setContainer($container);
 
         $this->setDefaultSanitizerConfig();
@@ -386,7 +387,6 @@ abstract class ContentElementTestCase extends TestCase
             ->method('getPrefix')
             ->willReturn('files')
         ;
-
         $storage
             ->method('get')
             ->willReturnCallback(
@@ -451,7 +451,6 @@ abstract class ContentElementTestCase extends TestCase
                 },
             )
         ;
-
         $storage
             ->method('generatePublicUri')
             ->willReturnCallback(
@@ -516,12 +515,10 @@ abstract class ContentElementTestCase extends TestCase
             ->method('replace')
             ->willReturnCallback($replaceDemo)
         ;
-
         $insertTagParser
             ->method('replaceInline')
             ->willReturnCallback($replaceDemo)
         ;
-
         $insertTagParser
             ->method('replaceChunked')
             ->willReturnCallback(

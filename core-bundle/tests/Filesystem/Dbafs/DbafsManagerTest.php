@@ -256,14 +256,20 @@ class DbafsManagerTest extends TestCase
 
     public function testGetExtraMetadata(): void
     {
-        $filesDbafs = $this->getDbafsWithExtraMetadata('media/hilarious-cat.mov', new ExtraMetadata([
-            'foo' => 'foobar',
-            'bar' => 42,
-        ]));
+        $filesDbafs = $this->getDbafsWithExtraMetadata(
+            'media/hilarious-cat.mov',
+            new ExtraMetadata([
+                'foo' => 'foobar',
+                'bar' => 42,
+            ]),
+        );
 
-        $filesMediaDbafs = $this->getDbafsWithExtraMetadata('hilarious-cat.mov', new ExtraMetadata([
-            'baz' => true,
-        ]));
+        $filesMediaDbafs = $this->getDbafsWithExtraMetadata(
+            'hilarious-cat.mov',
+            new ExtraMetadata([
+                'baz' => true,
+            ]),
+        );
 
         $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
@@ -281,17 +287,23 @@ class DbafsManagerTest extends TestCase
 
     public function testValidatesExtraMetadata(): void
     {
-        $assetsDbafs = $this->getDbafsWithExtraMetadata('images/a.jpg', new ExtraMetadata([
-            'accessed' => 123,
-            'compressed' => true,
-            'quality' => 'high',
-        ]));
+        $assetsDbafs = $this->getDbafsWithExtraMetadata(
+            'images/a.jpg',
+            new ExtraMetadata([
+                'accessed' => 123,
+                'compressed' => true,
+                'quality' => 'high',
+            ]),
+        );
 
-        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata('a.jpg', new ExtraMetadata([
-            'aspectRatio' => 1.5,
-            'quality' => '50',
-            'compressed' => true,
-        ]));
+        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata(
+            'a.jpg',
+            new ExtraMetadata([
+                'aspectRatio' => 1.5,
+                'quality' => '50',
+                'compressed' => true,
+            ]),
+        );
 
         $manager = $this->getDbafsManager();
         $manager->register($assetsDbafs, 'assets');
@@ -444,8 +456,8 @@ class DbafsManagerTest extends TestCase
         $manager->register($assetsDbafs, 'assets');
 
         $changeSet = $manager->sync('files/foo/*', 'files/foo/bar/**', 'baz');
-
         $itemsToDelete = $changeSet->getItemsToDelete();
+
         $this->assertCount(2, $itemsToDelete);
 
         $this->assertSame('files/foo/bar/file1', $itemsToDelete[0]->getPath());
@@ -487,8 +499,8 @@ class DbafsManagerTest extends TestCase
         $manager->register($assetsDbafs, 'assets');
 
         $changeSet = $manager->sync();
-
         $itemsToDelete = $changeSet->getItemsToDelete();
+
         $this->assertCount(2, $itemsToDelete);
 
         $this->assertSame('files/foo/bar/file1', $itemsToDelete[0]->getPath());
@@ -507,15 +519,9 @@ class DbafsManagerTest extends TestCase
             ->with()
             ->willReturn(
                 new ChangeSet(
-                    [
-                        ['hash' => '1234', 'path' => 'foo', 'type' => ChangeSet::TYPE_FILE],
-                    ],
-                    [
-                        'bar' => ['path' => 'bar2'],
-                    ],
-                    [
-                        'baz' => ChangeSet::TYPE_FILE,
-                    ],
+                    [['hash' => '1234', 'path' => 'foo', 'type' => ChangeSet::TYPE_FILE]],
+                    ['bar' => ['path' => 'bar2']],
+                    ['baz' => ChangeSet::TYPE_FILE],
                 ),
             )
         ;

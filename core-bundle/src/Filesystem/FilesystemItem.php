@@ -217,6 +217,7 @@ class FilesystemItem implements \Stringable
     public function getFileSize(): int
     {
         $this->assertIsFile(__FUNCTION__);
+
         $this->resolveIfClosure($this->fileSize);
 
         return $this->fileSize ?? 0;
@@ -225,6 +226,7 @@ class FilesystemItem implements \Stringable
     public function getMimeType(string|null $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
+
         $exception = null;
 
         try {

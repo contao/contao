@@ -54,6 +54,41 @@ class InspectorTest extends TestCase
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
 
+    public function testAnalyzesTemplateReferences(): void
+    {
+        $templates = [
+            'template.html.twig' => <<<'TWIG'
+                {% use 'blocks.html.twig' %}
+                {% include 'included.html.twig' %}
+                {% include dynamic_template %}
+                {{ include('function.html.twig') }}
+                {% embed 'embedded.html.twig' %}{% endembed %}
+                {% import 'macros.html.twig' as macros %}
+                {% from 'forms.html.twig' import field %}
+                TWIG,
+            'child.html.twig' => "{% extends 'base.html.twig' %}",
+            'base.html.twig' => '',
+            'blocks.html.twig' => '{% block reusable %}{% endblock %}',
+            'included.html.twig' => '',
+            'function.html.twig' => '',
+            'embedded.html.twig' => '',
+            'macros.html.twig' => '{% macro example() %}{% endmacro %}',
+            'forms.html.twig' => '{% macro field() %}{% endmacro %}',
+        ];
+
+        $references = $this->getInspector($templates)->inspectTemplate('template.html.twig')->getReferences();
+        $extendsReferences = $this->getInspector($templates)->inspectTemplate('child.html.twig')->getReferences();
+
+        $this->assertContains(['type' => 'extends', 'name' => 'base.html.twig', 'line' => 1, 'dynamic' => false], $extendsReferences);
+        $this->assertContains(['type' => 'use', 'name' => 'blocks.html.twig', 'line' => 1, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'include', 'name' => 'included.html.twig', 'line' => 2, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'include', 'name' => null, 'line' => 3, 'dynamic' => true], $references);
+        $this->assertContains(['type' => 'include', 'name' => 'function.html.twig', 'line' => 4, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'embed', 'name' => 'embedded.html.twig', 'line' => 5, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'import', 'name' => 'macros.html.twig', 'line' => 6, 'dynamic' => false], $references);
+        $this->assertContains(['type' => 'import', 'name' => 'forms.html.twig', 'line' => 7, 'dynamic' => false], $references);
+    }
+
     public function testHidesVirtualDeferredBlocks(): void
     {
         $templates = [
@@ -72,6 +107,7 @@ class InspectorTest extends TestCase
 
         foreach ($expectedSlots as $template => $expectedSlotsOfTemplate) {
             $templateInformation = $inspector->inspectTemplate($template);
+
             $this->assertSame(
                 $expectedSlotsOfTemplate,
                 $templateInformation->getSlots(),
@@ -101,51 +137,52 @@ class InspectorTest extends TestCase
             ],
         ];
 
-        yield 'inheritance' => [[
-            '@Contao_specific/base.twig' => <<<'SOURCE'
-                {% block all %}
+        yield 'inheritance' => [
+            [
+                '@Contao_specific/base.twig' => <<<'SOURCE'
+                    {% block all %}
+                        {% block foo %}
+                            {% block foo_inner %}
+                                {% slot B %}{% endslot %}
+                            {% endblock %}
+                        {% endblock %}
+                        {% block bar %}
+                            {% slot C %}{% endslot %}
+                        {% endblock %}
+                        {% slot A %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+
+                '@Contao_specific/canonical_child.twig' => <<<'SOURCE'
+                    {% extends "@Contao_specific/base.twig" %}
+                    SOURCE,
+
+                '@Contao_specific/child1.twig' => <<<'SOURCE'
+                    {% extends "@Contao_specific/base.twig" %}
                     {% block foo %}
-                        {% block foo_inner %}
-                            {% slot B %}{% endslot %}
+                        {# removing slot B by overriding foo while adding slot D #}
+                        {% block baz %}
+                            {% slot D %}{% endslot %}
                         {% endblock %}
                     {% endblock %}
                     {% block bar %}
-                        {% slot C %}{% endslot %}
+                        {# adding slot E #}
+                        {{ parent() }}
+                        {% slot E %}{% endslot %}
                     {% endblock %}
-                    {% slot A %}{% endslot %}
-                {% endblock %}
-                SOURCE,
+                    SOURCE,
 
-            '@Contao_specific/canonical_child.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/base.twig" %}
-                SOURCE,
-
-            '@Contao_specific/child1.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/base.twig" %}
-                {% block foo %}
-                    {# removing slot B by overriding foo while adding slot D #}
-                    {% block baz %}
-                        {% slot D %}{% endslot %}
+                '@Contao_specific/child2.twig' => <<<'SOURCE'
+                    {% extends "@Contao_specific/child1.twig" %}
+                    {% block foo %}
+                        {{ parent() }}
                     {% endblock %}
-                {% endblock %}
-                {% block bar %}
-                    {# adding slot E #}
-                    {{ parent() }}
-                    {% slot E %}{% endslot %}
-                {% endblock %}
-                SOURCE,
-
-            '@Contao_specific/child2.twig' => <<<'SOURCE'
-                {% extends "@Contao_specific/child1.twig" %}
-                {% block foo %}
-                    {{ parent() }}
-                {% endblock %}
-                {% block bar %}
-                    {{ parent() }}
-                    {% slot F %}{% endslot %}
-                {% endblock %}
-                SOURCE,
-        ],
+                    {% block bar %}
+                        {{ parent() }}
+                        {% slot F %}{% endslot %}
+                    {% endblock %}
+                    SOURCE,
+            ],
             [
                 '@Contao_specific/base.twig' => ['A', 'B', 'C'],
                 '@Contao_specific/canonical_child.twig' => ['A', 'B', 'C'],
@@ -479,7 +516,6 @@ class InspectorTest extends TestCase
         );
 
         $inspector = new Inspector($environment, $storage, $contaoFilesystemLoader);
-
         $templateAInformation = $inspector->inspectTemplate('@Contao_A/foo.twig');
 
         $this->assertSame(
@@ -514,9 +550,59 @@ class InspectorTest extends TestCase
         $inspector = $this->getInspector(['foo.html.twig' => '…'], new Storage(new NullAdapter()));
 
         $this->expectException(InspectionException::class);
-        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". No recorded information was found.');
 
         $inspector->inspectTemplate('foo.html.twig');
+    }
+
+    public function testRecompilesTheSourceIfNoInformationWasRecorded(): void
+    {
+        $templates = [
+            'foo.html.twig' => '…',
+        ];
+
+        $filesystemLoader = $this->getContaoFilesystemLoader($templates);
+        $environment = new Environment($filesystemLoader);
+
+        $data = null;
+        $record = false;
+
+        $storage = $this->createMock(Storage::class);
+        $storage
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->willReturnCallback(
+                static function () use (&$data, &$record): array|null {
+                    $record = true;
+
+                    return $data;
+                },
+            )
+        ;
+        $storage
+            ->expects($this->exactly(2))
+            ->method('set')
+            ->willReturnCallback(
+                static function (string $path, array $value) use (&$data, &$record): void {
+                    if ($record) {
+                        $data = $value;
+                    }
+                },
+            )
+        ;
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $filesystemLoader,
+                $this->createStub(ContaoVariable::class),
+                new InspectorNodeVisitor($storage, $environment),
+            ),
+        );
+
+        $information = new Inspector($environment, $storage, $filesystemLoader)->inspectTemplate('foo.html.twig');
+
+        $this->assertSame('…', $information->getCode());
     }
 
     public function testResolvesManagedNamespace(): void
@@ -556,12 +642,10 @@ class InspectorTest extends TestCase
                 static fn (string $name): bool => \array_key_exists(str_replace('@Contao/', '@Contao_specific/', $name), $templates),
             )
         ;
-
         $filesystemLoader
             ->method('isFresh')
             ->willReturn(true)
         ;
-
         $filesystemLoader
             ->method('getSourceContext')
             ->willReturnCallback(
@@ -579,7 +663,6 @@ class InspectorTest extends TestCase
                 static fn (string $name): string => $randomInstance.$name,
             )
         ;
-
         $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
@@ -594,14 +677,12 @@ class InspectorTest extends TestCase
                 },
             )
         ;
-
         $filesystemLoader
             ->method('getFirst')
             ->willReturnCallback(
                 static fn (string $name): string => str_replace('@Contao/', '@Contao_specific/', $name),
             )
         ;
-
         $filesystemLoader
             ->method('getAllDynamicParentsByThemeSlug')
             ->willReturnCallback(

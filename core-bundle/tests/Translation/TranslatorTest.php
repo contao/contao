@@ -42,13 +42,11 @@ class TranslatorTest extends TestCase
             ->with('id', ['param' => 'value'], $domain, 'en')
             ->willReturn('trans')
         ;
-
         $originalTranslator
             ->expects($this->once())
             ->method('setLocale')
             ->with('en')
         ;
-
         $originalTranslator
             ->expects($this->once())
             ->method('getLocale')
@@ -195,7 +193,6 @@ class TranslatorTest extends TestCase
             ->method('getCatalogues')
             ->willReturn([$originalCatalogueDe, $originalCatalogueEn])
         ;
-
         $originalTranslator
             ->method('getCatalogue')
             ->willReturnMap([
@@ -223,13 +220,11 @@ class TranslatorTest extends TestCase
             ->expects($this->never())
             ->method('trans')
         ;
-
         $originalTranslator
             ->expects($this->exactly(2))
             ->method('getLocale')
             ->willReturn('en')
         ;
-
         $originalTranslator
             ->method('getCatalogue')
             ->willReturnCallback(

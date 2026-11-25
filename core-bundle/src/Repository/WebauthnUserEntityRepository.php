@@ -42,11 +42,11 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
 
     public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
-        if (str_starts_with($userHandle, 'backend.')) {
+        if (str_starts_with($userHandle, 'backend.') && $this->scopeMatcher->isBackendRequest()) {
             return $this->getUserEntity($this->backendUserProvider->loadUserById((int) substr($userHandle, 8)));
         }
 
-        if (str_starts_with($userHandle, 'frontend.')) {
+        if (str_starts_with($userHandle, 'frontend.') && $this->scopeMatcher->isFrontendRequest()) {
             return $this->getUserEntity($this->frontendUserProvider->loadUserById((int) substr($userHandle, 9)));
         }
 
