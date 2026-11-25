@@ -2568,13 +2568,16 @@
         <source>Module</source>
       </trans-unit>
       <trans-unit id="CONFIRM.table">
-        <source>Affected table</source>
+        <source>Table</source>
+      </trans-unit>
+      <trans-unit id="CONFIRM.field">
+        <source>Field</source>
       </trans-unit>
       <trans-unit id="CONFIRM.act">
         <source>Action</source>
       </trans-unit>
       <trans-unit id="CONFIRM.id">
-        <source>Affected record</source>
+        <source>Record</source>
       </trans-unit>
       <trans-unit id="DP.select_a_time">
         <source>Select a time</source>
