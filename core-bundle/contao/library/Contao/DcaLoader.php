@@ -168,7 +168,7 @@ class DcaLoader extends Controller
 	private function loadDcaFiles()
 	{
 		$filesystem = new Filesystem();
-		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
+		$strCacheDir = System::getContainer()->getParameter('kernel.build_dir');
 		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache

@@ -40,6 +40,7 @@ class RowWizardTest extends TestCase
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.cache_dir', __DIR__);
+        $container->setParameter('kernel.build_dir', __DIR__);
 
         System::setContainer($container);
 
