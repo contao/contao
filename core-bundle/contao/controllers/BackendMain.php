@@ -187,11 +187,10 @@ class BackendMain extends Backend
 		// Add the versions overview
 		Versions::addToTemplate($objTemplate);
 
-		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
-
 		// Backwards compatibility
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
+		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
 		$objTemplate->editElement = $GLOBALS['TL_LANG']['MSC']['editElement'];
 
 		return $objTemplate->parse();
