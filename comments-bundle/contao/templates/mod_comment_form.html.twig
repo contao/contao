@@ -3,7 +3,7 @@
 <!-- indexer::stop -->
 <div class="form">
     {% if requireLogin|default %}
-        <p class="info">{{ 'MSC.com_login' }}</p>
+        <p class="info">{{ 'MSC.com_login'|trans }}</p>
     {% else %}
         {% if confirm|default %}
             <p class="tl_confirm">{{ confirm }}</p>
