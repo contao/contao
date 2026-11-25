@@ -2,7 +2,7 @@
 
 <div id="tl_maintenance_cache" class="maintenance_{{ isActive ? 'active' : 'inactive' }}">
 
-    <h2 class="sub_headline sub_headline_purge">{{ 'clearCache'|trans({}, 'contao_tl_maintenance') }}</h2>
+    <h2 class="sub_headline sub_headline_purge">{{ 'tl_maintenance.clearCache'|trans({}, 'contao_tl_maintenance') }}</h2>
 
     {% if message|default %}
         <div class="tl_message">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="tl_submit_container">
-            <button type="submit" name="clear" class="tl_submit">{{ 'clearCache'|trans({}, 'contao_tl_maintenance') }}</button>
+            <button type="submit" name="clear" class="tl_submit">{{ 'tl_maintenance.clearCache'|trans({}, 'contao_tl_maintenance') }}</button>
         </div>
     </form>
 
