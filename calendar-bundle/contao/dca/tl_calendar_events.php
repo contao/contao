@@ -653,6 +653,16 @@ class tl_calendar_events extends Backend
 			$date = Date::parse(Config::get('dateFormat'), $arrRow['startTime']) . ($arrRow['addTime'] ? ' ' . Date::parse(Config::get('timeFormat'), $arrRow['startTime']) . $GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'] . Date::parse(Config::get('timeFormat'), $arrRow['endTime']) : '');
 		}
 
+		if ($arrRow['recurring'])
+		{
+			$arrRange = StringUtil::deserialize($arrRow['repeatEach']);
+
+			if (isset($arrRange['unit'], $arrRange['value']))
+			{
+				$date .= ', ' . ($arrRange['value'] == 1 ? $GLOBALS['TL_LANG']['MSC']['cal_single_' . $arrRange['unit']] : \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']));
+			}
+		}
+
 		return RecordLabel::fromHtml($label . ' <span class="label-info">[' . StringUtil::specialchars($date) . ']</span>');
 	}
 
