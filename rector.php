@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 use Contao\Rector\Set\SetList;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
+use Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector;
 use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -44,6 +45,7 @@ return RectorConfig::configure()
         __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
+        ArrowFunctionDelegatingCallToFirstClassCallableRector::class,
         ArrayToFirstClassCallableRector::class,
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
