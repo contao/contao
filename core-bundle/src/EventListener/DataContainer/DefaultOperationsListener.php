@@ -318,7 +318,8 @@ class DefaultOperationsListener
                 [$table],
             );
 
-            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table)).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
+            $title = \sprintf($GLOBALS['TL_LANG']['MSC']['recordOfTable'], $operation->getRecord()['id'], $table);
+            $operation['attributes'] = 'onclick="Backend.openModalIframe({title:\''.StringUtil::specialchars(str_replace(['\\', "'"], ['\\\\', "\\'"], $title), false, true).'\', url:this.href+\'&popup=1&nb=1\'});return false"';
 
             if (
                 !\in_array($operation->getRecord()['id'], $versionIds, false)
