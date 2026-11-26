@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f484a961f54e760c4d1987147ffe7668",
+    "content-hash": "e8e75b2d08e1b9ec5ede973ad9e75fff",
     "packages": [
         {
             "name": "phar-io/version",
@@ -267,7 +267,7 @@
     "platform": {},
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.4"
+        "php": "8.4.1"
     },
     "plugin-api-version": "2.11.0"
 }
