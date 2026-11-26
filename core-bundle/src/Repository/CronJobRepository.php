@@ -57,7 +57,7 @@ class CronJobRepository extends ServiceEntityRepository
     public function createJob(string $name, \DateTimeInterface $lastRun): int|null
     {
         try {
-            $this->connection->insert('tl_cron_job', ['name' => $name, 'lastRun' => \DateTimeImmutable::createFromInterface($lastRun)], ['name' => Types::STRING, 'lastRun' => Types::DATE_IMMUTABLE]);
+            $this->connection->insert('tl_cron_job', ['name' => $name, 'lastRun' => \DateTimeImmutable::createFromInterface($lastRun)], ['name' => Types::STRING, 'lastRun' => Types::DATETIME_IMMUTABLE]);
         } catch (UniqueConstraintViolationException) {
             return null;
         }
@@ -69,12 +69,12 @@ class CronJobRepository extends ServiceEntityRepository
     {
         $sql = 'UPDATE tl_cron_job SET lastRun = :lastRun WHERE id = :id';
         $parameters = ['id' => $id, 'lastRun' => \DateTimeImmutable::createFromInterface($lastRun)];
-        $types = ['id' => Types::INTEGER, 'lastRun' => Types::DATE_IMMUTABLE];
+        $types = ['id' => Types::INTEGER, 'lastRun' => Types::DATETIME_IMMUTABLE];
 
         if ($previous) {
             $sql .= ' AND lastRun = :previous';
             $parameters['previous'] = \DateTimeImmutable::createFromInterface($previous);
-            $types['previous'] = Types::DATE_IMMUTABLE;
+            $types['previous'] = Types::DATETIME_IMMUTABLE;
         }
 
         return 1 === $this->connection->executeStatement($sql, $parameters, $types);
