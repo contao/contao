@@ -10,7 +10,7 @@
             <div class="widget widget-select">
                 <label for="ctrl_target" class="invisible">{{ 'MSC.targetPage'|trans }}</label>
                 <select name="target" id="ctrl_target" class="select">
-                    <option value="">{{ customLabel ?: ('MSC.quicknav'|trans) }}</option>
+                    <option value="">{{ customLabel|default('MSC.quicknav'|trans) }}</option>
                     {% for item in items %}
                         <option value="{{ item.href }}" {% if item.active %} selected{% endif %}>
                             {{- ' &nbsp; '|u.repeat(item.level) }}{{ item.link -}}
