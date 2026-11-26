@@ -35,13 +35,18 @@ use Contao\McpBundle\Tool\ApiTools;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Discovery\DocBlockParser;
 use Mcp\Capability\Discovery\SchemaGenerator;
+use Mcp\Capability\Discovery\SchemaValidator;
 use Mcp\Exception\ToolCallException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class ApiToolsTest extends TestCase
@@ -131,6 +136,24 @@ final class ApiToolsTest extends TestCase
         $tools->execute('unknown');
     }
 
+    public function testNamesAMissingPathParameter(): void
+    {
+        $routes = new RouteCollection();
+        $routes->add('contao_api_files_upload', new Route('/contao/api/files/{path}'));
+
+        $stack = new RequestStack();
+        $stack->push(Request::create('https://example.org/contao/mcp'));
+
+        $handler = $this->createBinaryPayloadHandler();
+
+        $tools = new ApiTools($this->createRegistry(), $this->createStub(HttpKernelInterface::class), new ApiRequestFactory(new UrlGenerator($routes, new RequestContext())), $stack, new ApiResponseConverter(), $handler);
+
+        $this->expectException(ToolCallException::class);
+        $this->expectExceptionMessage('Some mandatory parameters are missing ("path")');
+
+        $tools->execute('contao_api_files_upload', ['file' => 'example.txt'], base64_encode('binary content'));
+    }
+
     public function testRequiresHttpContextBeforeDispatch(): void
     {
         $this->expectException(ToolCallException::class);
@@ -178,12 +201,29 @@ final class ApiToolsTest extends TestCase
         }
 
         $this->assertSame(['contao_api_discover', 'contao_api_describe', 'contao_api_execute'], array_keys($tools));
-        $this->assertSame('object', $tools['contao_api_execute']['properties']['parameters']['type']);
+        $this->assertSame('object', $tools['contao_api_execute']['properties']['parameters']['anyOf'][0]['type']);
         $this->assertCount(6, $tools['contao_api_execute']['properties']['data']['anyOf']);
 
         foreach ($descriptions as $description) {
             $this->assertStringContainsString('Last resort', $description);
             $this->assertStringContainsString('Prefer any applicable specific MCP tool', $description);
+        }
+    }
+
+    public function testAcceptsAnEmptyParameterObject(): void
+    {
+        $schema = new SchemaGenerator(new DocBlockParser())->generate(new \ReflectionMethod(ApiTools::class, 'execute'));
+
+        // A default of [] would be sent as a JSON list
+        $this->assertSame('{}', json_encode($schema['properties']['parameters']['default']));
+
+        $validator = new SchemaValidator();
+
+        // The SDK decodes the arguments into arrays, so {} arrives as []
+        foreach (['{"operation":"contao_api_files_move","parameters":[]}', '{"operation":"contao_api_files_move","parameters":{}}'] as $json) {
+            $arguments = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+
+            $this->assertSame([], $validator->validateAgainstJsonSchema($arguments, $schema), $json);
         }
     }
 
