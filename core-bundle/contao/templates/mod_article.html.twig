@@ -14,7 +14,7 @@
                 <h2>{{ headline|insert_tag_html }}</h2>
                 <div class="teaser">
                     {{ teaser|default|sanitize_html('contao')|csp_inline_styles|insert_tag_html }}
-                    <p class="more"><a href="{{ href }}" title="{{ readMore }}">{{ 'MSC.more'|trans }} <span class="invisible">{{ headline }}</span></a></p>
+                    <p class="more"><a href="{{ href }}" title="{{ 'MSC.readMore'|trans([headline]) }}">{{ 'MSC.more'|trans }} <span class="invisible">{{ headline }}</span></a></p>
                 </div>
             </div>
         </article>

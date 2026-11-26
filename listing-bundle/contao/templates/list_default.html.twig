@@ -62,7 +62,7 @@
     {% endif %}
 
     {% if searchable and for and not tbody|default %}
-        {{ no_results }}
+        {{ 'MSC.sNoResult'|trans([for|e])|sanitize_html('contao') }}
     {% else %}
         <table class="all_records">
             <thead>

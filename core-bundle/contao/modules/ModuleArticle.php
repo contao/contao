@@ -153,10 +153,10 @@ class ModuleArticle extends Module
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl('/articles/' . ($this->alias ?: $this->id));
 			$this->Template->teaser = $this->teaser ?? '';
-			$this->Template->readMore = StringUtil::stripInsertTags(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline));
 
 			// Backwards compatibility
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
+			$this->Template->readMore = StringUtil::stripInsertTags(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline));
 
 			return;
 		}

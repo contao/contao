@@ -7,7 +7,7 @@
 
     {% if referer|default %}
         <!-- indexer::stop -->
-        <p class="back"><a href="{{ referer }}">{{ 'MSC.goBack'|trans }}</a></p>
+        <p class="back"><a href="{{ referer }}">{{ customLabel|default('MSC.goBack'|trans) }}</a></p>
         <!-- indexer::continue -->
     {% endif %}
 

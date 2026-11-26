@@ -33,7 +33,7 @@
     </div>
 
     {% if hasDetails.invoke() %}
-        <p class="more"><a href="{{ href|default }}" title="{{ readMore|default }}"{{ attrs(target) }}>{{ more|default }}<span class="invisible"> {{ link|default }}</span></a></p>
+        <p class="more"><a href="{{ href|default }}" title="{{ 'MSC.readMore'|trans([title]) }}"{{ attrs(target) }}>{{ more|default }}<span class="invisible"> {{ link|default }}</span></a></p>
     {% endif %}
 
 </div>
