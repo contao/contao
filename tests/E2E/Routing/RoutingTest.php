@@ -1105,7 +1105,7 @@ class RoutingTest extends AbstractContaoMonorepoE2ETestCase
     private function createFixtureSet(array $fileNames): FixtureSet
     {
         return new FixtureSet(array_map(
-            static fn ($file) => \dirname(__DIR__, 3).'/core-bundle/tests/Fixtures/Functional/Routing/'.$file.'.yaml',
+            static fn ($file) => self::projectDirectory().'/tests/E2E/Fixtures/Routing/'.$file.'.yaml',
             $fileNames,
         ));
     }
