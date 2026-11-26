@@ -91,7 +91,7 @@ class CronJobRepository extends ServiceEntityRepository
         $qb
             ->delete()
             ->where('c.lastRun < :date')
-            // Use a grace period of 1 month, so that a yearly cronjob is not deleted immediately
+            // Use a grace period of 1 month so that a yearly cronjob is not deleted immediately
             ->setParameter('date', new \DateTimeImmutable('-1 year -1 month'))
         ;
 
