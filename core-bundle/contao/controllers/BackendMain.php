@@ -253,7 +253,7 @@ class BackendMain extends Backend
 		$data['isDebug'] = $container->getParameter('kernel.debug');
 
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-		$data['metaTags'] = $responseContext->get(HtmlHeadBag::class)->getMetaTags();
+		$data['metaTags'] = $responseContext?->has(HtmlHeadBag::class) ? $responseContext->get(HtmlHeadBag::class)->getMetaTags() : array();
 
 		return $data;
 	}

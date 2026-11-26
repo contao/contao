@@ -103,7 +103,7 @@ class BackendFavoritesListenerTest extends TestCase
                         'id' => 8,
                         'pid' => 7,
                         'tstamp' => 1671538402,
-                        'title' => 'Edit "fe_page"',
+                        'title' => 'Edit "app.scss"',
                         'url' => '/contao?do=files&act=source&id=files%2Fapp.scss',
                     ],
                 ],
@@ -176,13 +176,13 @@ class BackendFavoritesListenerTest extends TestCase
         );
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
-        $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
+        $this->assertSame('Edit "app.scss"', $grandChildren[1]->getLabel());
         $this->assertSame('/contao?do=files&act=source&id=files%2Fapp.scss', $grandChildren[1]->getUri());
 
         $this->assertSame(
             [
                 'class' => 'navigation',
-                'title' => 'Edit "fe_page"',
+                'title' => 'Edit "app.scss"',
                 'data-contao--tooltips-target' => 'tooltip',
             ],
             $grandChildren[1]->getLinkAttributes(),
