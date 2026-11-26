@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6627385ba4c51b6e3759053253d02b84",
+    "content-hash": "7078780058888bd39efd6fd8a6aabef5",
     "packages": [
         {
             "name": "contao/rector",
@@ -190,7 +190,7 @@
     "platform": {},
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.4"
+        "php": "8.4.1"
     },
     "plugin-api-version": "2.11.0"
 }
