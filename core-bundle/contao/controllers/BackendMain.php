@@ -239,7 +239,7 @@ class BackendMain extends Backend
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
-		$data['title'] = StringUtil::specialchars(trim(strip_tags(preg_replace('~</span> <span.*?>~', ' › ', $data['title']))));
+		$data['title'] = StringUtil::specialchars(trim(strip_tags(preg_replace('~</span> <span.*?>~', ' › ', (string) $data['title']))));
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = $container->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
