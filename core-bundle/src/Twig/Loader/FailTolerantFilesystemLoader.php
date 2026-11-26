@@ -31,7 +31,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
     public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE, bool $check = true): void
     {
         try {
-            parent::addPath($path, $namespace);
+            parent::addPath($path, $namespace, $check);
         } catch (LoaderError) {
             // Ignore
         }
@@ -46,7 +46,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
     public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE, bool $check = true): void
     {
         try {
-            parent::prependPath($path, $namespace);
+            parent::prependPath($path, $namespace, $check);
         } catch (LoaderError) {
             // Ignore
         }
