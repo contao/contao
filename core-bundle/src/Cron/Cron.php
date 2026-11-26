@@ -134,7 +134,7 @@ class Cron
         $jobIds = [];
         $cronJobsToBeRun = [];
 
-        $now = new \DateTime();
+        $now = new \DateTimeImmutable();
 
         // Go through each cron job
         foreach ($cronJobs as $cron) {
