@@ -31,7 +31,7 @@
                 <table>
                     {% for key, info in info %}
                         <tr>
-                            <th scope="row">{{ labels[key]|default(key) }}</th>
+                            <th scope="row">{{ labels[key]|default(key) }}:</th>
                             <td>{{ info }}</td>
                         </tr>
                     {% endfor %}

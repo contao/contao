@@ -61,11 +61,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         $this->framework->initialize();
 
-        $this->generateConfigCache($cacheDir);
-        $this->generateDcaCache($cacheDir);
-        $this->generateLanguageCache($cacheDir);
-        $this->generateDcaExtracts($cacheDir);
-        $this->generateColumnInfos($cacheDir);
+        $buildDir ??= $cacheDir;
+
+        $this->generateConfigCache($buildDir);
+        $this->generateDcaCache($buildDir);
+        $this->generateLanguageCache($buildDir);
+        $this->generateDcaExtracts($buildDir);
+        $this->generateColumnInfos($buildDir);
 
         return [];
     }
@@ -75,9 +77,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         return true;
     }
 
-    private function generateConfigCache(string $cacheDir): void
+    private function generateConfigCache(string $buildDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($cacheDir, 'contao'));
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($buildDir, 'contao'));
 
         foreach (['autoload.php', 'config.php'] as $file) {
             $files = $this->findConfigFiles($file);
@@ -88,9 +90,9 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    private function generateDcaCache(string $cacheDir): void
+    private function generateDcaCache(string $buildDir): void
     {
-        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($cacheDir, 'contao'));
+        $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($buildDir, 'contao'));
 
         $processed = [];
         $files = $this->findDcaFiles();
@@ -109,12 +111,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    private function generateLanguageCache(string $cacheDir): void
+    private function generateLanguageCache(string $buildDir): void
     {
         $dumper = new CombinedFileDumper(
             $this->filesystem,
             new DelegatingLoader(new LoaderResolver([new PhpFileLoader(), new XliffFileLoader($this->projectDir)])),
-            Path::join($cacheDir, 'contao'),
+            Path::join($buildDir, 'contao'),
         );
 
         $dumper->setHeader("<?php\n");
@@ -168,7 +170,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                     unset($php);
 
                     $name = substr($domain, 7);
-                    $path = Path::join($cacheDir, 'contao', 'languages', $language, $name.'.php');
+                    $path = Path::join($buildDir, 'contao', 'languages', $language, $name.'.php');
 
                     if (isset($processed[$language][$name])) {
                         $this->filesystem->appendToFile($path, "\n".$buffer);
@@ -185,12 +187,12 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
         // Cache the available Contao language files (see #6454)
         $this->filesystem->dumpFile(
-            Path::join($cacheDir, 'contao/config/available-language-files.php'),
+            Path::join($buildDir, 'contao/config/available-language-files.php'),
             \sprintf("<?php\n\nreturn %s;\n", var_export($processed, true)),
         );
     }
 
-    private function generateDcaExtracts(string $cacheDir): void
+    private function generateDcaExtracts(string $buildDir): void
     {
         $processed = [];
         $files = $this->findDcaFiles();
@@ -210,7 +212,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             }
 
             $this->filesystem->dumpFile(
-                Path::join($cacheDir, 'contao/sql', "$table.php"),
+                Path::join($buildDir, 'contao/sql', "$table.php"),
                 \sprintf(
                     "<?php\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n%s\n\n\$this->blnIsDbTable = true;\n",
                     \sprintf('$this->arrMeta = %s;', var_export($extract->getMeta(), true)),
@@ -226,10 +228,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         }
     }
 
-    private function generateColumnInfos(string $cacheDir): void
+    private function generateColumnInfos(string $buildDir): void
     {
         $this->filesystem->dumpFile(
-            Path::join($cacheDir, 'contao/config/column-infos.php'),
+            Path::join($buildDir, 'contao/config/column-infos.php'),
             \sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnInfosFromDca(), true)),
         );
     }

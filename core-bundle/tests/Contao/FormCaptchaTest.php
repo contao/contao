@@ -38,6 +38,7 @@ class FormCaptchaTest extends TestCase
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.cache_dir', __DIR__);
+        $container->setParameter('kernel.build_dir', __DIR__);
 
         $container->set(
             'contao.rate_limit.form_captcha_factory',

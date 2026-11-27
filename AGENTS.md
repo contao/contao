@@ -17,7 +17,7 @@ and follow the conventions of the area being edited. **Do not over-engineer!**
   `monorepo.yml`. The root package itself is not intended for production.
 - Top-level `*-bundle/` directories are individual Symfony bundles. `test-case/` contains shared testing
   infrastructure; `vendor-bin/` contains isolated dev tools.
-- New PHP code lives in a bundle's `src/` directory (PSR-4). Tests live in the corresponding `tests/` directory.
+- New PHP code lives in a bundle’s `src/` directory (PSR-4). Tests live in the corresponding `tests/` directory.
 - Standalone bundle tests exist only for bundles that contain a `tests/` directory.
 - If a bundle provides asset source files, they live in its `assets/` directory.
 - Do not manually edit generated or third-party files in `node_modules/` or `vendor/`.
@@ -29,22 +29,26 @@ or formatting.**
 
 ### New code (`src/`)
 
-- Uses modern Contao/Symfony patterns, PSR-4, `declare(strict_types=1)`, spaces for indentation, and rules from root
-  `ecs.php`.
+- Uses modern Contao/Symfony patterns, PSR-4, `declare(strict_types=1)`, and rules from root `ecs.php`.
 - Prefer dependency injection, typed properties/returns, attributes, events, and existing service abstractions.
-- Rector and PHPStan intentionally cover **only** new code.
+- Rector and PHPStan intentionally cover **only** new code and tests (`src/` and `tests/`).
 
 ### Legacy code (`contao/`)
 
-- Located inside each bundle's `contao/` directory.
-- Legacy PHP uses tabs, long array syntax, and brace-on-next-line formatting.
+- Everything inside a bundle’s `contao/` directory is legacy code, **except** the Twig templates in
+  `contao/templates/`.
+- Legacy PHP uses long array syntax and brace-on-next-line formatting.
 - **Never** apply root `ecs.php`, Rector, PHPStan, or modern style conventions to legacy code.
 - Legacy style is configured in `vendor-bin/ecs/config/legacy.php`.
-- `.editorconfig` is authoritative: `*/contao/` uses tabs; `src/` and Twig use 4 spaces.
+
+### Indentation and whitespace
+
+- Always follow `.editorconfig`. It is authoritative and defines different rules per directory and file type (e.g.
+  tabs vs. spaces and indentation size), so check the rule for the specific file before editing.
 
 ## Working principles & Workflow
 
-1. **Context First:** Inspect the bundle's `composer.json`, neighboring implementations, and existing tests before
+1. **Context First:** Inspect the bundle’s `composer.json`, neighboring implementations, and existing tests before
    changing behavior or public APIs.
 2. **Bug Fixes:** For testable bug fixes, first add or adjust a focused regression test. Implement the smallest
    possible fix, then verify the test passes.
@@ -64,24 +68,26 @@ composer unit-tests -- --filter TestName
 # Functional tests (requires configured contao_test database)
 composer functional-tests
 
+# E2E tests (only run when explicitly requested)
+composer e2e-tests
+
 # Static analysis & CS for new code
 composer phpstan
-composer ecs-default -- --no-progress-bar
+composer ecs-default
 
 # CS for legacy code
-composer ecs-legacy -- --no-progress-bar
+composer ecs-legacy
 
 # Rector dry-run
-vendor-bin/rector/vendor/bin/rector --dry-run --no-progress-bar
+vendor-bin/rector/vendor/bin/rector --dry-run
 
-# Additional linters & build
+# Additional linters
 composer twig-cs-fixer
 composer service-linter
 composer monorepo-tools
 composer depcheck
 
-# Assets linter & build
+# Assets linters
 npx biome ci core-bundle/assets
-npx stylelint core-bundle/assets/styles core-bundle/contao/themes/flexible/styles
-npm run build
+npx stylelint core-bundle/assets/styles
 ```

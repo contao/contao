@@ -205,6 +205,7 @@ class Automator extends System
 
 		$clearer = $container->get('contao.cache.clearer');
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
+		$clearer->clear($container->getParameter('kernel.build_dir'));
 
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the internal cache');
 	}

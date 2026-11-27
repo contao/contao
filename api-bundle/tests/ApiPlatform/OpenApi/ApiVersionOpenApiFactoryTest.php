@@ -104,7 +104,7 @@ final class ApiVersionOpenApiFactoryTest extends TestCase
 
         $today = new \DateTimeImmutable('today', new \DateTimeZone('UTC'))->format('Y-m-d');
         $this->assertSame($today, $header->getExample());
-        $this->assertStringContainsString("today's date", $header->getDescription());
+        $this->assertStringContainsString('today’s date', $header->getDescription());
         $this->assertStringContainsString(ApiVersion::HEADER.': '.$today, $header->getDescription());
         $this->assertSame(['type' => 'string', 'format' => 'date'], $header->getSchema());
         $this->assertSame($existing, $result->getComponents()->getParameters()['Existing']);

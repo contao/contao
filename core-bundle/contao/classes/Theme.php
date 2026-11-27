@@ -1222,7 +1222,7 @@ class Theme extends Backend
 			{
 				$this->addTemplateFiles($objArchive, $strFolder . '/' . $item);
 			}
-			elseif (preg_match('/\.(html5|sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
+			elseif (preg_match('/\.(sql|twig)$/', $item) && !str_starts_with($item, 'be_') && !str_starts_with($item, 'nl_'))
 			{
 				$objArchive->addFile($strFolder . '/' . $item);
 			}

@@ -23,6 +23,7 @@ use Mcp\Schema\Result\CallToolResult;
 use Mcp\Schema\ToolAnnotations;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
 
 final class ApiTools
@@ -60,7 +61,7 @@ final class ApiTools
     }
 
     #[McpTool(name: 'contao_api_execute', description: 'Last resort when no purpose-built MCP tool supports the task. Prefer any applicable specific MCP tool. Execute a discovered Contao API operation through the API pipeline. Supply path and query parameters together in parameters. Supply data only when the operation description declares a request body.', annotations: new ToolAnnotations(destructiveHint: true, openWorldHint: false))]
-    public function execute(string $operation, #[Schema(type: 'object', additionalProperties: true)] array $parameters = [], #[Schema(definition: ['anyOf' => [['type' => 'object'], ['type' => 'array'], ['type' => 'string'], ['type' => 'number'], ['type' => 'boolean'], ['type' => 'null']]])] mixed $data = null): CallToolResult
+    public function execute(string $operation, #[Schema(definition: ['anyOf' => [['type' => 'object', 'additionalProperties' => true], ['type' => 'array', 'maxItems' => 0]], 'default' => new \stdClass()])] array $parameters = [], #[Schema(definition: ['anyOf' => [['type' => 'object'], ['type' => 'array'], ['type' => 'string'], ['type' => 'number'], ['type' => 'boolean'], ['type' => 'null']]])] mixed $data = null): CallToolResult
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -76,6 +77,8 @@ final class ApiTools
             throw new ToolCallException($exception->getMessage().' Use contao_api_discover first.', previous: $exception);
         } catch (UnsupportedFormatException $exception) {
             throw new ToolCallException($exception->getMessage(), previous: $exception);
+        } catch (ExceptionInterface $exception) {
+            throw new ToolCallException($exception->getMessage().' Use contao_api_describe for the path parameters.', previous: $exception);
         }
 
         // Use the API pipeline so serialization, validation and operation security also

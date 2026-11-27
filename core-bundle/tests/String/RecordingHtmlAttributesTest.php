@@ -41,6 +41,97 @@ class RecordingHtmlAttributesTest extends AbstractHtmlAttributesTestCase
     }
 
     #[DataProvider('provideMergeTargets')]
+    public function testReplaysAdditionsAgainstMergeTarget(string $targetClass): void
+    {
+        $source = new RecordingHtmlAttributes();
+        $source->add('data-controller', 'child');
+
+        $this->assertSame('child', $source['data-controller']);
+
+        $target = new $targetClass(['data-controller' => 'parent']);
+        $target->mergeWith($source);
+
+        $source->add('data-controller', 'later');
+
+        $this->assertSame('parent child', $target['data-controller']);
+        $this->assertSame('child later', $source['data-controller']);
+    }
+
+    #[DataProvider('provideMergeTargets')]
+    public function testReplaysRemovalsAgainstMergeTarget(string $targetClass): void
+    {
+        $source = new RecordingHtmlAttributes();
+        $source->remove('data-controller', 'parent');
+
+        $this->assertSame('', (string) $source);
+
+        $target = new $targetClass(['data-controller' => 'parent child']);
+        $target->mergeWith($source);
+
+        $source->remove('data-controller', 'child');
+
+        $this->assertSame('child', $target['data-controller']);
+    }
+
+    #[DataProvider('provideListMutations')]
+    public function testCapturesListMutationArgumentsImmediately(string $method, string $expected, string|null $afterSecondMutation): void
+    {
+        $value = new class implements \Stringable {
+            public string $value = 'first';
+            public int $calls = 0;
+
+            public function __toString(): string
+            {
+                ++$this->calls;
+
+                return $this->value;
+            }
+        };
+
+        $attributes = new RecordingHtmlAttributes(['data-controller' => 'second']);
+        $attributes->$method('data-controller', $value, $value);
+
+        $this->assertSame(2, $value->calls);
+
+        $value->value = '';
+        $attributes->$method('data-controller', $value, $value);
+
+        $this->assertSame(3, $value->calls);
+        $this->assertSame($expected, $attributes['data-controller']);
+
+        $attributes->$method('data-controller', 'second');
+
+        $this->assertSame($afterSecondMutation, $attributes['data-controller'] ?? null);
+        $this->assertSame(3, $value->calls);
+    }
+
+    public static function provideListMutations(): iterable
+    {
+        yield 'add' => ['add', 'second first', 'second first second'];
+        yield 'remove' => ['remove', 'second', null];
+    }
+
+    public function testSnapshotsListMutationArrays(): void
+    {
+        $added = 'first';
+        $removed = 'remove';
+        $additions = [&$added];
+        $removals = [&$removed];
+
+        $attributes = new RecordingHtmlAttributes(['data-controller' => 'keep remove']);
+        $attributes->add('data-controller', $additions)->remove('data-controller', $removals);
+
+        $additions[0] = 'later';
+        $removals[0] = 'keep';
+
+        $this->assertSame('keep first', $attributes['data-controller']);
+
+        $attributes->add('data-controller', ['second']);
+
+        $this->assertSame('keep first second', $attributes['data-controller']);
+    }
+
+    #[DataProvider('provideMergeTargets')]
     public function testPreservesDeletionsThroughArrayRoundTrip(string $targetClass): void
     {
         $source = new RecordingHtmlAttributes();

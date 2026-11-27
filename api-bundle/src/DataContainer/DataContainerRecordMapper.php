@@ -94,6 +94,28 @@ final class DataContainerRecordMapper
     }
 
     /**
+     * @param list<string> $tables
+     *
+     * @return array{table: string, id: int}
+     */
+    public function toRecordIdentifier(string $iri, array $tables): array
+    {
+        foreach ($tables as $table) {
+            try {
+                $id = $this->relationResolver->resolveToIdentifier($iri, new DataContainerRelationDefinition($table));
+            } catch (InvalidInputException) {
+                continue;
+            }
+
+            if (false !== ($id = filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]))) {
+                return ['table' => $table, 'id' => $id];
+            }
+        }
+
+        throw new InvalidInputException(\sprintf('The IRI "%s" does not reference a record of %s.', $iri, implode(' or ', $tables)));
+    }
+
+    /**
      * Resolves the parent reference of a new record to its identifier.
      */
     public function toParentIdentifier(string $table, mixed $value): int
