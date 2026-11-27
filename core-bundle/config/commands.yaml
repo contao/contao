@@ -106,6 +106,7 @@ services:
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
+            - '@clock'
 
     contao.command.supervise_workers:
         class: Contao\CoreBundle\Command\SuperviseWorkersCommand

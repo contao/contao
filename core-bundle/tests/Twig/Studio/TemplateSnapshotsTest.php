@@ -22,6 +22,8 @@ use Symfony\Component\Process\Process;
 
 class TemplateSnapshotsTest extends TestCase
 {
+    private static bool|null $gitAvailable = null;
+
     private string $directory;
 
     protected function setUp(): void
@@ -57,7 +59,7 @@ class TemplateSnapshotsTest extends TestCase
 
         $snapshots = new TemplateSnapshots($this->directory, $this->directory.'/var/cache/test', $cacheInvalidator, $loader);
 
-        if (!$snapshots->isAvailable()) {
+        if (!$this->isGitAvailable()) {
             $this->markTestSkipped('Git is unavailable.');
         }
 
@@ -85,12 +87,12 @@ class TemplateSnapshotsTest extends TestCase
 
     public function testProjectRepositoryIsIndependent(): void
     {
-        $git = new Process(['git', 'init', $this->directory]);
-        $git->run();
-
-        if (!$git->isSuccessful()) {
+        if (!$this->isGitAvailable()) {
             $this->markTestSkipped('Git is unavailable.');
         }
+
+        $git = new Process(['git', 'init', $this->directory]);
+        $git->run();
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile($this->directory.'/templates/page.twig', 'original');
@@ -111,7 +113,7 @@ class TemplateSnapshotsTest extends TestCase
     {
         $snapshots = $this->createSnapshots();
 
-        if (!$snapshots->isAvailable()) {
+        if (!$this->isGitAvailable()) {
             $this->markTestSkipped('Git is unavailable.');
         }
 
@@ -147,5 +149,12 @@ class TemplateSnapshotsTest extends TestCase
             $this->createStub(CacheInvalidator::class),
             $this->createStub(ContaoFilesystemLoader::class),
         );
+    }
+
+    private function isGitAvailable(): bool
+    {
+        self::$gitAvailable ??= 0 === new Process(['git', '--version'])->run();
+
+        return self::$gitAvailable;
     }
 }

@@ -21,7 +21,7 @@ use Symfony\Component\Process\Process;
  * Short-lived, whole-tree history for user templates. The Git directory lives in
  * the cache and is deliberately separate from the project's repository.
  */
-final class TemplateSnapshots
+class TemplateSnapshots
 {
     private readonly string $workTree;
     private readonly string $gitDir;

@@ -12,15 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\McpBundle\Tests\Tool;
 
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Contao\CoreBundle\Twig\Studio\CacheInvalidator;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshotException;
 use Contao\CoreBundle\Twig\Studio\TemplateSnapshots;
 use Contao\McpBundle\Tool\TemplateSnapshotTools;
 use Contao\TestCase\ContaoTestCase;
 use Mcp\Exception\ToolCallException;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Filesystem\Filesystem;
 
 final class TemplateSnapshotToolsTest extends ContaoTestCase
 {
@@ -49,62 +46,75 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
 
     public function testCreatesListsComparesAndRestoresTheLatestManualSnapshot(): void
     {
-        $snapshots = $this->createSnapshots();
+        $hash = str_repeat('a', 40);
 
-        if (!$snapshots->isAvailable()) {
-            $this->markTestSkipped('Git is unavailable.');
-        }
+        $snapshots = $this->createMock(TemplateSnapshots::class);
+        $snapshots
+            ->expects($this->once())
+            ->method('snapshot')
+            ->willReturn($hash)
+        ;
+        $snapshots
+            ->expects($this->once())
+            ->method('listSnapshots')
+            ->willReturn([['hash' => $hash]])
+        ;
+        $snapshots
+            ->expects($this->once())
+            ->method('diff')
+            ->with(null)
+            ->willReturn('template diff')
+        ;
+        $snapshots
+            ->expects($this->once())
+            ->method('rollback')
+            ->with(null)
+            ->willReturn(['restored' => $hash])
+        ;
 
         $tools = new TemplateSnapshotTools($snapshots, $this->createAdminSecurity());
-        new Filesystem()->dumpFile(self::getTempDir().'/templates/page.twig', 'original');
 
-        $hash = $tools->snapshot()['hash'];
-        $this->assertMatchesRegularExpression('/^[a-f0-9]{40}$/', $hash);
-        $this->assertSame($hash, $tools->listSnapshots()['snapshots'][0]['hash']);
-
-        new Filesystem()->dumpFile(self::getTempDir().'/templates/page.twig', 'changed');
-        $this->assertStringContainsString('+changed', $tools->diff()['diff']);
-        $this->assertSame($tools->diff()['diff'], $tools->diff($hash)['diff']);
-
-        $result = $tools->rollback();
-        $this->assertSame($hash, $result['restored']);
-        $this->assertSame('original', file_get_contents(self::getTempDir().'/templates/page.twig'));
-        $this->assertSame('', $tools->diff()['diff']);
+        $this->assertSame(['hash' => $hash], $tools->snapshot());
+        $this->assertSame(['snapshots' => [['hash' => $hash]]], $tools->listSnapshots());
+        $this->assertSame(['diff' => 'template diff'], $tools->diff());
+        $this->assertSame(['restored' => $hash], $tools->rollback());
     }
 
     public function testCanRestoreAnExplicitSnapshot(): void
     {
-        $snapshots = $this->createSnapshots();
+        $first = str_repeat('b', 40);
 
-        if (!$snapshots->isAvailable()) {
-            $this->markTestSkipped('Git is unavailable.');
-        }
+        $snapshots = $this->createMock(TemplateSnapshots::class);
+        $snapshots
+            ->expects($this->once())
+            ->method('diff')
+            ->with($first)
+            ->willReturn('explicit snapshot diff')
+        ;
+        $snapshots
+            ->expects($this->once())
+            ->method('rollback')
+            ->with($first)
+            ->willReturn(['restored' => $first])
+        ;
 
         $tools = new TemplateSnapshotTools($snapshots, $this->createAdminSecurity());
 
-        $filesystem = new Filesystem();
-        $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'first');
-
-        $first = $tools->snapshot()['hash'];
-
-        $filesystem->dumpFile(self::getTempDir().'/templates/page.twig', 'second');
-        $tools->snapshot();
-
-        $this->assertStringContainsString('+second', $tools->diff($first)['diff']);
-        $this->assertSame($first, $tools->rollback($first)['restored']);
-        $this->assertSame('first', file_get_contents(self::getTempDir().'/templates/page.twig'));
+        $this->assertSame(['diff' => 'explicit snapshot diff'], $tools->diff($first));
+        $this->assertSame(['restored' => $first], $tools->rollback($first));
     }
 
     public function testConvertsSnapshotErrorsToToolCallErrors(): void
     {
-        $snapshots = $this->createSnapshots();
-
-        if (!$snapshots->isAvailable()) {
-            $this->markTestSkipped('Git is unavailable.');
-        }
+        $snapshots = $this->createMock(TemplateSnapshots::class);
+        $snapshots
+            ->expects($this->once())
+            ->method('diff')
+            ->with('invalid')
+            ->willThrowException(new TemplateSnapshotException('Invalid template snapshot hash.'))
+        ;
 
         $tools = new TemplateSnapshotTools($snapshots, $this->createAdminSecurity());
-        $tools->snapshot();
 
         try {
             $tools->diff('invalid');
@@ -118,12 +128,7 @@ final class TemplateSnapshotToolsTest extends ContaoTestCase
 
     private function createSnapshots(): TemplateSnapshots
     {
-        return new TemplateSnapshots(
-            self::getTempDir(),
-            self::getTempDir().'/var/cache/test',
-            $this->createStub(CacheInvalidator::class),
-            $this->createStub(ContaoFilesystemLoader::class),
-        );
+        return $this->createStub(TemplateSnapshots::class);
     }
 
     private function createAdminSecurity(): Security

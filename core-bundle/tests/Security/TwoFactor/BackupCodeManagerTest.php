@@ -62,8 +62,8 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodes = json_encode(
             [
-                password_hash('123456', PASSWORD_DEFAULT),
-                password_hash('234567', PASSWORD_DEFAULT),
+                password_hash('123456', PASSWORD_BCRYPT, ['cost' => 4]),
+                password_hash('234567', PASSWORD_BCRYPT, ['cost' => 4]),
             ],
             JSON_THROW_ON_ERROR,
         );
@@ -84,8 +84,8 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodes = json_encode(
             [
-                '$2y$10$vY0fVrqfUmzzHSQpT6ZMPOGwrYLq.9s/Y1M9cV9/0K0SlGH/kMotC', // 4ead45-4ea70a
-                '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
+                '$2y$04$fHlPcz85jpnvCsgNzGRRauZqAoLHE34Ye5RCxoEoQF6T04uuzQCiW', // 4ead45-4ea70a
+                '$2y$04$77eT1qrNoPVw7NZedUe3xuGgPDrxgAETi0jvq46yq2eUHMMfQ34Ei', // 0082ec-b95f03
             ],
             JSON_THROW_ON_ERROR,
         );
@@ -107,7 +107,7 @@ class BackupCodeManagerTest extends TestCase
 
     public function testGenerateBackupCodes(): void
     {
-        $backupCodeManager = new BackupCodeManager();
+        $backupCodeManager = new BackupCodeManager(['cost' => 4]);
 
         $user = $this->createClassWithPropertiesMock(BackendUser::class);
         $user
@@ -118,7 +118,10 @@ class BackupCodeManagerTest extends TestCase
         $backupCodes = $backupCodeManager->generateBackupCodes($user);
 
         $this->assertCount(10, $backupCodes);
-        $this->assertCount(10, json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+
+        $hashedBackupCodes = json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR);
+        $this->assertCount(10, $hashedBackupCodes);
+        $this->assertStringStartsWith('$2y$04$', $hashedBackupCodes[0]);
         $this->assertMatchesRegularExpression('/[a-f0-9]{6}-[a-f0-9]{6}/', $backupCodes[0]);
     }
 }

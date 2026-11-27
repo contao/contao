@@ -19,6 +19,9 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -96,6 +99,8 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testTimeLimit(): void
     {
+        $clock = new MockClock();
+
         $factory = $this->createStub(ImageFactoryInterface::class);
         $factory
             ->method('create')
@@ -106,8 +111,8 @@ class ResizeImagesCommandTest extends TestCase
         $resizer
             ->method('resizeDeferredImage')
             ->willReturnCallback(
-                function () {
-                    sleep(1);
+                function () use ($clock) {
+                    $clock->sleep(1);
 
                     return $this->createStub(ImageInterface::class);
                 },
@@ -120,7 +125,7 @@ class ResizeImagesCommandTest extends TestCase
             ->willReturn(['image1.jpg', 'image2.jpg'])
         ;
 
-        $command = $this->getCommand($factory, $resizer, $storage);
+        $command = $this->getCommand($factory, $resizer, $storage, $clock);
 
         $tester = new CommandTester($command);
         $code = $tester->execute(['--no-sub-process' => true, '--time-limit' => 0.5], ['capture_stderr_separately' => true]);
@@ -133,13 +138,14 @@ class ResizeImagesCommandTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/image2.jpg/', $display);
     }
 
-    private function getCommand(ImageFactoryInterface|null $factory = null, DeferredResizerInterface|null $resizer = null, DeferredImageStorageInterface|null $storage = null): ResizeImagesCommand
+    private function getCommand(ImageFactoryInterface|null $factory = null, DeferredResizerInterface|null $resizer = null, DeferredImageStorageInterface|null $storage = null, ClockInterface|null $clock = null): ResizeImagesCommand
     {
         return new ResizeImagesCommand(
             $factory ?? $this->createStub(ImageFactoryInterface::class),
             $resizer ?? $this->createStub(DeferredResizerInterface::class),
             Path::join($this->getTempDir(), 'assets/images'),
             $storage ?? $this->createStub(DeferredImageStorageInterface::class),
+            clock: $clock ?? new NativeClock(),
         );
     }
 }

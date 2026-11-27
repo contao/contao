@@ -18,6 +18,8 @@ use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ResizerInterface;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -58,6 +60,7 @@ class ResizeImagesCommand extends Command
         private readonly string $targetDir,
         private readonly DeferredImageStorageInterface $storage,
         private readonly Filesystem $filesystem = new Filesystem(),
+        private readonly ClockInterface $clock = new NativeClock(),
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
         $this->terminalWidth = new Terminal()->getWidth();
@@ -184,7 +187,7 @@ class ResizeImagesCommand extends Command
 
     private function executeInCurrentProcess(float $timeLimit, float $concurrent, bool $preserveMissing): int
     {
-        $startTime = microtime(true);
+        $startTime = $this->getCurrentTime();
 
         $count = 0;
         $failedCount = 0;
@@ -194,23 +197,23 @@ class ResizeImagesCommand extends Command
             foreach ($this->storage->listPaths() as $path) {
                 $sleep = $concurrent < 1 ? (1 - $concurrent) / $concurrent * $lastDuration : 0;
 
-                if ($timeLimit && microtime(true) - $startTime + $sleep > $timeLimit) {
+                if ($timeLimit && $this->getCurrentTime() - $startTime + $sleep > $timeLimit) {
                     $this->io->writeln('Time limit of '.$timeLimit.' seconds reached.');
 
                     break;
                 }
 
-                usleep((int) ($sleep * 1000000));
+                $this->clock->sleep($sleep);
 
                 $this->table->setRows([[getmypid(), ++$count, $path]]);
                 $this->tableOutput->clear();
                 $this->table->render();
 
-                $resizeStart = microtime(true);
+                $resizeStart = $this->getCurrentTime();
 
                 $failedCount += $this->resizeImage($path, $preserveMissing, true);
 
-                $lastDuration = microtime(true) - $resizeStart;
+                $lastDuration = $this->getCurrentTime() - $resizeStart;
             }
         } finally {
             $this->tableOutput->clear();
@@ -234,8 +237,8 @@ class ResizeImagesCommand extends Command
 
     private function executeConcurrent(float $timeLimit, float $concurrent): int
     {
-        $startTime = microtime(true);
-        $processStartTime = 0;
+        $startTime = $this->getCurrentTime();
+        $processStartTime = 0.0;
 
         $phpFinder = new PhpExecutableFinder();
         $phpPath = $phpFinder->find();
@@ -247,7 +250,7 @@ class ResizeImagesCommand extends Command
 
         foreach ($this->storage->listPaths() as $path) {
             while (true) {
-                if ($timeLimit && microtime(true) - $startTime > $timeLimit) {
+                if ($timeLimit && $this->getCurrentTime() - $startTime > $timeLimit) {
                     $this->io->writeln('Time limit of '.$timeLimit.' seconds reached.');
                     break 2;
                 }
@@ -263,12 +266,11 @@ class ResizeImagesCommand extends Command
                         }
 
                         if ($concurrent < 1) {
-                            usleep((int) (
+                            $this->clock->sleep(
                                 (1 - $concurrent)
                                 / $concurrent
-                                * (microtime(true) - $processStartTime)
-                                * 1000000
-                            ));
+                                * ($this->getCurrentTime() - $processStartTime),
+                            );
                         }
                     }
 
@@ -277,7 +279,7 @@ class ResizeImagesCommand extends Command
                     $process->start();
 
                     if ($concurrent < 1) {
-                        $processStartTime = microtime(true);
+                        $processStartTime = $this->getCurrentTime();
                     }
 
                     $processes[$index] = $process;
@@ -289,7 +291,7 @@ class ResizeImagesCommand extends Command
                     continue 3;
                 }
 
-                usleep(15000);
+                $this->clock->sleep(0.015);
             }
         }
 
@@ -336,6 +338,11 @@ class ResizeImagesCommand extends Command
         $this->table->setRows($rows);
         $this->tableOutput->clear();
         $this->table->render();
+    }
+
+    private function getCurrentTime(): float
+    {
+        return (float) $this->clock->now()->format('U.u');
     }
 
     private function finishSubProcess(Process $process, string $path): bool
