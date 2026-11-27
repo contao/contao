@@ -221,6 +221,8 @@ class Email
 				break;
 
 			case 'logFile':
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "Contao\Email::$logFile" property has been deprecated and will no longer work in Contao 6.');
+
 				$this->strLogFile = $varValue;
 				break;
 
@@ -268,6 +270,8 @@ class Email
 				return $this->blnEmbedImages;
 
 			case 'logFile':
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "Contao\Email::$logFile" property has been deprecated and will no longer work in Contao 6.');
+
 				return $this->strLogFile;
 
 			case 'failures':

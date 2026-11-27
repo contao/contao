@@ -11,14 +11,13 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
-use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
@@ -154,31 +153,27 @@ class Newsletter extends Backend
 				$this->redirect($referer);
 			}
 
-			// Get the total number of recipients
-			$objTotal = $db
-				->prepare("SELECT COUNT(DISTINCT email) AS count FROM tl_newsletter_recipients WHERE pid=? AND active=1")
-				->execute($objNewsletter->pid);
+			// Get page and timeout
+			$intTimeout = (Input::get('timeout') > 0) ? Input::get('timeout') : 1;
+			$intStart = Input::get('start') ?: 0;
+			$intPages = Input::get('mpc') ?: 10;
+			$intTotal = $intStart ? $objSession->get('newsletter_sent', 0) : 0;
+			$strLastRecipient = $intStart ? $objSession->get('newsletter_last_recipient', '') : '';
+
+			// Continue after the last address so that deactivations in the worker
+			// cannot shift the offset and cause recipients to be skipped.
+			$objRecipients = $db
+				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email = m.email WHERE r.pid = ? AND r.active = 1 AND r.email > ? ORDER BY r.email")
+				->limit($intPages, $strLastRecipient ? 0 : $intStart)
+				->execute($objNewsletter->pid, $strLastRecipient);
 
 			// Return if there are no recipients
-			if ($objTotal->count < 1)
+			if ($intStart == 0 && $objRecipients->numRows < 1)
 			{
 				$objSession->set('tl_newsletter_send', null);
 				Message::addError($GLOBALS['TL_LANG']['tl_newsletter']['error']);
 				$this->redirect($referer);
 			}
-
-			$intTotal = $objTotal->count;
-
-			// Get page and timeout
-			$intTimeout = (Input::get('timeout') > 0) ? Input::get('timeout') : 1;
-			$intStart = Input::get('start') ?: 0;
-			$intPages = Input::get('mpc') ?: 10;
-
-			// Get recipients
-			$objRecipients = $db
-				->prepare("SELECT *, r.id AS recipient, r.email FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=? AND r.active=1 ORDER BY r.email")
-				->limit($intPages, $intStart)
-				->execute($objNewsletter->pid);
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
@@ -192,7 +187,6 @@ class Newsletter extends Backend
 						->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
 						->execute(time(), $objNewsletter->id);
 
-					$objSession->set('rejected_recipients', array());
 					$objSession->set('skipped_recipients', array());
 				}
 
@@ -201,10 +195,12 @@ class Newsletter extends Backend
 
 				while ($objRecipients->next())
 				{
+					$objSession->set('newsletter_last_recipient', $objRecipients->email);
+
 					// Skip the recipient if the member is not active (see #8812)
 					if ($objRecipients->id !== null && ($objRecipients->disable || ($objRecipients->start && $objRecipients->start > $time) || ($objRecipients->stop && $objRecipients->stop <= $time)))
 					{
-						--$intTotal;
+						$arrSkippedRecipients[] = $objRecipients->email;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong> as the member is not active<br>';
 						continue;
 					}
@@ -213,6 +209,7 @@ class Newsletter extends Backend
 
 					if ($this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html))
 					{
+						++$intTotal;
 						echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 					else
@@ -223,41 +220,24 @@ class Newsletter extends Backend
 				}
 
 				$objSession->set('skipped_recipients', $arrSkippedRecipients);
+				$objSession->set('newsletter_sent', $intTotal);
 			}
 
 			echo '<div style="margin-top:12px">';
 
 			// Redirect back home
-			if ($objRecipients->numRows < 1 || ($intStart + $intPages) >= $intTotal)
+			if ($objRecipients->numRows < $intPages)
 			{
 				$objSession->set('tl_newsletter_send', null);
 
-				// Deactivate rejected addresses
-				if ($arrRejected = $objSession->get('rejected_recipients', array()))
-				{
-					$intRejected = \count($arrRejected);
-
-					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
-					$intTotal -= $intRejected;
-
-					foreach ($arrRejected as $strRecipient)
-					{
-						$db
-							->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
-							->execute($strRecipient);
-
-						System::getContainer()->get('monolog.logger.contao.general')->info('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
-					}
-				}
-
 				if ($intSkipped = \count($objSession->get('skipped_recipients', array())))
 				{
-					$intTotal -= $intSkipped;
 					Message::addInfo(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
 				}
 
-				$objSession->remove('rejected_recipients');
 				$objSession->remove('skipped_recipients');
+				$objSession->remove('newsletter_last_recipient');
+				$objSession->remove('newsletter_sent');
 
 				Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -283,6 +263,8 @@ class Newsletter extends Backend
 
 		$strToken = md5(uniqid(mt_rand(), true));
 		$objSession->set('tl_newsletter_send', $strToken);
+		$objSession->remove('newsletter_last_recipient');
+		$objSession->remove('newsletter_sent');
 		$sprintf = $objNewsletter->senderName ? $objNewsletter->senderName . ' &lt;%s&gt;' : '%s';
 
 		// Preview newsletter
@@ -385,7 +367,6 @@ class Newsletter extends Backend
 		}
 
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
@@ -468,29 +449,23 @@ class Newsletter extends Backend
 		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
-		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
-		$arrRejected = $objSession->get('rejected_recipients', array());
+		$objEmail->addHeader('Contao-Newsletter-ID', (string) $objNewsletter->id);
 
-		// Deactivate invalid addresses
 		try
 		{
-			$objEmail->sendTo($arrRecipient['email']);
+			return $objEmail->sendTo($arrRecipient['email']);
 		}
-		catch (RfcComplianceException|TransportException $e)
+		catch (RfcComplianceException|TransportExceptionInterface $e)
 		{
-			$arrRejected[] = $arrRecipient['email'];
-			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Invalid recipient address "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
+			if ($e instanceof RfcComplianceException)
+			{
+				System::getContainer()->get('contao_newsletter.mailer.newsletter_failure_manager')->recordFailure((int) $objNewsletter->id, $arrRecipient['email'], $e);
+			}
+
+			System::getContainer()->get('monolog.logger.contao.error')->error(\sprintf('Failed to send newsletter to "%s": %s', Idna::decodeEmail($arrRecipient['email']), $e->getMessage()));
+
+			return false;
 		}
-
-		// Rejected recipients
-		if ($objEmail->hasFailures())
-		{
-			$arrRejected[] = $arrRecipient['email'];
-		}
-
-		$objSession->set('rejected_recipients', $arrRejected);
-
-		return true;
 	}
 
 	/**

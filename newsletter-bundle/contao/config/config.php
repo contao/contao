@@ -21,7 +21,7 @@ use Contao\NewsletterRecipientsModel;
 // Back end modules
 $GLOBALS['BE_MOD']['content']['newsletter'] = array
 (
-	'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients'),
+	'tables'     => array('tl_newsletter_channel', 'tl_newsletter', 'tl_newsletter_recipients', 'tl_newsletter_failures'),
 	'send'       => array(Newsletter::class, 'send'),
 	'import'     => array(Newsletter::class, 'importRecipients'),
 	'stylesheet' => 'bundles/contaonewsletter/newsletter.min.css'
