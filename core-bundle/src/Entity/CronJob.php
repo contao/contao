@@ -17,12 +17,12 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[Table(name: 'tl_cron_job')]
 #[Entity(repositoryClass: CronJobRepository::class)]
-#[Index(columns: ['name'], name: 'name')]
+#[UniqueConstraint(columns: ['name'], name: 'name')]
 class CronJob
 {
     #[Id]
@@ -30,16 +30,26 @@ class CronJob
     #[GeneratedValue]
     protected int $id;
 
-    #[Column(type: 'string', length: 255, nullable: false)]
+    #[Column(type: 'string', length: 255, nullable: false, options: ['charset' => 'ascii', 'collation' => 'ascii_bin'])]
     protected string $name;
 
-    #[Column(type: 'datetime', nullable: false)]
-    protected \DateTimeInterface $lastRun;
+    #[Column(type: 'datetime_immutable', nullable: false)]
+    protected \DateTimeImmutable $lastRun;
 
     public function __construct(string $name, \DateTimeInterface|null $lastRun = null)
     {
         $this->name = $name;
-        $this->lastRun = $lastRun ?? new \DateTime();
+
+        if ($lastRun && !$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
+        $this->lastRun = $lastRun ?? new \DateTimeImmutable();
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public function getName(): string
@@ -49,6 +59,10 @@ class CronJob
 
     public function setLastRun(\DateTimeInterface $lastRun): self
     {
+        if (!$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
         $this->lastRun = $lastRun;
 
         return $this;

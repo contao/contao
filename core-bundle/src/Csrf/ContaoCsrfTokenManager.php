@@ -89,8 +89,8 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     }
 
     /**
-     * Skip the CSRF token validation if the request has no cookies, no authenticated
-     * user and the session has not been started.
+     * Skip the CSRF token validation if the request is same-origin, has no cookies,
+     * no authenticated user and the session has not been started.
      */
     public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
     {
@@ -99,6 +99,10 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
             && (
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
+            )
+            && (
+                'same-origin' === $request->headers->get('Sec-Fetch-Site')
+                || $request->getSchemeAndHttpHost() === $request->headers->get('Origin')
             )
             && $this->isSessionEmpty($request);
     }

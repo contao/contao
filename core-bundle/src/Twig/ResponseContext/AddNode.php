@@ -15,13 +15,13 @@ namespace Contao\CoreBundle\Twig\ResponseContext;
 use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
-use Twig\Node\NodeOutputInterface;
+use Twig\Node\NodeCaptureInterface;
 
 /**
  * @experimental
  */
 #[YieldReady]
-final class AddNode extends Node implements NodeOutputInterface
+final class AddNode extends Node implements NodeCaptureInterface
 {
     public function __construct(string $extensionName, Node $body, string|null $identifier, DocumentLocation $location, int $lineno)
     {

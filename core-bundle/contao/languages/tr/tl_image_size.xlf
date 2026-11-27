@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Buradan görselin istenilen genişliğini tanımlayabilirsiniz. Gerçek boyut CSS ile tanımlanmalıdır. Örnek: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -82,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadata.1">
         <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
-        <target>Bu seçenek etkinleştirildiğinde, telif hakkı ile ilgili üst veri alanları korunur (EXIF, IPTC, XMP).</target>
+        <target>Etkinleştirildiğinde, telif hakkı ile ilgili üst veri alanları korunur (EXIF, IPTC, XMP).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataFields.0">
         <source>Metadata fields</source>
@@ -114,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
-        <target>Bu seçenek etkinleştirildiğinde, görsel görüş açısına kaydırılana kadar yüklenmez.</target>
+        <target>Etkinleştirildiğinde, görsel görüş açısına kaydırılana kadar yüklenmez.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>

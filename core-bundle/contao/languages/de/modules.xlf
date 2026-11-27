@@ -293,14 +293,6 @@
         <source>Generates a login form</source>
         <target>Erzeugt ein Anmeldeformular (Login)</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>Automatischer Logout</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>Meldet ein Mitglied automatisch ab (Logout)</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Personendaten</target>

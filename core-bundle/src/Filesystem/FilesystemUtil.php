@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\StringUtil;
-use Contao\Validator;
 use League\Flysystem\Filesystem;
 use Symfony\Component\Uid\Uuid;
 
@@ -97,12 +96,8 @@ class FilesystemUtil
                 continue;
             }
 
-            if (Validator::isBinaryUuid($uuid)) {
-                $uuid = StringUtil::binToUuid($uuid);
-            }
-
             try {
-                $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
+                $uuidObject = Uuid::fromString($uuid);
 
                 if (!$item = $storage->get($uuidObject)) {
                     continue;

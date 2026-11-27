@@ -178,8 +178,8 @@ class BackendMain extends Backend
 		// Add the versions overview
 		Versions::addToTemplate($objTemplate);
 
-		$objTemplate->showDifferences = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
-		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
+		$objTemplate->showDifferences = StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['MSC']['showDifferences']), false, true);
+		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['MSC']['recordOfTable']), false, true);
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
 		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
@@ -228,7 +228,7 @@ class BackendMain extends Backend
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
-		$data['title'] = StringUtil::specialchars(trim(strip_tags(preg_replace('~</span> <span.*?>~', ' › ', $data['title']))));
+		$data['title'] = StringUtil::specialchars(trim(strip_tags(preg_replace('~</span> <span.*?>~', ' › ', (string) $data['title']))));
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
