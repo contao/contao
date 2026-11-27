@@ -40,6 +40,17 @@ class RequestTokenListenerTest extends TestCase
         $this->validateRequestTokenForRequest($request);
     }
 
+    public function testDoesNotValidateTheRequestTokenWithSecFetchSiteHeader(): void
+    {
+        $request = $this->createPostRequest();
+        $request->attributes->set('_token_check', true);
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+
+        $this->validateRequestTokenForRequest($request, false);
+    }
+
     public function testValidatesTheRequestTokenUponAuthenticatedRequest(): void
     {
         $request = $this->createPostRequest();
@@ -175,7 +186,6 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
-        $request->headers->set('Sec-Fetch-Site', 'same-origin');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -355,7 +365,7 @@ class RequestTokenListenerTest extends TestCase
     public function testValidatesTheRequestTokenWithoutOriginHeader(): void
     {
         $request = $this->createPostRequest();
-        $request->headers->remove('Sec-Fetch-Site');
+        $request->headers->remove('Origin');
 
         $this->validateRequestTokenForRequest($request);
     }
@@ -364,6 +374,14 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('https://example.com/account.html', 'POST');
         $request->headers->set('Origin', 'https://example.com');
+
+        $this->validateRequestTokenForRequest($request, false);
+    }
+
+    public function testDoesNotValidateTheRequestTokenWithRefererHeader(): void
+    {
+        $request = Request::create('https://example.com/account.html', 'POST');
+        $request->headers->set('Referer', 'https://example.com/foo/bar.html');
 
         $this->validateRequestTokenForRequest($request, false);
     }
@@ -411,8 +429,8 @@ class RequestTokenListenerTest extends TestCase
 
     private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded'): Request
     {
-        $request = Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
-        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+        $request = Request::create('https://example.com/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
+        $request->headers->set('Origin', 'https://example.com');
 
         return $request;
     }

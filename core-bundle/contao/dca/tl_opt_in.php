@@ -193,6 +193,11 @@ class tl_opt_in extends Backend
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
+		if (!$request || $request->isMethodSafe())
+		{
+			trigger_deprecation('contao/core-bundle', '6.1', 'Using "%s" on GET requests is deprecated and will no longer work in Contao 7. Use a POST request instead.', __METHOD__);
+		}
+
 		if ((!$request || $request->isMethodSafe()) && !System::getContainer()->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken(System::getContainer()->getParameter('contao.csrf_token_name'), Input::get('rt'))))
 		{
 			throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');

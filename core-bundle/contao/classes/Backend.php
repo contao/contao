@@ -441,6 +441,11 @@ abstract class Backend extends Controller
 		// Set a new node
 		if (Input::get('pn') !== null)
 		{
+			if (!$request || $request->isMethodSafe())
+			{
+				trigger_deprecation('contao/core-bundle', '6.1', 'Using pn= on GET requests is deprecated and will no longer work in Contao 7. Use a POST request instead.');
+			}
+
 			// Check the request token
 			if ((!$request || $request->isMethodSafe()) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
 			{

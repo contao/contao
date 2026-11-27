@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Csrf;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -80,8 +81,8 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $session->getFlashBag()->set('flash', 'bar');
         $session->getFlashBag()->get('flash');
 
-        $request = Request::create('/');
-        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+        $request = Request::create('https://example.com/');
+        $request->headers->set('Origin', 'https://example.com');
         $request->setSession($session);
 
         $this->assertTrue($tokenManager->canSkipTokenValidation($request, 'csrf_contao_csrf_token'));
@@ -110,5 +111,64 @@ class ContaoCsrfTokenManagerTest extends TestCase
         $request->setSession($foreignSession);
 
         $this->assertTrue($tokenManager->canSkipTokenValidation($request, 'csrf_contao_csrf_token'));
+    }
+
+    public function testAnyTokenIsValidForPostRequestsWithoutCookies(): void
+    {
+        $request = Request::create('https://example.com/', 'POST');
+        $request->headers->set('Origin', 'https://example.com');
+
+        $tokenManager = new ContaoCsrfTokenManager(
+            new RequestStack([$request]),
+            'csrf_',
+            $this->createStub(TokenGeneratorInterface::class),
+            new MemoryTokenStorage(),
+            '',
+            'contao_csrf_token',
+        );
+
+        $token = new CsrfToken('contao_csrf_token', 'any-value');
+        $this->assertTrue($tokenManager->isTokenValid($token));
+    }
+
+    public function testAnyTokenIsValidForPostRequestsWithSecFetchSiteHeader(): void
+    {
+        $request = Request::create('https://example.com/', 'POST');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+
+        $tokenManager = new ContaoCsrfTokenManager(
+            new RequestStack([$request]),
+            'csrf_',
+            $this->createStub(TokenGeneratorInterface::class),
+            new MemoryTokenStorage(),
+            '',
+            'contao_csrf_token',
+        );
+
+        $token = new CsrfToken('contao_csrf_token', 'any-value');
+        $this->assertTrue($tokenManager->isTokenValid($token));
+    }
+
+    public function testAnyTokenIsNotValidForGetRequestsWithSecFetchSiteHeader(): void
+    {
+        $storage = new MemoryTokenStorage();
+        $storage->initialize(['contao_csrf_token' => 'foo']);
+
+        $request = Request::create('https://example.com/', 'GET');
+        $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
+        $request->headers->set('Sec-Fetch-Site', 'same-origin');
+
+        $tokenManager = new ContaoCsrfTokenManager(
+            new RequestStack([$request]),
+            'csrf_',
+            $this->createStub(TokenGeneratorInterface::class),
+            $storage,
+            '',
+            'contao_csrf_token',
+        );
+
+        $token = new CsrfToken('contao_csrf_token', 'any-value');
+        $this->assertFalse($tokenManager->isTokenValid($token));
     }
 }
