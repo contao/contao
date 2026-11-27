@@ -259,6 +259,32 @@ class ContentCompositionBuilderTest extends TestCase
         $this->assertSame($expectedResponseContextData, iterator_to_array($parameters['response_context']->all()));
     }
 
+    public function testFinalizesThePageTitleAfterContentRendering(): void
+    {
+        $responseContext = new ResponseContext()->add($head = new HtmlHeadBag()->setTitle('Page title'));
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+        $page = $this->createClassWithPropertiesStub(PageModel::class, [
+            'layout' => 1,
+            'language' => 'en',
+            'rootPageTitle' => 'Root title',
+        ]);
+
+        $template = $this->getContentCompositionBuilder($this->mockFramework(), $page, responseContextAccessor: $responseContextAccessor)
+            ->buildLayoutTemplate()
+        ;
+
+        // Simulate a reader module overwriting the title while its content is rendered.
+        $head->setTitle('Reader title');
+
+        $this->assertSame($head, $template->getData()['response_context']->head);
+        $this->assertSame('Reader title - Root title', $head->getTitle());
+        $this->assertSame('Reader title - Root title', $head->all()[HtmlHeadBag::TAG_TITLE]->getContent());
+    }
+
     public function testAddsCompositedContentToTemplate(): void
     {
         $layout = $this->createClassWithPropertiesStub(LayoutModel::class, [
