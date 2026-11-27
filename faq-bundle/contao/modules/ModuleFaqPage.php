@@ -142,6 +142,8 @@ class ModuleFaqPage extends Module
 
 		$this->Template->faq = array_values(array_filter($arrFaqs));
 		$this->Template->request = Environment::get('requestUri');
+
+		// Backwards compatibility
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
 		$this->Template->getSchemaOrgData = function () use ($objFaqs) {

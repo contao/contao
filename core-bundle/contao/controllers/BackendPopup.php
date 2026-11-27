@@ -198,10 +198,12 @@ class BackendPopup extends Backend
 		$objTemplate->mtime = Date::parse(Config::get('datimFormat'), $objFile->mtime);
 		$objTemplate->atime = Date::parse(Config::get('datimFormat'), $objFile->atime);
 		$objTemplate->path = $this->strFile;
-		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = $this->strFile;
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = $container->getParameter('kernel.charset');
+
+		// Backwards compatibility
+		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->labels = (object) $GLOBALS['TL_LANG']['MSC'];
 		$objTemplate->download = $GLOBALS['TL_LANG']['MSC']['fileDownload'];
 

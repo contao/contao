@@ -1,5 +1,7 @@
+{% trans_default_domain 'contao_default' %}
+
 <div class="comment_default" id="{{ id }}">
-    <p class="info">{{ by }} {% if website %}<a href="{{ website }}" target="_blank" rel="nofollow noreferrer noopener">{{ name }}</a>{% else %}{{ name }}{% endif %} | <time datetime="{{ datetime }}" class="date">{{ date }}</time></p>
+    <p class="info">{{ 'MSC.com_by'|trans }} {% if website %}<a href="{{ website }}" target="_blank" rel="nofollow noreferrer noopener">{{ 'MSC.com_name'|trans }}</a>{% else %}{{ 'MSC.com_name'|trans }}{% endif %} | <time datetime="{{ datetime }}" class="date">{{ date }}</time></p>
 
     <div class="comment">
         {{ comment|autolink_url|nl2br }}
@@ -7,7 +9,7 @@
 
     {% if addReply %}
         <div class="reply">
-            <p class="info">{{ rby }} {{ author.name }}</p>
+            <p class="info">{{ 'MSC.com_reply'|trans }} {{ author.name }}</p>
             <div class="comment">
                 {{ reply|sanitize_html('contao')|csp_inline_styles|insert_tag_html }}
             </div>

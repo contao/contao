@@ -153,8 +153,10 @@ class ModuleArticle extends Module
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl('/articles/' . ($this->alias ?: $this->id));
 			$this->Template->teaser = $this->teaser ?? '';
-			$this->Template->readMore = StringUtil::stripInsertTags(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline));
+
+			// Backwards compatibility
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
+			$this->Template->readMore = StringUtil::stripInsertTags(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline));
 
 			return;
 		}
@@ -187,6 +189,8 @@ class ModuleArticle extends Module
 		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
 			$this->Template->backlink = $objPage->getFrontendUrl();
+
+			// Backwards compatibility
 			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		}
 
@@ -232,6 +236,7 @@ class ModuleArticle extends Module
 			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
 
+			// Backwards compatibility
 			$this->Template->printTitle = $GLOBALS['TL_LANG']['MSC']['printPage'];
 			$this->Template->facebookTitle = $GLOBALS['TL_LANG']['MSC']['facebookShare'];
 			$this->Template->twitterTitle = $GLOBALS['TL_LANG']['MSC']['twitterShare'];

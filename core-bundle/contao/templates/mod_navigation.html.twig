@@ -1,3 +1,5 @@
+{% trans_default_domain 'contao_default' %}
+
 {% set wrapperAttributes = attrs(cssID)
     .addClass([class, 'block'])
     .addStyle(style|default)
@@ -12,7 +14,7 @@
         <{{ hl }}>{{ headline|insert_tag_html }}</{{ hl }}>
     {% endif %}
 
-    <a href="{{ request }}#{{ skipId }}" class="invisible">{{ skipNavigation }}</a>
+    <a href="{{ request }}#{{ skipId }}" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
 
     {{ items|raw }}
 

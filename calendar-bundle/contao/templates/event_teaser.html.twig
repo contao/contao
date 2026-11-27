@@ -1,3 +1,5 @@
+{% trans_default_domain 'contao_default' %}
+
 {% if header|default %}
     <div class="header">
         {% if firstDay|default %}<span class="day">{{ firstDay }}, </span>{% endif %}<span class="date">{{ firstDate|default }}</span>
@@ -33,7 +35,7 @@
     </div>
 
     {% if hasDetails.invoke() %}
-        <p class="more"><a href="{{ href|default }}" title="{{ readMore|default }}"{{ attrs(target) }}>{{ more|default }}<span class="invisible"> {{ link|default }}</span></a></p>
+        <p class="more"><a href="{{ href|default }}" title="{{ 'MSC.readMore'|trans([title]) }}"{{ attrs(target) }}>{{ linkText|default('MSC.more'|trans) }}<span class="invisible"> {{ link|default }}</span></a></p>
     {% endif %}
 
 </div>
