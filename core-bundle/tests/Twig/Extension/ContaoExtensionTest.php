@@ -139,6 +139,7 @@ class ContaoExtensionTest extends TestCase
             'csp_inline_styles',
             'encode_email',
             'deserialize',
+            'country_name',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);
