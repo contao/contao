@@ -15,11 +15,15 @@ namespace Contao\CoreBundle\Tests\Controller\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\Backend\AbstractBackendController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
@@ -75,7 +79,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
-        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -101,6 +104,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'backendWidth' => null,
             'menu' => '<menu>',
+            'metaTags' => [],
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
@@ -176,6 +180,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'backendWidth' => null,
             'menu' => '<menu>',
+            'metaTags' => [],
             'renderMainOnly' => false,
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
@@ -312,6 +317,90 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame($sessionBag, $controller->getBackendSessionBagDelegate());
     }
 
+    public function testAddsMetaTags(): void
+    {
+        $controller = new class extends AbstractBackendController {
+            public function fooAction(): Response
+            {
+                return $this->render('custom_be.html.twig', ['foo' => 'bar', 'version' => 'my version']);
+            }
+        };
+
+        // Legacy setup
+        ContaoEnvironment::reset();
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'version' => 'version',
+            'dashboard' => 'dashboard',
+            'home' => 'home',
+            'learnMore' => 'learn more',
+        ];
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        $metaTag = new HtmlAttributes()
+            ->set('name', 'foo')
+            ->set('content', 'bar')
+        ;
+
+        $expectedContext = [
+            'version' => 'my version',
+            'headline' => 'dashboard',
+            'title' => '',
+            'language' => 'en',
+            'host' => 'localhost',
+            'charset' => 'UTF-8',
+            'home' => 'home',
+            'isDebug' => false,
+            'isPopup' => null,
+            'learnMore' => 'learn more',
+            'backendWidth' => null,
+            'menu' => '<menu>',
+            'metaTags' => [$metaTag],
+            'renderMainOnly' => false,
+            'headerMenu' => '<header_menu>',
+            'badgeTitle' => '',
+            'foo' => 'bar',
+            'Template' => $this->anything(),
+            'getLocaleString' => $this->anything(),
+            'getDateString' => $this->anything(),
+            'as_editor_view' => true,
+        ];
+
+        $container = $this->getContainerWithDefaultConfiguration($expectedContext);
+
+        $responseContext = new ResponseContext();
+        $responseContext->addLazy(HtmlHeadBag::class);
+        $responseContext->get(HtmlHeadBag::class)->addMetaTag($metaTag);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->exactly(2))
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->never())
+            ->method('createWebpageResponseContext')
+        ;
+
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
+
+        System::setContainer($container);
+
+        $controller->setContainer($container);
+
+        $controller->fooAction();
+    }
+
     private function getContainerWithDefaultConfiguration(array $expectedContext, Request|null $request = null): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
@@ -359,18 +448,6 @@ class AbstractBackendControllerTest extends TestCase
             )
         ;
 
-        $filesystemLoader = $this->createStub(ContaoFilesystemLoader::class);
-        $filesystemLoader
-            ->method('exists')
-            ->willReturn(true)
-        ;
-        $filesystemLoader
-            ->method('getFirst')
-            ->willReturnCallback(
-                static fn (string $identifier) => "templates/$identifier.html5",
-            )
-        ;
-
         $requestStack = new RequestStack([$request ?? new Request(server: $_SERVER)]);
 
         $scopeMatcher = $this->createStub(ScopeMatcher::class);
@@ -379,16 +456,32 @@ class AbstractBackendControllerTest extends TestCase
             ->willReturn(true)
         ;
 
+        $responseContext = new ResponseContext();
+        $responseContext->addLazy(HtmlHeadBag::class);
+
+        $responseContextAccessor = $this->createStub(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $responseContextFactory = $this->createStub(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->method('createWebpageResponseContext')
+            ->willReturn($responseContext)
+        ;
+
         $container->set('security.helper', $security);
         $container->set('security.token_storage', $this->createStub(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createStub(TokenChecker::class));
         $container->set('database_connection', $this->createStub(Connection::class));
         $container->set('session', $this->createStub(Session::class));
         $container->set('twig', $twig);
-        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
         $container->set('router', $this->createStub(RouterInterface::class));
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

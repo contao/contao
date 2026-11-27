@@ -28,11 +28,13 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\RetryableException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class TableDataContainerRecords
@@ -159,6 +161,8 @@ class TableDataContainerRecords
     {
         $this->validateContext($context);
 
+        $move = $this->resolveDestination($table, $id, $move, $context);
+
         return $this->write(
             new DataContainerRecord($table, [], $id),
             ['act' => 'cut', 'id' => $id] + $move->getParameters(),
@@ -272,20 +276,25 @@ class TableDataContainerRecords
         $main->attributes->remove('_contao_widget_errors');
 
         try {
-            if (!$create) {
-                $submitOnChangeValues = array_filter(
-                    $values,
-                    static fn (string $field): bool => true === ($GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['submitOnChange'] ?? false),
-                    ARRAY_FILTER_USE_KEY,
+            $submitOnChangeValues = array_filter(
+                $values,
+                static fn (string $field): bool => true === ($GLOBALS['TL_DCA'][$record->table]['fields'][$field]['eval']['submitOnChange'] ?? false),
+                ARRAY_FILTER_USE_KEY,
+            );
+
+            if ($submitOnChangeValues) {
+                // These fields can change the palette and field options, so persist them in
+                // their own back end request before submitting the complete request data against
+                // the updated DCA state
+                $this->run(
+                    $record->table,
+                    ['act' => 'edit', 'id' => $record->id],
+                    function (DC_Table $dc, Request $request) use ($submitOnChangeValues): void {
+                        $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
+
+                        $this->submitFormValues($dc, $submitOnChangeValues, []);
+                    },
                 );
-
-                if ($submitOnChangeValues) {
-                    // These fields can change the palette and field options, so persist them before
-                    // submitting the complete request data against the updated DCA state
-                    $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$submitOnChangeValues]);
-
-                    $this->submitFormValues($dc, $submitOnChangeValues, []);
-                }
             }
 
             $request->request->replace(['FORM_SUBMIT' => $dc->table, ...$values]);
@@ -338,6 +347,10 @@ class TableDataContainerRecords
         $destinationTable = 'after' === $move->position ? $table : ($dc->parentTable ?: $table);
         $destination = $dc->getCurrentRecord($move->target, $destinationTable);
 
+        if (null === $destination && 'after' !== $move->position && null === $move->ptable && ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false)) {
+            throw new ResourceNotFoundException(\sprintf('The destination record does not exist in %1$s. Without "ptable", the target ID is a record of %1$s. To move into another parent table, send "ptable" (e.g. "tl_content" to move into an element group) or the destination IRI as "target".', $destinationTable));
+        }
+
         if (null === $destination) {
             throw new ResourceNotFoundException('The destination record does not exist.');
         }
@@ -345,6 +358,47 @@ class TableDataContainerRecords
         if ('after' === $move->position && !empty($destination['ptable']) && $destination['ptable'] !== $dc->parentTable) {
             throw new InvalidInputException('Specify the destination record’s parent table when moving between dynamic parents.');
         }
+    }
+
+    private function resolveDestination(string $table, int|string $id, DataContainerMove $move, DataContainerContext|null $context): DataContainerMove
+    {
+        if (\is_int($move->target)) {
+            return $move;
+        }
+
+        return $this->run(
+            $table,
+            ['id' => $id, 'act' => 'show'],
+            function (DC_Table $dc) use ($table, $move, $context): DataContainerMove {
+                $dynamic = (bool) ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false);
+
+                $tables = match (true) {
+                    'after' === $move->position => [$table],
+                    null !== $move->ptable => [$move->ptable],
+                    $dynamic => $this->getParentTables($dc, $table, $context),
+                    default => [$dc->parentTable ?: $table],
+                };
+
+                $destination = $this->mapper->toRecordIdentifier($move->target, $tables);
+
+                return new DataContainerMove($destination['id'], $move->position, $dynamic && 'after' !== $move->position ? $destination['table'] : $move->ptable);
+            },
+        );
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getParentTables(DC_Table $dc, string $table, DataContainerContext|null $context): array
+    {
+        $parents = array_diff(array_column($context?->getParents() ?? [], 'table'), [$table]);
+        $tables = [end($parents) ?: $dc->parentTable];
+
+        if (\in_array($table, (array) ($GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? []), true)) {
+            $tables[] = $table;
+        }
+
+        return array_values(array_unique(array_filter($tables)));
     }
 
     private function getParentParameters(DataContainerContext|null $context): array
@@ -416,7 +470,13 @@ class TableDataContainerRecords
     private function write(DataContainerRecord $record, array $parameters, callable $callback): mixed
     {
         try {
+            if ($this->connection->isTransactionActive()) {
+                return $this->run($record->table, $parameters, $callback);
+            }
+
             return $this->connection->transactional(fn () => $this->run($record->table, $parameters, $callback));
+        } catch (RetryableException $exception) {
+            throw new ConflictHttpException('The record could not be saved because of a concurrent write. Retry the request.', $exception);
         } finally {
             // A rollback must not leave records from the failed write in the static cache
             DataContainer::clearCurrentRecordCache(table: $record->table);
@@ -480,6 +540,14 @@ class TableDataContainerRecords
         // control parameters
         $request = Request::create($parent->getSchemeAndHttpHost().$url, $method, cookies: $parent->cookies->all(), server: array_intersect_key($parent->server->all(), array_flip(['SCRIPT_NAME', 'SCRIPT_FILENAME', 'SERVER_PROTOCOL'])));
         $request->attributes->add(['_route' => 'contao_backend', '_scope' => 'backend', '_stateless' => true, '_locale' => $parent->getLocale()]);
+
+        // A nested back end request continues the session of its parent, so the edit
+        // pass of a create finds the new record in the session
+        if ('contao_backend' === $parent->attributes->get('_route') && $parent->attributes->getBoolean('_stateless') && $parent->hasSession()) {
+            $request->setSession($parent->getSession());
+
+            return $request;
+        }
 
         // Keep backend UI state isolated from the API request
         $session = new Session(new MockArraySessionStorage());

@@ -82,16 +82,16 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'token' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>24, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 24, 'default' => '')
 		),
 		'createdOn' => array
 		(
@@ -99,47 +99,47 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'confirmedOn' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'removeOn' => array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'eval'                    => array('rgxp'=>'datim'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'invalidatedThrough' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>24, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 24, 'default' => '')
 		),
 		'email' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['emailAddress'],
 			'search'                  => true,
 			'sorting'                 => true,
-			'eval'                    => array('rgxp'=>'email'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('rgxp' => 'email'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'emailSubject' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'emailText' => array
 		(
 			'search'                  => true,
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		)
 	)
 );
@@ -171,7 +171,7 @@ class tl_opt_in extends Backend
 			$arrAdd = array();
 			$arrRow = $objRelated->row();
 
-			foreach ($arrRow as $k=>$v)
+			foreach ($arrRow as $k => $v)
 			{
 				$label = is_array($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'] ?? null) ? $GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'][0] : ($GLOBALS['TL_DCA']['tl_opt_in_related']['fields'][$k]['label'] ?? null);
 

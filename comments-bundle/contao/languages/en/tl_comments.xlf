@@ -24,7 +24,7 @@
         <source>Author</source>
       </trans-unit>
       <trans-unit id="tl_comments.name.1">
-        <source>Please enter the author's name.</source>
+        <source>Please enter the author’s name.</source>
       </trans-unit>
       <trans-unit id="tl_comments.email.0">
         <source>E-mail address</source>

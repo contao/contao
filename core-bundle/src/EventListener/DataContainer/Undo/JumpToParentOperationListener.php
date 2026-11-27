@@ -74,7 +74,7 @@ class JumpToParentOperationListener
 
         $operation->setUrl($backend->addToUrl($parentLinkParameters.'&popup=1'));
         $operation['title'] = $newTitle;
-        $operation['attributes'] = ' onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars($newTitle).'\',\'url\': this.href });return false"';
+        $operation['attributes'] = ' onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace(['\\', "'"], ['\\\\', "\\'"], $newTitle), false, true).'\',\'url\': this.href });return false"';
     }
 
     private function getParentLinkParameters(array $parent, string $table): string

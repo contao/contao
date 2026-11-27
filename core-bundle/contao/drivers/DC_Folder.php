@@ -39,6 +39,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Provide methods to modify the file system.
@@ -1402,6 +1403,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			elseif ($blnIsAjax)
 			{
 				throw new ResponseException(new Response(Message::generateUnwrapped($strMode, true), 500));
+			}
+			else
+			{
+				// Set the status code to 422, so that Turbo can handle the error (see #10584)
+				$mainRequest = System::getContainer()->get('request_stack')->getMainRequest();
+				$mainRequest->attributes->set('_contao_widget_errors', $mainRequest->attributes->get('_contao_widget_errors', new ConstraintViolationList()));
 			}
 		}
 

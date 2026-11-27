@@ -22,6 +22,7 @@ use Symfony\Component\Filesystem\Path;
 class XliffFileLoader extends Loader
 {
     public function __construct(
+        // @phpstan-ignore property.onlyWritten (backwards compatibility)
         private readonly string $projectDir,
         private readonly bool $addToGlobals = false,
     ) {
@@ -42,7 +43,7 @@ class XliffFileLoader extends Loader
     {
         $xml = $this->getDomDocumentFromFile($name);
 
-        $return = "\n// ".Path::makeRelative($name, $this->projectDir)."\n";
+        $return = '';
         $fileNodes = $xml->getElementsByTagName('file');
         $language = strtolower($language);
 

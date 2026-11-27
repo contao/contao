@@ -52,8 +52,8 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 /*
  * Attributes based on the safe default configuration from the HTML
  * specification with the following modifications:
- * - added for all elements: data-*,id,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
- * - added for the <a> element: rel,target,download,referrerpolicy
+ * - added for all elements: data-lightbox,class,style,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype
+ * - added for the <a> element: rel,target
  * - added for the <table> element: border,cellspacing,cellpadding,width,height
  * - added for the <td> and <th> element: width,height
  * - added elements: img, map, area, video, audio, source, style, details

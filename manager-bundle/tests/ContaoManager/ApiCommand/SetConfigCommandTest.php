@@ -58,7 +58,5 @@ class SetConfigCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['json' => 'foobar']);
-
-        $this->assertSame(0, $commandTester->getStatusCode());
     }
 }

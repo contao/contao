@@ -10,7 +10,7 @@ The `Hybrid`, `ContentElement` and `Module` classes will be removed in Contao 7.
 
 ## Service annotations
 
-All of Contao's service annotations will be removed in Contao 7. Use PHP attributes instead, e.g. `#[AsCallback(…)]`
+All of Contao’s service annotations will be removed in Contao 7. Use PHP attributes instead, e.g. `#[AsCallback(…)]`
 instead of `/** @Callback(…) */` etc.
 
 ## $GLOBALS['objPage']

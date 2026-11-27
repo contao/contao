@@ -106,6 +106,7 @@ abstract class ContaoTestCase extends TestCase
             $cachedContainers[$projectDir]->setParameter('kernel.charset', 'UTF-8');
             $cachedContainers[$projectDir]->setParameter('kernel.default_locale', 'en');
             $cachedContainers[$projectDir]->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+            $cachedContainers[$projectDir]->setParameter('kernel.build_dir', $projectDir.'/var/cache');
             $cachedContainers[$projectDir]->setParameter('kernel.project_dir', $projectDir);
             $cachedContainers[$projectDir]->setParameter('kernel.root_dir', $projectDir.'/app');
             $cachedContainers[$projectDir]->setDefinition('request_stack', new Definition(RequestStack::class));

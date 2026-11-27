@@ -111,7 +111,9 @@ class BackendIndex extends Backend
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = base64_encode($targetPath);
 		$objTemplate->webauthnSuccessUrl = $targetPath;
-		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
+
+		// Backwards compatibility
+		$objTemplate->loginMenu = Template::once(static fn (): string => $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig'));
 
 		return $objTemplate->getResponse();
 	}

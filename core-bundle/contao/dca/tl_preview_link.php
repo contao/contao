@@ -68,35 +68,35 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'url' => array
 		(
 			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'maxlength'=>2048),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>''),
+			'eval'                    => array('mandatory' => true, 'readonly' => true, 'rgxp' => 'url', 'maxlength' => 2048),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => ''),
 		),
 		'showUnpublished' => array
 		(
 			'exclude'                 => false,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'restrictToUrl' => array
 		(
 			'exclude'                 => false,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>true)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'createdAt' => array
 		(
@@ -105,15 +105,15 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'readonly'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'readonly' => true, 'doNotCopy' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'previewTime' => array
 		(
 			'exclude'                 => false,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'expiresAt' => array
 		(
@@ -121,21 +121,21 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'eval'                    => array('rgxp' => 'datim', 'mandatory' => true, 'doNotCopy' => true, 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'published' => array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'createdBy' => array
 		(
 			'foreignKey'              => 'tl_user.name',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		)
 	)
 );

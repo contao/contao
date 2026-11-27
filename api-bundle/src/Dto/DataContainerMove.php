@@ -20,20 +20,23 @@ final class DataContainerMove
     public const SCHEMA = [
         'type' => 'object',
         'properties' => [
-            'target' => ['type' => 'integer', 'minimum' => 0, 'description' => 'Parent ID for first/last, sibling ID for after. Zero denotes the root.'],
+            'target' => [
+                'oneOf' => [['type' => 'integer', 'minimum' => 0], ['type' => 'string', 'format' => 'iri-reference']],
+                'description' => 'The destination: the parent for first/last, the sibling for after. Zero denotes the root. An ID is a record of ptable if sent, otherwise of the default parent table of the data container (tl_article for content elements of an article); it is never looked up in other tables. An IRI (the "@id" of the destination) names its own table, e.g. an element group.',
+            ],
             'position' => ['type' => 'string', 'enum' => ['first', 'last', 'after'], 'default' => 'last'],
-            'ptable' => ['type' => 'string', 'description' => 'Destination parent table for data containers supporting dynamic parents.'],
+            'ptable' => ['type' => 'string', 'description' => 'Table of the destination parent for data containers with dynamic parents, e.g. tl_content to move a content element into an element group. Without ptable or an IRI target, the destination is a record of the default parent table.'],
         ],
         'required' => ['target'],
         'additionalProperties' => false,
     ];
 
     public function __construct(
-        public readonly int $target,
+        public readonly int|string $target,
         public readonly string $position = 'last',
         public readonly string|null $ptable = null,
     ) {
-        if ($target < 0 || !\in_array($position, ['first', 'last', 'after'], true) || ('after' === $position && 0 === $target) || '' === $ptable) {
+        if ((\is_int($target) && $target < 0) || '' === $target || !\in_array($position, ['first', 'last', 'after'], true) || ('after' === $position && 0 === $target) || '' === $ptable) {
             throw new InvalidInputException('Invalid move destination or position.');
         }
     }
