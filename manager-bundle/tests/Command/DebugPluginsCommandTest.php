@@ -38,7 +38,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
     public function testNameAndArguments(): void
     {
-        $command = new DebugPluginsCommand($this->getKernel([]));
+        $command = new DebugPluginsCommand($this->getKernel([]), [], []);
 
         $this->assertSame('debug:plugins', $command->getName());
         $this->assertTrue($command->getDefinition()->hasArgument('name'));
@@ -48,7 +48,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
     #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $plugins, array $bundles, array $arguments, string $expectedOutput): void
     {
-        $command = new DebugPluginsCommand($this->getKernel($plugins, $bundles));
+        $command = new DebugPluginsCommand($this->getKernel($plugins, $bundles), [], []);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments);
@@ -92,7 +92,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
     public function testCannotDescribePluginBundlesIfInterfaceIsNotImplemented(): void
     {
-        $command = new DebugPluginsCommand($this->getKernel(['foo/bar-bundle' => new FixturesPlugin()]));
+        $command = new DebugPluginsCommand($this->getKernel(['foo/bar-bundle' => new FixturesPlugin()]), [], []);
 
         $commandTester = new CommandTester($command);
         $result = $commandTester->execute(['name' => 'foo/bar-bundle', '--bundles' => true]);
@@ -107,7 +107,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
     public function testGeneratesAnErrorIfAPluginDoesNotExist(): void
     {
-        $command = new DebugPluginsCommand($this->getKernel(['foo/bar-bundle' => new FixturesPlugin()]));
+        $command = new DebugPluginsCommand($this->getKernel(['foo/bar-bundle' => new FixturesPlugin()]), [], []);
 
         $commandTester = new CommandTester($command);
         $result = $commandTester->execute(['name' => 'foo/baz-bundle', '--bundles' => true]);

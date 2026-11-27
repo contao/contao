@@ -11,6 +11,8 @@ services:
         class: Contao\ManagerBundle\Command\DebugPluginsCommand
         arguments:
             - '@kernel'
+            - '%kernel.bundles%'
+            - '%kernel.bundles_metadata%'
 
     contao_manager.command.dotenv_dump:
         class: Symfony\Component\Dotenv\Command\DotenvDumpCommand
