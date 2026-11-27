@@ -71,7 +71,7 @@
                             <p>{{ languages[lang] }}</p>
                             {% for field, value in data %}
                                 {% if value|default %}
-                                    {{ value }} ({{ 'MSC.aw_' ~ field|trans }})<br>
+                                    {{ value }} ({{ ('MSC.aw_' ~ field)|trans }})<br>
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
