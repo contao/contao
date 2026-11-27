@@ -395,6 +395,9 @@
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
         <target>Le Lazy Loading doit être activé si l’attribut sizes est défini sur « auto ».</target>
       </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Veuillez additionner %d et %d.</target>

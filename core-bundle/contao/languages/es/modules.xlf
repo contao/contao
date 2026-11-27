@@ -293,14 +293,6 @@
         <source>Generates a login form</source>
         <target>Este módulo añade un formulario que permite a un miembro conectarse. Una vez que se haya conectado podrá acceder a las páginas protegidas con contraseña.</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>Desconexión automática</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>Cierra la sesión de un miembro automáticamente</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Datos personales</target>

@@ -393,6 +393,9 @@
       <trans-unit id="ERR.lazyLoadingSizesAuto">
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
       </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>لطفا %d و %d را با هم جمع نمایید.</target>

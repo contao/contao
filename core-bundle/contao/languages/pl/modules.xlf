@@ -293,14 +293,6 @@
         <source>Generates a login form</source>
         <target>Ten moduł osadza na stronie formularz, poprzez który użytkownik może się zalogować. Podczas gdy użytkownik jest zalogowany, posiada dostęp do stron chronionych hasłem (jeśli oczywiście posiada nadane odpowiednie uprawnienia).</target>
       </trans-unit>
-      <trans-unit id="FMD.logout.0">
-        <source>Automatic logout</source>
-        <target>Automatyczne wylogowanie</target>
-      </trans-unit>
-      <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a member</source>
-        <target>Automatycznie wylogowuje użytkownika</target>
-      </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Osobiste informacje</target>

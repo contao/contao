@@ -521,7 +521,7 @@ class Combiner extends System
 				{
 					if ($matches[1][0] == "'")
 					{
-						$strData = str_replace("'", "\\'", $strData);
+						$strData = str_replace(array('\\', "'"), array('\\\\', "\\'"), $strData);
 					}
 					else
 					{

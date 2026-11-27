@@ -28,8 +28,8 @@ class TrustedDevice
     #[GeneratedValue(strategy: 'AUTO')]
     protected int|null $id = null;
 
-    #[Column(type: 'datetime')]
-    protected \DateTimeInterface $created;
+    #[Column(type: 'datetime_immutable')]
+    protected \DateTimeImmutable $created;
 
     #[Column(type: 'string', nullable: true)]
     protected string|null $userClass = null;
@@ -52,7 +52,7 @@ class TrustedDevice
     public function __construct(User $user)
     {
         $this->userId = $user->id;
-        $this->created = new \DateTime();
+        $this->created = new \DateTimeImmutable();
         $this->userClass = $user::class;
     }
 
@@ -75,6 +75,10 @@ class TrustedDevice
 
     public function setCreated(\DateTimeInterface $created): self
     {
+        if (!$created instanceof \DateTimeImmutable) {
+            $created = \DateTimeImmutable::createFromInterface($created);
+        }
+
         $this->created = $created;
 
         return $this;

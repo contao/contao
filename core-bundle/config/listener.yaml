@@ -264,6 +264,14 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
             - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_article, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_content, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_page, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_member, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_member_group, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_user, target: config.onbeforesubmit }
+            - { name: contao.callback, table: tl_user_group, target: config.onbeforesubmit }
 
     contao.listener.data_container.template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
@@ -329,6 +337,7 @@ services:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
             - '@contao.doctrine.dca_schema_provider'
+            - '@contao.doctrine.escargot_schema_provider'
             - '@messenger.receiver_locator'
 
     contao.listener.exception_converter:

@@ -104,7 +104,7 @@ class RootPageDependentSelectListener
                 ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
                 StringUtil::specialchars($title),
-                StringUtil::specialchars(str_replace("'", "\\'", $title)),
+                StringUtil::specialchars(str_replace(['\\', "'"], ['\\\\', "\\'"], $title), false, true),
                 Image::getHtml('alias.svg', $title),
             );
         }

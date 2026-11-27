@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpClient\Psr18Client;
 
 trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s" has been deprecated and will no longer work in Contao 6. Use the feed reader module instead.', __CLASS__);
 
@@ -52,7 +53,14 @@ class ModuleRssReader extends Module
 			return $objTemplate->parse();
 		}
 
+		if (!method_exists(\SimplePie::class, 'set_http_client'))
+		{
+			throw new \RuntimeException('The RSS reader requires simplepie/simplepie 1.9.0 or later. Please update simplepie/simplepie.');
+		}
+
+		$httpClient = new Psr18Client(System::getContainer()->get('contao.http_client.no_private_network_except_root_pages'));
 		$this->objFeed = new \SimplePie();
+		$this->objFeed->set_http_client($httpClient, $httpClient, $httpClient);
 		$arrUrls = StringUtil::trimsplit('[\n\t ]', trim($this->rss_feed));
 
 		if (\count($arrUrls) > 1)

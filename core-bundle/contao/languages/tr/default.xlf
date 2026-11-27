@@ -397,6 +397,10 @@
         <source>Lazy loading must be enabled if the sizes attribute is set to &quot;auto&quot;.</source>
         <target>Sizes özniteliği &quot;auto&quot; olarak ayarlanmışsa yavaş yükleme etkinleştirilmelidir.</target>
       </trans-unit>
+      <trans-unit id="ERR.fragmentResponseException">
+        <source>This element cannot be previewed.</source>
+        <target>Bu bileşen ön izlenemez.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>
