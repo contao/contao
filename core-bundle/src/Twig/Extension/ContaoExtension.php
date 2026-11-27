@@ -41,6 +41,7 @@ use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\IntlRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
@@ -396,6 +397,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFilter(
                 'deserialize',
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
+            ),
+            new TwigFilter(
+                'country_name',
+                [IntlRuntime::class, 'countryName'],
             ),
         ];
     }

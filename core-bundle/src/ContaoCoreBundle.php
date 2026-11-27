@@ -133,7 +133,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
         $container->addCompilerPass(new AccessDecisionStrategyPass());
-        $container->addCompilerPass(new RegisterTwigExtensionsPass());
+        $container->addCompilerPass(new RegisterTwigExtensionsPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
     }
 
     public static function getVersion(): string

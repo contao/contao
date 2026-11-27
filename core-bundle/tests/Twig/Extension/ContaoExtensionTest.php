@@ -168,6 +168,7 @@ class ContaoExtensionTest extends TestCase
             'input_encoded_to_plain_text',
             'html_to_plain_text',
             'deserialize',
+            'country_name',
         ];
 
         $this->assertCount(\count($expectedFilters), $filters);

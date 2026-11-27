@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\String\StringExtension;
 
 class RegisterTwigExtensionsPassTest extends TestCase
@@ -31,5 +32,20 @@ class RegisterTwigExtensionsPassTest extends TestCase
 
         $this->assertSame(StringExtension::class, $definition->getClass());
         $this->assertArrayHasKey('twig.extension', $definition->getTags());
+    }
+
+    public function testRegistersIntlExtensionWithHigherPriority(): void
+    {
+        $container = new ContainerBuilder();
+
+        (new RegisterTwigExtensionsPass())->process($container);
+
+        $this->assertTrue(class_exists(IntlExtension::class));
+        $this->assertTrue($container->hasDefinition('twig.extension.intl'));
+
+        $definition = $container->getDefinition('twig.extension.intl');
+
+        $this->assertSame(IntlExtension::class, $definition->getClass());
+        $this->assertSame([['priority' => 1]], $definition->getTag('twig.extension'));
     }
 }

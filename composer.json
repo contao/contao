@@ -196,7 +196,8 @@
         "playwright-php/playwright": "^1.6",
         "sebastian/diff": "^7.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
-        "symfony/browser-kit": "^7.4"
+        "symfony/browser-kit": "^7.4",
+        "twig/intl-extra": "^3.0"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",

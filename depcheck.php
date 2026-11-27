@@ -121,6 +121,9 @@ return (new Configuration())
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
 
+    // The intl extension is only registered if the package is installed.
+    ->ignoreErrorsOnPackage('twig/intl-extra', [ErrorType::DEV_DEPENDENCY_IN_PROD])
+
     // We only use the assets from the web-auth/webauthn-stimulus package.
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 ;

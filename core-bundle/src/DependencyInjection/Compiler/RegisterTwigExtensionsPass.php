@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Twig\Extra\Intl\IntlExtension;
 use Twig\Extra\String\StringExtension;
 
 class RegisterTwigExtensionsPass implements CompilerPassInterface
@@ -25,5 +26,12 @@ class RegisterTwigExtensionsPass implements CompilerPassInterface
         $stringExtension->addTag('twig.extension');
 
         $container->setDefinition('twig.extension.string', $stringExtension);
+
+        if (class_exists(IntlExtension::class)) {
+            $intlExtension = new Definition(IntlExtension::class);
+            $intlExtension->addTag('twig.extension', ['priority' => 1]);
+
+            $container->setDefinition('twig.extension.intl', $intlExtension);
+        }
     }
 }

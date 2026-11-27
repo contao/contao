@@ -1576,6 +1576,11 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
+    contao.twig.intl_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\IntlRuntime
+        arguments:
+            - '@contao.intl.countries'
+
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
