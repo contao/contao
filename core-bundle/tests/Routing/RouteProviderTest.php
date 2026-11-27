@@ -599,6 +599,8 @@ class RouteProviderTest extends TestCase
             0 => $this->mockRootPage('de', 'german-root', false),
         ];
 
+        $pages[1]->rootSorting = $pages[2]->rootSorting;
+
         $routeNames = [
             'tl_page.'.$pages[0]->id.'.root',
             'tl_page.'.$pages[1]->id.'.root',
@@ -618,6 +620,7 @@ class RouteProviderTest extends TestCase
         ];
 
         $pages[0]->urlPrefix = 'en';
+        $pages[1]->rootSorting = $pages[2]->rootSorting;
         $pages[1]->urlPrefix = 'en';
         $pages[2]->urlPrefix = 'de';
 
