@@ -2455,19 +2455,20 @@ ul.sortable button {
 	line-height: 9px;
 	cursor: pointer;
 	transition: all .1s linear;
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-ul.sortable button:hover {
+ul.sortable button:not([disabled]):hover {
 	background: var(--form-button-hover);
 }
 
 ul.sortable button[disabled] {
 	color: var(--gray);
 	cursor: not-allowed;
-}
-
-ul.sortable button[disabled]:hover {
-	background: rgba(255,255,255,.7);
 }
 
 #picker-menu {
