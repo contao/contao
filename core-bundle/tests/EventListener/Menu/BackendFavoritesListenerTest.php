@@ -96,7 +96,7 @@ class BackendFavoritesListenerTest extends TestCase
                     'id' => 8,
                     'pid' => 7,
                     'tstamp' => 1671538402,
-                    'title' => 'Edit "fe_page"',
+                    'title' => 'Edit "app.scss"',
                     'url' => '/contao?do=files&act=source&id=files%2Fapp.scss',
                 ],
                 ['id' => 9, 'pid' => 0, 'tstamp' => 1, 'title' => 'Second root', 'url' => '/contao?do=article'],
@@ -148,7 +148,7 @@ class BackendFavoritesListenerTest extends TestCase
 
         $this->assertCount(1, $nestedChildren);
         $this->assertSame('favorite_8', $nestedChildren[0]->getName());
-        $this->assertSame('Edit "fe_page"', $nestedChildren[0]->getLabel());
+        $this->assertSame('Edit "app.scss"', $nestedChildren[0]->getLabel());
         $this->assertSame('/contao?do=files&act=source&id=files%2Fapp.scss', $nestedChildren[0]->getUri());
         $this->assertFalse($nestedChildren[0]->isCurrent());
 

@@ -108,7 +108,6 @@ class BackendIndex extends Backend
 		$objTemplate->curUsername = Input::post('username') ?: '';
 		$objTemplate->targetPath = base64_encode($targetPath);
 		$objTemplate->webauthnSuccessUrl = $targetPath;
-		$objTemplate->loginMenu = $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig');
 
 		// Backwards compatibility
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
@@ -118,6 +117,7 @@ class BackendIndex extends Backend
 		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
+		$objTemplate->loginMenu = Template::once(static fn (): string => $container->get('twig')->render('@Contao/backend/chrome/login_menu.html.twig'));
 
 		return $objTemplate->getResponse();
 	}
