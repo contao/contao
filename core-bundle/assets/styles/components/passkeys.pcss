@@ -37,3 +37,10 @@
 .tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
     display: none;
 }
+
+@media (width < 768px) {
+    .passkeys .credential-table td.actions,
+    .passkeys .credential-table td.created {
+        width: auto;
+    }
+}

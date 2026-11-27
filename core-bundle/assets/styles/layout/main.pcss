@@ -79,3 +79,19 @@
         }
     }
 }
+
+@media (width < 992px) {
+    #main {
+        width: 100%;
+        flex-shrink: 0;
+        position: relative;
+        transition: transform 0.2s ease;
+        will-change: transform;
+    }
+}
+
+@media (width < 768px) {
+    #main .content {
+        margin: 0 5px 5px;
+    }
+}

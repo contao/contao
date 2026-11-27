@@ -244,3 +244,100 @@
 #tmenu .icon-jobs {
     background: var(--icon-jobs) center center no-repeat;
 }
+
+@media (width < 992px) {
+    #tmenu .burger {
+        display: inline;
+    }
+}
+
+@media (width < 768px) {
+    #tmenu > li > a {
+        width: 16px;
+        margin-bottom: -2px;
+        position: relative;
+    }
+
+    #tmenu > li > a .label {
+        border: 0;
+        clip-path: inset(50%);
+        height: 1px;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
+    #tmenu :not(.icon-alert) .icon {
+        width: 18px;
+        height: 18px;
+        margin: -2px -1px;
+    }
+
+    #tmenu .icon-alert .icon {
+        width: 14px;
+        height: 14px;
+        margin: 0 1px;
+    }
+
+    #tmenu sup {
+        top: 6px;
+        font-size: 0.5rem;
+    }
+
+    #tmenu .profile button {
+        width: 40px;
+        padding-right: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
+        background: var(--icon-user-profile) center center no-repeat;
+        background-size: 18px;
+    }
+}
+
+@media (width < 600px) {
+    #home {
+        min-width: 22px;
+        padding: 12px;
+    }
+
+    #header .app-title {
+        display: none;
+    }
+
+    #header:has(.badge-title) {
+        padding-top: 18px;
+    }
+
+    #header .badge-title {
+        position: absolute;
+        inset: 0 0 auto;
+        margin: -18px 0 0;
+        border-radius: 0;
+        background-color: var(--invert-bg);
+        color: var(--invert-text);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: unset;
+    }
+}
+
+@media (width < 480px) {
+    #tmenu .icon-manual {
+        display: none;
+    }
+}
+
+@media (width >= 768px) {
+    #tmenu .icon-alert,
+    #tmenu .icon-manual {
+        img {
+            width: 16px;
+            align-items: center;
+        }
+    }
+}

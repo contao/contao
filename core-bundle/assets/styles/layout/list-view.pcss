@@ -739,3 +739,31 @@
     top: -4px;
     z-index: 1;
 }
+
+@media (width < 768px) {
+    .tl_content_left {
+        width: 100%;
+        float: none;
+    }
+
+    .showColumns th,
+    .showColumns td {
+        display: block;
+    }
+
+    .showColumns th:empty {
+        display: none;
+    }
+
+    .tl_label {
+        white-space: normal;
+    }
+
+    .list_view .tl_listing img.theme_preview {
+        display: none;
+    }
+
+    .tl_show td {
+        word-break: break-word;
+    }
+}

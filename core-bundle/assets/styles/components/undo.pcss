@@ -66,3 +66,13 @@
         width: 1%;
     }
 }
+
+@media (width < 768px) {
+    .tl_undo_header {
+        grid-template-columns: 2fr 3fr;
+    }
+
+    .tl_undo_header div:not(.tstamp, .source) {
+        display: none;
+    }
+}

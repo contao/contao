@@ -1,0 +1,73 @@
+.tl_modulewizard {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 2px;
+}
+
+.tl_modulewizard td {
+    position: relative;
+    padding: 0 3px 0 0;
+}
+
+.tl_modulewizard th {
+    font-size: 0.75rem;
+    font-weight: 400;
+    padding: 0 6px 1px 0;
+}
+
+@media (resolution >= 2dppx) {
+    .tl_modulewizard th {
+        font-weight: 300;
+    }
+}
+
+.tl_modulewizard td:first-child,
+.tl_modulewizard td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.tl_modulewizard .tl_select_wrapper {
+    margin: 2px 0;
+}
+
+.js .tl_modulewizard input.mw_enable {
+    position: absolute;
+    opacity: 0;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+}
+
+.js .tl_modulewizard input.mw_enable + label {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    text-indent: -999em;
+    background: var(--icon-invisible) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.js .tl_modulewizard input.mw_enable:focus + label {
+    outline: 5px auto -webkit-focus-ring-color;
+}
+
+.js .tl_modulewizard input.mw_enable:checked + label {
+    background-image: var(--icon-visible);
+}
+
+@media (width < 768px) {
+    .tl_modulewizard td:first-child {
+        width: 1%;
+    }
+
+    .tl_modulewizard td:first-child .tl_select_wrapper {
+        max-width: 52vw;
+    }
+}
+
+@media (width < 480px) {
+    .tl_modulewizard td:first-child .tl_select_wrapper {
+        max-width: 48vw;
+    }
+}

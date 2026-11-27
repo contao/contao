@@ -113,3 +113,76 @@ fieldset > .widget-group {
 .widget:has(.tl_checkbox_single_container) {
     align-self: center;
 }
+
+@media (width < 768px) {
+    fieldset > .widget-group {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media (width >= 768px) {
+    .widget-group {
+        --widget-gap-cols: 30px;
+    }
+
+    .w16,
+    .w25,
+    .w33,
+    .w50,
+    .w66,
+    .w75 {
+        --widget-cols: 6;
+    }
+
+    /* Backwards compatibility */
+    :not(.widget-group) > .m12 {
+        margin: 0 15px;
+        padding: 16px 0;
+    }
+
+    :not(.widget-group) > .w50 {
+        width: calc(50% - 30px);
+        float: left;
+        min-height: 80px;
+    }
+
+    .nogrid :not(.widget-group) > :is(.w16, .w25, .w33, .w50, .w66, .w75) {
+        float: none;
+    }
+
+    :not(.widget-group) > .cbx {
+        min-height: 46px;
+    }
+
+    :not(.widget-group) > .cbx.m12 {
+        min-height: 80px;
+        box-sizing: border-box;
+    }
+}
+
+@media (width >= 1280px) {
+    .w16 {
+        --widget-cols: 2;
+    }
+
+    .w25 {
+        --widget-cols: 3;
+    }
+
+    .w33 {
+        --widget-cols: 4;
+    }
+
+    .w50 {
+        --widget-cols: 6;
+    }
+
+    .w66 {
+        --widget-cols: 8;
+    }
+
+    .w75 {
+        --widget-cols: 9;
+    }
+}

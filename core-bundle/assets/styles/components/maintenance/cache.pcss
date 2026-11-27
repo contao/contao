@@ -38,3 +38,14 @@
 #tl_maintenance_search .tl_submit_container {
     margin-top: 10px;
 }
+
+@media (width < 768px) {
+    #tl_maintenance_cache table {
+        width: 100%;
+    }
+
+    #tl_maintenance_cache tr th:last-child,
+    #tl_maintenance_cache tr td:last-child {
+        display: none;
+    }
+}

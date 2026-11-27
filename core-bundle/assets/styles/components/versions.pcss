@@ -25,3 +25,30 @@
     border: 0;
     border-radius: var(--border-radius);
 }
+
+@media (width < 768px) {
+    #tl_versions table tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        td,
+        th {
+            display: block;
+            border-top: 0;
+        }
+
+        th:last-child {
+            display: none;
+        }
+
+        td:first-child,
+        td:nth-child(2) {
+            border-top: 2px solid var(--border);
+        }
+
+        td:last-child {
+            width: auto;
+            grid-column: 1 / -1;
+        }
+    }
+}

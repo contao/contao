@@ -15,3 +15,30 @@
 #left .version a {
     color: var(--nav-group);
 }
+
+@media (width < 992px) {
+    #left {
+        visibility: hidden;
+        width: 240px;
+        flex-shrink: 0;
+        margin-left: -240px;
+        transition: transform 0.2s ease, visibility 0.2s ease;
+        will-change: transform, visibility;
+    }
+
+    #left.active {
+        visibility: visible;
+        transform: translateX(240px);
+
+        + #main,
+        + #contao-main #main {
+            transform: translateX(240px);
+        }
+    }
+}
+
+@media (width >= 1280px) {
+    #sbtog {
+        display: none;
+    }
+}
