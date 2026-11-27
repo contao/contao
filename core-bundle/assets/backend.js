@@ -1,6 +1,6 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
-import '@hotwired/turbo';
+import { PageSnapshot, session } from '@hotwired/turbo';
 import PasswordVisibility from '@stimulus-components/password-visibility';
 import { AuthenticationController, RegistrationController } from '@web-auth/webauthn-stimulus';
 import TextareaAutogrow from 'stimulus-textarea-autogrow';
@@ -80,6 +80,23 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
 
     e.preventDefault();
     e.detail.visit(e.detail.response);
+});
+
+// Turbo reloads the page if a 4xx form response has the "turbo-visit-control=reload"
+// meta tag, so render a 409 page the same way it renders a 5xx response (see #10589).
+document.documentElement.addEventListener('turbo:before-fetch-response', async (e) => {
+    const response = e.detail.fetchResponse;
+
+    if (409 !== response.statusCode) {
+        return;
+    }
+
+    e.preventDefault();
+
+    const snapshot = PageSnapshot.fromHTMLString(await response.responseHTML);
+
+    await session.view.renderError(snapshot, session.navigator.currentVisit);
+    session.view.clearSnapshotCache();
 });
 
 // Call the beforeCache() function on all controllers implementing it. This
