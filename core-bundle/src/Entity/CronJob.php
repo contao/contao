@@ -33,13 +33,18 @@ class CronJob
     #[Column(type: 'string', length: 255, nullable: false, options: ['charset' => 'ascii', 'collation' => 'ascii_bin'])]
     protected string $name;
 
-    #[Column(type: 'datetime', nullable: false)]
-    protected \DateTimeInterface $lastRun;
+    #[Column(type: 'datetime_immutable', nullable: false)]
+    protected \DateTimeImmutable $lastRun;
 
     public function __construct(string $name, \DateTimeInterface|null $lastRun = null)
     {
         $this->name = $name;
-        $this->lastRun = $lastRun ?? new \DateTime();
+
+        if ($lastRun && !$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
+        $this->lastRun = $lastRun ?? new \DateTimeImmutable();
     }
 
     public function getId(): int
@@ -54,6 +59,10 @@ class CronJob
 
     public function setLastRun(\DateTimeInterface $lastRun): self
     {
+        if (!$lastRun instanceof \DateTimeImmutable) {
+            $lastRun = \DateTimeImmutable::createFromInterface($lastRun);
+        }
+
         $this->lastRun = $lastRun;
 
         return $this;
