@@ -398,6 +398,21 @@ tl_user_group:
         news:
             - '@news_archive_corporate'
         disable: 0
+    group_fields_news_basic:
+        tstamp: 1704067200
+        name: Fields | News | Basic
+        alexf:
+            - tl_news::headline
+            - tl_news::teaser
+            - tl_news_archive::title
+        disable: 0
+    group_records_news_create_update:
+        tstamp: 1704067200
+        name: Records | News | Create and update
+        cud:
+            - tl_news::create
+            - tl_news::update
+        disable: 0
     group_calendars_events:
         tstamp: 1704067200
         name: Calendars | Events | Edit
@@ -594,6 +609,33 @@ tl_user:
         inherit: group
         disable: 0
         dateAdded: 1704067200
+    user_news_writer:
+        tstamp: 1704067200
+        username: news-writer
+        name: News writer
+        email: news-writer@example.com
+        language: en
+        password: backend
+        groups:
+            - '@group_news_corporate'
+            - '@group_fields_news_basic'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
+    user_news_author:
+        tstamp: 1704067200
+        username: news-author
+        name: News author
+        email: news-author@example.com
+        language: en
+        password: backend
+        groups:
+            - '@group_news_corporate'
+            - '@group_fields_news_basic'
+            - '@group_records_news_create_update'
+        inherit: group
+        disable: 0
+        dateAdded: 1704067200
     user_calendar_editor:
         tstamp: 1704067200
         username: calendar-editor
@@ -773,6 +815,14 @@ personal_access_token:
         <<: *backend_token_defaults
         id: !!binary zoTAH/eAWFyUSkDkAtMj8A==
         userId: '@user_news_editor'
+    user_news_writer_token:
+        <<: *backend_token_defaults
+        id: !!binary 6xHdyzkmVbmXbQlYUEo05Q==
+        userId: '@user_news_writer'
+    user_news_author_token:
+        <<: *backend_token_defaults
+        id: !!binary fH5uy5g4W0S3vQa4nzgXqA==
+        userId: '@user_news_author'
     user_calendar_editor_token:
         <<: *backend_token_defaults
         id: !!binary nP1xtZA0VA29W5poBEIqnQ==
