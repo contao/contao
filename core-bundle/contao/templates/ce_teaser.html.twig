@@ -11,6 +11,6 @@
 {% block content %}
 
     {{ text|default|sanitize_html('contao')|csp_inline_styles|encode_email|insert_tag_html }}
-    <p class="more"><a href="{{ href }}" title="{{ 'MSC.readMore'|trans([headline]|insert_tag_html) }}">{{ 'MSC.more'|trans }}<span class="invisible"> {{ headline|insert_tag_html }}</span></a></p>
+    <p class="more"><a href="{{ href }}" title="{{ 'MSC.readMore'|trans([headline])|insert_tag_html }}">{{ 'MSC.more'|trans }}<span class="invisible"> {{ headline|insert_tag_html }}</span></a></p>
 
 {% endblock %}
