@@ -2459,17 +2459,13 @@ ul.sortable button {
 	height: 16px;
 }
 
-ul.sortable button:hover {
+ul.sortable button:not([disabled]):hover {
 	background: var(--form-button-hover);
 }
 
 ul.sortable button[disabled] {
 	color: var(--gray);
 	cursor: not-allowed;
-}
-
-ul.sortable button[disabled]:hover {
-	background: rgba(255,255,255,.7);
 }
 
 #picker-menu {
