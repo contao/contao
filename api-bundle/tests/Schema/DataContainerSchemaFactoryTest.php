@@ -157,6 +157,35 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         $this->assertSame(['type' => 'string', 'contentMediaType' => 'text/html'], $schema['properties']['text']);
     }
 
+    public function testBuildsTheSchemaOnlyOncePerTableUntilItIsReset(): void
+    {
+        $counter = new \ArrayObject();
+
+        $GLOBALS['TL_DCA']['tl_content']['fields'] = [
+            'type' => [
+                'inputType' => 'select',
+                'options_callback' => static function () use ($counter): array {
+                    $counter->append(true);
+
+                    return ['a', 'b'];
+                },
+                'sql' => ['type' => 'string'],
+            ],
+        ];
+
+        $factory = new DataContainerSchemaFactory($this->createStub(ContaoFramework::class), new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))]), $this->relationResolver, $this->createLocaleSwitcher(), $this->createRelationDefinitionFactory(new WidgetConverterRegistry([new CoreWidgetConverter(new DateValueFormatter($this->createStub(ContaoFramework::class)))])), new DataContainerWidgetFactory());
+        $schema = $factory->create('tl_content');
+
+        $this->assertSame($schema, $factory->create('tl_content'));
+        $this->assertSame($schema['properties']['type'], $factory->createOperationSchemas('tl_content')['update']['properties']['type']);
+        $this->assertCount(1, $counter);
+
+        $factory->reset();
+        $factory->create('tl_content');
+
+        $this->assertCount(2, $counter);
+    }
+
     public function testRequiresExplicitWidgetSupportEvenWithSchemaOverrides(): void
     {
         $widget = new class extends Widget {
@@ -415,6 +444,8 @@ final class DataContainerSchemaFactoryTest extends ContaoTestCase
         );
 
         $GLOBALS['TL_DCA']['tl_content']['fields']['pid']['eval']['readonly'] = true;
+        $factory->reset();
+
         $this->assertTrue($factory->create('tl_content')['properties']['pid']['readOnly']);
     }
 

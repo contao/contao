@@ -26,9 +26,12 @@ use Contao\DC_Table;
 use Contao\System;
 use Contao\Validator as ContaoValidator;
 use Symfony\Component\Translation\LocaleSwitcher;
+use Symfony\Contracts\Service\ResetInterface;
 
-final class DataContainerSchemaFactory
+final class DataContainerSchemaFactory implements ResetInterface
 {
+    private array $schemas = [];
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly WidgetConverterRegistry $converters,
@@ -48,10 +51,14 @@ final class DataContainerSchemaFactory
      */
     public function create(string $table): array
     {
+        if (isset($this->schemas[$table])) {
+            return $this->schemas[$table];
+        }
+
         $this->framework->initialize();
 
         try {
-            return $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
+            return $this->schemas[$table] = $this->localeSwitcher->runWithLocale('en', fn () => $this->createTableSchema($table));
         } finally {
             $system = $this->framework->getAdapter(System::class);
             $system->loadLanguageFile('default');
@@ -95,6 +102,11 @@ final class DataContainerSchemaFactory
             'properties' => $properties,
             'additionalProperties' => false,
         ];
+    }
+
+    public function reset(): void
+    {
+        $this->schemas = [];
     }
 
     public function createOperationSchemas(string $table): array

@@ -18,6 +18,7 @@ use Contao\DC_Table;
 use Contao\SelectMenu;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Psr\Log\LoggerInterface;
 
 final class DataContainerWidgetFactoryTest extends ContaoTestCase
 {
@@ -78,11 +79,61 @@ final class DataContainerWidgetFactoryTest extends ContaoTestCase
             'status',
         );
 
+        $resolved = new DataContainerWidgetFactory()->resolve($field, $dc);
+
+        $this->assertArrayNotHasKey('options', $resolved->config['eval']);
+
+        $this->assertSame('previous', $dc->field);
+    }
+
+    public function testDocumentsAFieldWithoutOptionsWhenItsOptionsCallbackNeedsARecord(): void
+    {
+        $dc = $this->createDataContainer();
+        $exception = new \LogicException('The options depend on the current record.');
+
+        $field = new DataContainerFieldContext(
+            [
+                'inputType' => 'select',
+                'eval' => ['mandatory' => true],
+                'options_callback' => static fn () => throw $exception,
+            ],
+            'tl_test',
+            'status',
+        );
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('warning')
+            ->with('The options_callback of field "tl_test.status" failed without a record, so the field is resolved without it.', ['exception' => $exception])
+        ;
+
+        $resolved = new DataContainerWidgetFactory($logger)->resolve($field, $dc);
+
+        $this->assertArrayNotHasKey('options_callback', $resolved->config);
+        $this->assertArrayNotHasKey('options', $resolved->config['eval']);
+        $this->assertTrue($resolved->config['eval']['mandatory']);
+        $this->assertSame('previous', $dc->field);
+    }
+
+    public function testStillFailsWhenTheAttributesCannotBeResolvedWithoutTheOptionsCallback(): void
+    {
+        $dc = $this->createDataContainer();
+
+        $field = new DataContainerFieldContext(
+            [
+                'inputType' => 'select',
+                'foreignKey' => 'tl_page.title',
+                'options_callback' => static fn () => throw new \LogicException('Callback failed'),
+            ],
+            'tl_test',
+            'status',
+        );
+
         try {
             new DataContainerWidgetFactory()->resolve($field, $dc);
             $this->fail('Expected a widget attribute resolution error.');
         } catch (\RuntimeException $error) {
-            $this->assertSame($exception, $error->getPrevious());
             $this->assertStringContainsString('tl_test.status', $error->getMessage());
         }
 
