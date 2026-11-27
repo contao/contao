@@ -1157,6 +1157,7 @@ services:
             - '@contao.framework'
             - '@contao.routing.locale_candidates'
             - '@contao.routing.page_registry'
+            - '%contao.backend.route_prefix%'
 
     contao.routing.route_provider:
         class: Contao\CoreBundle\Routing\RouteProvider

@@ -84,7 +84,7 @@ class RegisterPagesPass implements CompilerPassInterface
                 if ('error_404' === $type) {
                     $container
                         ->getDefinition('contao.routing.route_404_provider')
-                        ->setArgument(3, $this->getControllerName($reference, $definition, $attributes))
+                        ->setArgument('$controller', $this->getControllerName($reference, $definition, $attributes))
                     ;
                 }
             }

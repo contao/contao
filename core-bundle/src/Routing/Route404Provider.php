@@ -36,6 +36,7 @@ class Route404Provider extends AbstractPageRouteProvider
         ContaoFramework $framework,
         CandidatesInterface $candidates,
         PageRegistry $pageRegistry,
+        private readonly string $backendRoutePrefix,
         private readonly string $controller = ErrorPageController::class,
     ) {
         parent::__construct($framework, $candidates, $pageRegistry);
@@ -171,10 +172,11 @@ class Route404Provider extends AbstractPageRouteProvider
         $requirements = ['_url_fragment' => '.*'];
         $path = '/{_url_fragment}';
 
+        // Let the router answer 405 and 404 for requests below the API prefix
         $routes['tl_page.'.$page->id.'.error_404'] = new Route(
             $path,
             $defaults,
-            $requirements,
+            ['_url_fragment' => '(?!'.preg_quote(ltrim($this->backendRoutePrefix, '/')).'/api(?:/|$)).*'],
             ['utf8' => true],
             $page->domain,
             $page->rootUseSSL ? 'https' : 'http',
