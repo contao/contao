@@ -80,10 +80,13 @@ class ModuleQuicknav extends Module
 		}
 
 		$this->Template->formId = 'tl_quicknav_' . $this->id;
+		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
+		$this->Template->customLabel = $this->customLabel;
+
+		// Backwards compatibility
 		$this->Template->targetPage = $GLOBALS['TL_LANG']['MSC']['targetPage'];
 		$this->Template->button = $GLOBALS['TL_LANG']['MSC']['go'];
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
-		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
 	}
 
 	/**

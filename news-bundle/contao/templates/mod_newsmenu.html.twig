@@ -1,9 +1,10 @@
+{% trans_default_domain 'contao_default' %}
 {% extends '@Contao/block_unsearchable.html.twig' %}
 
 {% block content %}
 
     {% if not items|default and not days|default %}
-        <p class="empty">{{ empty }}</p>
+        <p class="empty">{{ 'MSC.empty'|trans }}</p>
     {% else %}
         {% if yearly|default %}
             <ul class="level_1">
@@ -19,9 +20,9 @@
             <table class="minicalendar">
                 <thead>
                 <tr>
-                    <th class="head previous"><a href="{{ prevHref }}" title="{{ prevTitle }}">{{ prevLabel }}</a></th>
+                    <th class="head previous"><a href="{{ prevHref }}" title="{{ prevTitle }}">{{ 'MSC.news_previous'|trans }}</a></th>
                     <th colspan="5" class="head current">{{ current }}</th>
-                    <th class="head next"><a href="{{ nextHref }}" title="{{ nextTitle }}">{{ nextLabel }}</a></th>
+                    <th class="head next"><a href="{{ nextHref }}" title="{{ nextTitle }}">{{ 'MSC.news_next'|trans }}</a></th>
                 </tr>
                 <tr>
                     {% for day in days %}

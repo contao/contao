@@ -142,6 +142,9 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 		}
 
 		$objTemplate->jobs = $arrJobs;
+		$objTemplate->showHelp = (bool) Config::get('showHelp');
+
+		// Backwards compatibility
 		$objTemplate->headline = $GLOBALS['TL_LANG']['tl_maintenance']['clearCache'];
 		$objTemplate->job = $GLOBALS['TL_LANG']['tl_maintenance']['job'];
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];

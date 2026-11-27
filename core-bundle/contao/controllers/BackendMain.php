@@ -100,12 +100,6 @@ class BackendMain extends Backend
 
 		$this->Template = new BackendTemplate('be_main');
 		$this->Template->version = $version;
-
-		if (isset($GLOBALS['TL_LANG']['MSC']['version']))
-		{
-			$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
-		}
-
 		$this->Template->main = '';
 
 		// Ajax request
@@ -193,6 +187,7 @@ class BackendMain extends Backend
 		// Add the versions overview
 		Versions::addToTemplate($objTemplate);
 
+		// Backwards compatibility
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
 		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');

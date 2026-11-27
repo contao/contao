@@ -199,7 +199,9 @@ class ModuleCustomnav extends Module
 
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
-		$this->Template->skipNavigation = $GLOBALS['TL_LANG']['MSC']['skipNavigation'];
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
+
+		// Backwards compatibility
+		$this->Template->skipNavigation = $GLOBALS['TL_LANG']['MSC']['skipNavigation'];
 	}
 }
