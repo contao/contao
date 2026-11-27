@@ -851,7 +851,7 @@ class tl_files extends Backend
 			return '';
 		}
 
-		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace(array('\\', "'"), array('\\\\', "\\'"), $row['fileNameEncoded']), false, true) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

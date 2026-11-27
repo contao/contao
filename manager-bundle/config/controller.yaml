@@ -8,3 +8,5 @@ services:
             - '@security.helper'
             - '@request_stack'
             - '@contao_manager.jwt_manager'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'

@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Qui è possibile definire la larghezza desiderata dell&apos;immagine nel layout; la dimensione effettiva va definita tramite CSS. Esempio: &lt;em&gt;auto, (max-width: 600px) 100vw, 50vw &lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -158,6 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
         <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>L&apos;immagine verrà ridimensionata in modo proporzionale, in modo che nessun lato superi le dimensioni specificate. Questo comportamento è simile al valore &lt;em&gt; contain &lt;/em&gt;nei CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
@@ -165,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>L&apos;immagine verrà ridimensionata in base alle dimensioni esatte specificate, ritagliandola se necessario e preservando la parte importante, se specificato. Questo funziona in modo simile al valore &lt;em&gt;cover&lt;/em&gt; nei CSS.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>

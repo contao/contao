@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
-use GuzzleHttp\Promise\Is;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\RejectionException;
 use Symfony\Component\Process\Process;
 
@@ -45,7 +45,7 @@ class ProcessUtilTest extends TestCase
         $process = $this->mockProcess($successful, $autostart);
         $promise = $util->createPromise($process, $autostart);
 
-        $this->assertTrue(Is::pending($promise));
+        $this->assertSame(PromiseInterface::PENDING, $promise->getState());
 
         if ($successful) {
             $this->assertSame('Success!', $promise->wait());
@@ -58,8 +58,7 @@ class ProcessUtilTest extends TestCase
             }
         }
 
-        $this->assertSame($successful, Is::fulfilled($promise));
-        $this->assertSame(!$successful, Is::rejected($promise));
+        $this->assertSame($successful ? PromiseInterface::FULFILLED : PromiseInterface::REJECTED, $promise->getState());
     }
 
     public static function promiseTestProvider(): iterable

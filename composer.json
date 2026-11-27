@@ -70,7 +70,7 @@
         "doctrine/orm": "^2.17",
         "doctrine/persistence": "^3.2",
         "dragonmantank/cron-expression": "^2.3",
-        "enshrined/svg-sanitize": "^0.22",
+        "enshrined/svg-sanitize": "^1.0",
         "friendsofsymfony/http-cache": "^2.15.1",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "guzzlehttp/promises": "^1.5 || ^2.0",
@@ -162,7 +162,7 @@
         "symfony/var-dumper": "^6.4",
         "symfony/web-profiler-bundle": "^6.4",
         "symfony/yaml": "^6.4",
-        "terminal42/escargot": "^1.6",
+        "terminal42/escargot": "^1.7.1 || ^2.0.1",
         "terminal42/service-annotation-bundle": "^1.1",
         "tijsverkoyen/css-to-inline-styles": "^2.0",
         "toflar/cronjob-supervisor": "^2.0",
@@ -310,7 +310,7 @@
     "scripts": {
         "all": [
             "@rector",
-            "@ecs",
+            "@cs-fixer",
             "@service-linter",
             "@monorepo-tools",
             "@unit-tests",
@@ -318,7 +318,7 @@
             "@phpstan",
             "@depcheck"
         ],
-        "ecs": [
+        "cs-fixer": [
             "@ecs-default",
             "@ecs-legacy",
             "@ecs-template"

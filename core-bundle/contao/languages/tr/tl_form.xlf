@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
-        <target>Bu seçenek etkinleştirildiğinde, boş alanlar form verilerine katılmaz.</target>
+        <target>Etkinleştirildiğinde, boş alanlar form verilerine katılmaz.</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmtpy.1">
         <source>Hide empty fields in the e-mail.</source>
-        <target>Bu seçenek etkinleştirildiğinde, boş alanlar e-postada görüntülenmez.</target>
+        <target>Etkinleştirildiğinde, boş alanlar e-postada görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_form.storeValues.0">
         <source>Store data</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_form.allowTags.1">
         <source>Allow HTML tags in form fields.</source>
-        <target>Bu seçenek etkinleştirildiğinde, form alanlarında HTML kod imleri kullanılabilir.</target>
+        <target>Etkinleştirildiğinde, form alanlarında HTML kod imleri kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form.ajax.0">
         <source>Submit via Ajax</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_form.ajax.1">
         <source>Submit the form via Ajax instead of reloading the page.</source>
-        <target>Bu seçenek etkinleştirildiğinde, form gönderilirken sayfanın yeniden yüklenmesi yerine AJAX kullanılır. </target>
+        <target>Etkinleştirildiğinde, form gönderilirken sayfanın yeniden yüklenmesi yerine AJAX kullanılır. </target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>

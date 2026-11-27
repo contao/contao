@@ -641,12 +641,10 @@ class ImageFactoryTest extends TestCase
         // Do not use Path::join here (see #4596)
         $uploadDir ??= $this->getTempDir().'/images';
 
-        if (null === $imagineOptions) {
-            $imagineOptions = [
-                'jpeg_quality' => 80,
-                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-            ];
-        }
+        $imagineOptions ??= [
+            'jpeg_quality' => 80,
+            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+        ];
 
         return new ImageFactory(
             $resizer,

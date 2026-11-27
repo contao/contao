@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.1">
         <source>Send the newsletter as plain text e-mail without the HTML content.</source>
-        <target>Bu seçenek etkinleştirildiğinde, haber bülteni HTML içerik olmadan düz yazı olarak gönderilir.</target>
+        <target>Etkinleştirildiğinde, haber bülteni HTML içerik olmadan düz yazı olarak gönderilir.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.externalImages.0">
         <source>External images</source>
