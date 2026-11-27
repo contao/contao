@@ -193,6 +193,8 @@ final class GlobalStateWatcher implements Extension
             /** @noinspection ClassnameLiteralInspection */
             foreach ([
                 'Composer\InstalledVersions',
+                'Contao\CoreBundle\Tests\DependencyInjection\ContaoCoreExtensionTest',
+                'Contao\CoreBundle\Tests\Twig\Studio\TemplateSnapshotsTest',
                 'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
                 'DASPRiD\Enum\AbstractEnum',
