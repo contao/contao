@@ -17,6 +17,10 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
+    public function __construct(private readonly array $hashOptions = [])
+    {
+    }
+
     public function isBackupCode(object $user, string $code): bool
     {
         if (!$user instanceof User) {
@@ -89,7 +93,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
 
         $user->backupCodes = json_encode(
             array_map(
-                static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
+                fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT, $this->hashOptions),
                 $backupCodes,
             ),
             JSON_THROW_ON_ERROR,
