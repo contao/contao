@@ -338,7 +338,7 @@ class ListWizardTest extends AbstractContaoMonorepoE2ETestCase
         $this->assertSame([...self::FIXTURE, ''], $this->tree($backend));
 
         $crawler = $this->requestPage();
-        $this->assertSame(['Foo', 'Qux', 'Quux', ''], $crawler->filter('.content-list > ul > li')->each(static fn ($li) => trim($li->getNode(0)->firstChild?->textContent ?? '')));
+        $this->assertSame(['Foo', 'Qux', 'Quux', ''], $crawler->filter('.content-list > ul > li')->each(static fn ($li) => trim($li->getNode(0)->firstChild->textContent ?? '')));
     }
 
     public function testBasicListWizardDoesNotNest(): void

@@ -39,6 +39,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Provide methods to modify the file system.
@@ -1403,6 +1404,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				throw new ResponseException(new Response(Message::generateUnwrapped($strMode, true), 500));
 			}
+			else
+			{
+				// Set the status code to 422, so that Turbo can handle the error (see #10584)
+				$mainRequest = System::getContainer()->get('request_stack')->getMainRequest();
+				$mainRequest->attributes->set('_contao_widget_errors', $mainRequest->attributes->get('_contao_widget_errors', new ConstraintViolationList()));
+			}
 		}
 
 		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateUploadButtons($this->strTable, $this);
@@ -1697,6 +1704,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				$this->isValid($id);
+
+				if (!file_exists($this->strRootDir . '/' . $id) || !$this->isMounted($id))
+				{
+					throw new AccessDeniedException('File or folder "' . $id . '" is not mounted or cannot be found.');
+				}
+
 				try
 				{
 					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $id)));

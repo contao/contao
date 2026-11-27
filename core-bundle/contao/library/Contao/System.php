@@ -430,7 +430,7 @@ abstract class System
 		// Prepare the XLIFF loader
 		$container = static::getContainer();
 		$xlfLoader = new XliffFileLoader($container->getParameter('kernel.project_dir'), true);
-		$strCacheDir = $container->getParameter('kernel.cache_dir');
+		$strCacheDir = $container->getParameter('kernel.build_dir');
 
 		if (null === self::$arrAvailableLanguageFiles)
 		{
@@ -475,7 +475,7 @@ abstract class System
 				}
 
 				// Also populate $GLOBALS['TL_LANG'] with the Symfony translations of the 'contao_' domains.
-				$catalogue = $container->get('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCatalogue($strLanguage);
+				$catalogue = $container->get('translator', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCatalogue($strCreateLang);
 
 				if ($catalogue instanceof MessageCatalogue)
 				{
@@ -502,14 +502,14 @@ abstract class System
 		// Handle single quotes in the deleteConfirm message
 		if ($strName == 'default' && isset($GLOBALS['TL_LANG']['MSC']['deleteConfirm']))
 		{
-			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
+			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace(array('\\', "'"), array('\\\\', "\\'"), $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 	}
 
 	/**
 	 * Check whether a language is installed
 	 *
-	 * @param boolean $strLanguage The language code
+	 * @param string $strLanguage The language code
 	 *
 	 * @return boolean True if the language is installed
 	 */
@@ -528,7 +528,7 @@ abstract class System
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
-			elseif (is_dir(static::getContainer()->getParameter('kernel.cache_dir') . '/contao/languages/' . $strLanguage))
+			elseif (is_dir(static::getContainer()->getParameter('kernel.build_dir') . '/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -566,7 +566,7 @@ abstract class System
 	 */
 	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" is deprecated and will no longer work in Contao 7. Use Symfony\'s HttpFoundation and kernel.response events instead.');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\System::setCookie()" is deprecated and will no longer work in Contao 7. Use Symfony’s HttpFoundation and kernel.response events instead.');
 
 		if (!$strPath)
 		{

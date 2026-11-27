@@ -11,7 +11,7 @@ resources, which then authenticate with bearer tokens.
 [Client ID Metadata Documents][3] and the authorization server and protected resource metadata endpoints
 ([RFC 8414][4], [RFC 9728][5]).**
 
-**This bundle is experimental**. Experimental features are not covered by Contao's backwards compatibility promise
+**This bundle is experimental**. Experimental features are not covered by Contao’s backwards compatibility promise
 and may change or be removed in any release.
 
 Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to

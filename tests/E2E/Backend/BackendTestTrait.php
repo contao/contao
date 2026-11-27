@@ -24,11 +24,11 @@ trait BackendTestTrait
 {
     private const string DUMMY_IMAGE = 'files/images/dummy.jpg';
 
-    private const string FIXTURE_USERS = 'users.yaml';
+    protected const string FIXTURE_USERS = 'users.yaml';
 
-    private const string FIXTURE_DEFAULT = 'default.yaml';
+    protected const string FIXTURE_DEFAULT = 'default.yaml';
 
-    private const string DCA_CONTENT = 'tl_content.php';
+    protected const string DCA_CONTENT = 'tl_content.php';
 
     protected static function createApplicationConfig(): ManagedEditionConfig
     {

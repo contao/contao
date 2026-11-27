@@ -104,7 +104,7 @@ class RootPageDependentSelectListener
             $wizards[$rootPage] = \sprintf(
                 ' <a href="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
-                StringUtil::specialchars(str_replace("'", "\\'", $title)),
+                StringUtil::specialchars(str_replace(['\\', "'"], ['\\\\', "\\'"], $title)),
                 Image::getHtml('edit.svg', $title),
             );
         }

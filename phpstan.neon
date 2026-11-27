@@ -34,6 +34,7 @@ parameters:
         - %currentWorkingDirectory%/oauth-server-bundle/src
         - %currentWorkingDirectory%/oauth-server-bundle/tests
         - %currentWorkingDirectory%/test-case/src
+        - %currentWorkingDirectory%/tests
 
     universalObjectCratesClasses:
         - Contao\BackendUser

@@ -52,6 +52,11 @@ class DataContainerOperation implements \ArrayAccess
             $operation['label'] = $operation['title'] = $name;
         }
 
+        // Encode for usage in attributes (JS encoding followed by HTML encoding)
+        if (null !== $id) {
+            $id = StringUtil::specialchars(str_replace(['\\', "'", '"'], ['\\\\', "\\'", '\\"'], $id));
+        }
+
         foreach (['attributes', 'listAttributes', 'iconAttributes'] as $key) {
             $operation[$key] ??= new HtmlAttributes();
 

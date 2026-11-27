@@ -88,6 +88,8 @@ class InsertTagParser implements ResetInterface
 
     private readonly HtmlDecoder $htmlDecoder;
 
+    private readonly string $allowedUrlProtocolsRegex;
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly LoggerInterface $logger,
@@ -97,6 +99,7 @@ class InsertTagParser implements ResetInterface
         private readonly ResponseTagger|null $responseTagger = null,
         private readonly SubrequestCacheSubscriber|null $subrequestCacheSubscriber = null,
         EscaperRuntime|null $escaperRuntime = null,
+        array $allowedUrlProtocols = ['http', 'https', 'mailto'],
     ) {
         $this->allowedTagsRegex = '('.implode(
             '|',
@@ -106,6 +109,7 @@ class InsertTagParser implements ResetInterface
             ),
         ).')';
 
+        $this->allowedUrlProtocolsRegex = '(^(?:'.implode('|', array_map(preg_quote(...), $allowedUrlProtocols)).'):)i';
         $this->escaperRuntime = $escaperRuntime ?? new EscaperRuntime();
         $this->htmlDecoder = new HtmlDecoder($this);
     }
@@ -185,11 +189,14 @@ class InsertTagParser implements ResetInterface
      */
     public function replaceInline(ParsedSequence|string $input, OutputType $outputType = OutputType::html): string
     {
+        $parts = $this->handleCaching($this->executeReplace($input, false, $outputType));
+
         return implode(
             '',
             array_map(
-                fn ($result) => $this->toOutputType($result, $outputType),
-                $this->handleCaching($this->executeReplace($input, false, $outputType)),
+                fn ($result, $key) => $this->toOutputType($result, $outputType, 0 === $key || ('mailto:' === $parts[0] && 1 === $key)),
+                $parts,
+                array_keys($parts),
             ),
         );
     }
@@ -500,6 +507,11 @@ class InsertTagParser implements ResetInterface
             $result = $subscription->service->{$subscription->method}($tag);
 
             foreach ($tag->getFlags() as $flag) {
+                // Backwards compatibility
+                if ('email_url' === $tag->getName() && 1 === \count($tag->getFlags()) && \in_array($tag->getFlags()[0]->getName(), ['attr', 'urlattr'], true)) {
+                    break;
+                }
+
                 // ESI tags need to be replaced before flags can be applied
                 $result = $this->replaceEsiTags($result, $esiTagsCount);
 
@@ -607,7 +619,7 @@ class InsertTagParser implements ResetInterface
         }
     }
 
-    private function toOutputType(InsertTagResult|string $result, OutputType $outputType): string
+    private function toOutputType(InsertTagResult|string $result, OutputType $outputType, bool $allowFullUrl = false): string
     {
         if (\is_string($result)) {
             return $result;
@@ -621,6 +633,19 @@ class InsertTagParser implements ResetInterface
 
         if (OutputType::text === $outputType && OutputType::html === $result->getOutputType()) {
             $value = $this->htmlDecoder->htmlToPlainText($result->getValue(), null, false);
+        }
+
+        if (OutputType::url === $outputType && OutputType::html === $result->getOutputType()) {
+            $value = StringUtil::revertInputEncoding($result->getValue());
+        }
+
+        if (
+            $allowFullUrl
+            && OutputType::url === $outputType
+            && OutputType::html === $result->getOutputType()
+            && (preg_match($this->allowedUrlProtocolsRegex, $value) || !preg_match('/^[\x00-\x20]*[a-z][a-z0-9+.-]*:/i', $value))
+        ) {
+            return preg_replace_callback('/[^A-Za-z0-9\-_.~;\/?:@&=+$,#%\[\]]+/', static fn ($matches) => rawurlencode($matches[0]), $value);
         }
 
         return match ($outputType) {

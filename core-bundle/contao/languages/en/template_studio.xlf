@@ -135,7 +135,7 @@
         <source>Please define a new unique name for the variant template %s.</source>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.not_analyzable">
-        <source>The template's relation cannot be analyzed because it contains errors.</source>
+        <source>The template’s relation cannot be analyzed because it contains errors.</source>
       </trans-unit>
       <trans-unit id="template_studio.editor_tab.relation.no_extend_warning">
         <source>This template overwrites all previously defined content because it does not extend %previous%.</source>

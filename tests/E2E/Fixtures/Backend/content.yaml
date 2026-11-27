@@ -1,0 +1,41 @@
+tl_article:
+    article_main_content:
+        pid: '@page_main_home'
+        sorting: 256
+        tstamp: 1704067200
+        title: Main website content
+        alias: main-website-content
+        inColumn: main
+        published: 1
+
+tl_content:
+    content_foo:
+        pid: '@article_main_content'
+        ptable: tl_article
+        sorting: 128
+        tstamp: 1704067200
+        type: text
+        text: <p>Foo</p>
+    content_bar:
+        pid: '@article_main_content'
+        ptable: tl_article
+        sorting: 256
+        tstamp: 1704067200
+        type: element_group
+    content_baz:
+        pid: '@content_bar'
+        ptable: tl_content
+        sorting: 128
+        tstamp: 1704067200
+        type: text
+        text: <p>Baz</p>
+
+tl_news:
+    news_foo:
+        pid: '@news_archive_corporate'
+        tstamp: 1704067200
+        headline: Foo
+        alias: foo
+        date: 1704067200
+        time: 1704067200
+        published: 1

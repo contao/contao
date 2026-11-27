@@ -1647,6 +1647,10 @@ window.Backend =
 	 * @param {object} el The DOM element
 	 */
 	editPreviewWizard: function(el) {
+		if (window.console) {
+			console.warn('Backend.editPreviewWizard() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		el = $(el);
 		var imageElement = el.getElement('img'),
 			inputElements = {},
@@ -1791,6 +1795,7 @@ window.Backend =
 		var fallbackUrl = options.url,
 			dzElement = new Element('div', {
 				'class': 'dropzone dropzone-filetree',
+				'data-turbo-temporary': '',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
 			currentHover, currentHoverTime, expandLink;

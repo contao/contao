@@ -9,7 +9,6 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
@@ -119,17 +118,17 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'foreignKey'              => 'tl_news_archive.title',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'tstamp' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'headline' => array
 		(
@@ -137,39 +136,38 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'basicEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'basicEntities' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'featured' => array
 		(
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'alias' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'alias', 'doNotCopy' => true, 'unique' => true, 'maxlength' => 255, 'tl_class' => 'w50'),
 			'save_callback' => array
 			(
 				array('tl_news', 'generateAlias')
 			),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'utf8mb4_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'utf8mb4_bin'))
 		),
 		'author' => array
 		(
-			'default'                 => static fn () => ($user = System::getContainer()->get('security.helper')->getUser()) instanceof BackendUser ? $user->id : 0,
 			'search'                  => true,
 			'backendSearch' 		  => false,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
-			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+			'eval'                    => array('doNotCopy' => true, 'chosen' => true, 'mandatory' => true, 'includeBlankOption' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy')
 		),
 		'date' => array
 		(
@@ -178,31 +176,31 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_MONTH_BOTH,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('rgxp' => 'date', 'mandatory' => true, 'doNotCopy' => true, 'datepicker' => true, 'tl_class' => 'w50 wizard'),
 			'load_callback' => array
 			(
 				array('tl_news', 'loadDate')
 			),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'time' => array
 		(
 			'default'                 => time(),
 			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp' => 'time', 'mandatory' => true, 'doNotCopy' => true, 'tl_class' => 'w50'),
 			'load_callback' => array
 			(
 				array('tl_news', 'loadTime')
 			),
-			'sql'                     => array('type'=>'integer', 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'default' => 0)
 		),
 		'pageTitle' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'robots' => array
 		(
@@ -210,132 +208,132 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'backendSearch'           => false,
 			'inputType'               => 'select',
 			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'eval'                    => array('tl_class' => 'w50', 'includeBlankOption' => true),
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'description' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('style' => 'height:60px', 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'serpPreview' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('titleFields' => array('pageTitle', 'headline'), 'descriptionFields' => array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'canonicalLink' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'eval'                    => array('rgxp' => 'url', 'maxlength' => 2048, 'dcaPicker' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		),
 		'subheadline' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'long'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'teaser' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('rte' => 'tinyMCE', 'basicEntities' => true, 'tl_class' => 'clr'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'addImage' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'overwriteMeta' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['overwriteMeta'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true, 'tl_class' => 'w50 clr'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'singleSRC' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>true),
-			'sql'                     => array('type'=>'binary', 'length'=>16, 'fixed'=>true, 'notnull'=>false)
+			'eval'                    => array('fieldType' => 'radio', 'filesOnly' => true, 'extensions' => '%contao.image.valid_extensions%', 'mandatory' => true),
+			'sql'                     => array('type' => 'binary', 'length' => 16, 'fixed' => true, 'notnull' => false)
 		),
 		'alt' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['alt'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'imageTitle' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageTitle'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'size' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp' => 'natural', 'includeBlankOption' => true, 'nospace' => true, 'helpwizard' => true, 'tl_class' => 'w50 clr'),
 			'options_callback'        => array('contao.listener.image_size_options', '__invoke'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'imageUrl' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imageUrl'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('rgxp' => 'url', 'maxlength' => 2048, 'dcaPicker' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'fullsize' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'caption' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['caption'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'eval'                    => array('maxlength' => 255, 'allowHtml' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'floating' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['floating'],
 			'inputType'               => 'radioTable',
 			'options'                 => array('above', 'left', 'right', 'below'),
-			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
+			'eval'                    => array('cols' => 4, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'above')
+			'sql'                     => array('type' => 'string', 'length' => 12, 'default' => 'above')
 		),
 		'addEnclosure' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('submitOnChange' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'enclosure' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull'=>false)
+			'eval'                    => array('multiple' => true, 'fieldType' => 'checkbox', 'filesOnly' => true, 'isDownloads' => true, 'extensions' => Config::get('allowedDownload'), 'mandatory' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false)
 		),
 		'source' => array
 		(
@@ -343,52 +341,52 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_news', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
-			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
-			'sql'                     => array('type'=>'string', 'length'=>12, 'default'=>'default')
+			'eval'                    => array('submitOnChange' => true, 'helpwizard' => true),
+			'sql'                     => array('type' => 'string', 'length' => 12, 'default' => 'default')
 		),
 		'linkText' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('maxlength' => 255, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'jumpTo' => array
 		(
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'eval'                    => array('mandatory' => true, 'fieldType' => 'radio'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'articleId' => array
 		(
 			'inputType'               => 'picker',
 			'foreignKey'              => 'tl_article.title',
-			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy'),
+			'eval'                    => array('mandatory' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy'),
 		),
 		'url' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['url'],
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>2048, 'default'=>'')
+			'eval'                    => array('mandatory' => true, 'rgxp' => 'url', 'maxlength' => 2048, 'dcaPicker' => true, 'tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 2048, 'default' => '')
 		),
 		'target' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'eval'                    => array('tl_class' => 'w50'),
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'searchIndexer' => array
 		(
@@ -396,9 +394,9 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
-			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength' => 32, 'includeBlankOption' => true, 'tl_class' => 'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => array('type'=>'string', 'length'=>32, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 32, 'default' => '')
 		),
 		'published' => array
 		(
@@ -406,20 +404,20 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'filter'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => array('type'=>'boolean', 'default'=>false)
+			'eval'                    => array('doNotCopy' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		),
 		'stop' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => array('type'=>'string', 'length'=>10, 'default'=>'', 'platformOptions'=>array('collation'=>'ascii_bin'))
+			'eval'                    => array('rgxp' => 'datim', 'datepicker' => true, 'tl_class' => 'w50 wizard'),
+			'sql'                     => array('type' => 'string', 'length' => 10, 'default' => '', 'platformOptions' => array('collation' => 'ascii_bin'))
 		)
 	)
 );

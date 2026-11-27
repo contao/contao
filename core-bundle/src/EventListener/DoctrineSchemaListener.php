@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
+use Contao\CoreBundle\Doctrine\Schema\EscargotSchemaProvider;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
@@ -22,15 +23,18 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 #[AsDoctrineListener('postGenerateSchema')]
 class DoctrineSchemaListener
 {
-    public function __construct(private readonly DcaSchemaProvider $provider)
-    {
+    public function __construct(
+        private readonly DcaSchemaProvider $dcaSchemaProvider,
+        private readonly EscargotSchemaProvider $escargotSchemaProvider,
+    ) {
     }
 
     /**
-     * Adds the Contao DCA information to the Doctrine schema.
+     * Adds the crawl queue and Contao DCA information to the Doctrine schema.
      */
     public function postGenerateSchema(GenerateSchemaEventArgs $event): void
     {
-        $this->provider->appendToSchema($event->getSchema());
+        $this->escargotSchemaProvider->appendToSchema($event->getSchema());
+        $this->dcaSchemaProvider->appendToSchema($event->getSchema());
     }
 }

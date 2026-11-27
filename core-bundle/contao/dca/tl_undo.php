@@ -84,46 +84,46 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'autoincrement'=>true)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'autoincrement' => true)
 		),
 		'pid' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
 			'foreignKey'              => 'tl_user.username',
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0),
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+			'relation'                => array('type' => 'belongsTo', 'load' => 'lazy')
 		),
 		'tstamp' => array
 		(
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sql'                     => array('type'=>'integer', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'integer', 'unsigned' => true, 'default' => 0)
 		),
 		'fromTable' => array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>'')
+			'sql'                     => array('type' => 'string', 'length' => 255, 'default' => '')
 		),
 		'query' => array
 		(
-			'sql'                     => array('type'=>'text', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull'=>false)
+			'sql'                     => array('type' => 'text', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, 'notnull' => false)
 		),
 		'affectedRows' => array
 		(
-			'sql'                     => array('type'=>'smallint', 'unsigned'=>true, 'default'=>0)
+			'sql'                     => array('type' => 'smallint', 'unsigned' => true, 'default' => 0)
 		),
 		'data' => array
 		(
 			'search'                  => true,
-			'eval'                    => array('doNotShow'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'preview' => array
 		(
-			'eval'                    => array('doNotShow'=>true),
-			'sql'                     => array('type'=>'blob', 'length'=>AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull'=>false)
+			'eval'                    => array('doNotShow' => true),
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		)
 	)
 );
@@ -162,7 +162,7 @@ class tl_undo extends Backend
 	{
 		$arrData = StringUtil::deserialize($row['data']);
 
-		foreach ($arrData as $strTable=>$arrTableData)
+		foreach ($arrData as $strTable => $arrTableData)
 		{
 			System::loadLanguageFile($strTable);
 			Controller::loadDataContainer($strTable);
@@ -170,7 +170,7 @@ class tl_undo extends Backend
 			foreach ($arrTableData as $arrRow)
 			{
 				// Unset fields that are not to be displayed
-				foreach (($GLOBALS['TL_DCA'][$strTable]['fields'] ?? array()) as $key=>$config)
+				foreach (($GLOBALS['TL_DCA'][$strTable]['fields'] ?? array()) as $key => $config)
 				{
 					if ($config['eval']['doNotShow'] ?? false)
 					{
@@ -180,7 +180,7 @@ class tl_undo extends Backend
 
 				$arrBuffer = array();
 
-				foreach ($arrRow as $i=>$v)
+				foreach ($arrRow as $i => $v)
 				{
 					if (is_array($array = StringUtil::deserialize($v)))
 					{

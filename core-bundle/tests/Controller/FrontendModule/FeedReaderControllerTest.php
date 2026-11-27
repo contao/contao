@@ -347,12 +347,6 @@ class FeedReaderControllerTest extends TestCase
             ->method('exists')
             ->willReturn(true)
         ;
-        $loader
-            ->method('getFirst')
-            ->willReturnCallback(
-                static fn (string $identifier): string => 'pagination' === $identifier ? 'templates/pagination.html5' : "path/to/$identifier.html.twig",
-            )
-        ;
 
         $twig = $this->createMock(TwigEnvironment::class);
 
