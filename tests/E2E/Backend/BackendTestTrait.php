@@ -46,6 +46,8 @@ trait BackendTestTrait
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_USERS)
             ->withFixtureFile(self::fixtureDirectory().'/'.self::FIXTURE_DEFAULT)
             ->withConfigFile(self::configDirectory().'/security.yaml')
+            ->withConfigFile(self::configDirectory().'/content_elements.yaml')
+            ->withFileMapping(new FileMapping(self::controllerDirectory().'/ContentElement/RowWizardMandatoryController.php', 'src/Controller/ContentElement/RowWizardMandatoryController.php'))
             ->withFileMapping(new FileMapping($dummyImage, self::DUMMY_IMAGE))
             ->withFileMapping(new FileMapping($dummyImage, 'files/media/dummy.jpg'))
             ->withFileMapping(new FileMapping($dummyImage, 'files/private/dummy.jpg'))
@@ -64,6 +66,11 @@ trait BackendTestTrait
     private static function customDcaDirectory(): string
     {
         return self::projectDirectory().'/tests/E2E/Fixtures/Dca';
+    }
+
+    private static function controllerDirectory(): string
+    {
+        return self::projectDirectory().'/tests/E2E/Fixtures/Controller';
     }
 
     private static function configDirectory(): string
