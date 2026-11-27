@@ -36,7 +36,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
             ->name('*.yaml')
             ->path('config')
             ->exclude('vendor')
-            ->in(\dirname(__DIR__, 3))
+            ->in(glob(\dirname(__DIR__, 3).'/*-bundle', GLOB_ONLYDIR))
         ;
 
         foreach ($files as $file) {

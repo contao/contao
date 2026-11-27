@@ -62,10 +62,10 @@ class PageControllerTest extends FunctionalTestCase
 
     public static function getPageController(): iterable
     {
-        foreach (['/test', '/test/5', '/test/5/abc'] as $request) {
-            foreach ([true, false] as $withDefault) {
-                foreach ([true, false] as $withSuffix) {
-                    foreach ([true, false] as $withAlias) {
+        foreach ([true, false] as $withSuffix) {
+            foreach ([true, false] as $withAlias) {
+                foreach (['/test', '/test/5', '/test/5/abc'] as $request) {
+                    foreach ([true, false] as $withDefault) {
                         $description = \sprintf(
                             'Request: %s, withDefault: %s, withSuffix: %s, withAlias: %s',
                             $request,
