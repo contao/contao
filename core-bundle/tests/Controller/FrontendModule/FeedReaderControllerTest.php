@@ -19,6 +19,7 @@ use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\ModuleModel;
@@ -40,7 +41,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment as TwigEnvironment;
-use Twig\Loader\LoaderInterface;
 
 class FeedReaderControllerTest extends TestCase
 {
@@ -312,11 +312,21 @@ class FeedReaderControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, callable|null $assertTwigContext = null): ContainerBuilder
     {
-        $loader = $this->createMock(LoaderInterface::class);
+        $loader = $this->createStub(ContaoFilesystemLoader::class);
         $loader
             ->method('exists')
-            ->with('@Contao/frontend_module/feed_reader.html.twig')
-            ->willReturn(true)
+            ->willReturnCallback(static fn ($template) => match ($template) {
+                '@Contao/frontend_module/feed_reader.html.twig' => true,
+                default => false,
+            })
+        ;
+
+        $loader
+            ->method('getFirst')
+            ->willReturnCallback(static fn ($template) => match ($template) {
+                '@Contao/frontend_module/feed_reader.html.twig' => '@Contao_ContaoCoreBundle/frontend_module/feed_reader.html.twig',
+                default => "$template.html5",
+            })
         ;
 
         $twig = $this->createMock(TwigEnvironment::class);

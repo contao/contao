@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\EventListener;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Knp\Menu\Util\MenuManipulator;
@@ -35,6 +36,7 @@ class BackendMenuListener
         private readonly bool $debug,
         private readonly string|null $managerPath,
         private readonly JwtManager|null $jwtManager,
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
@@ -72,6 +74,7 @@ class BackendMenuListener
             'key' => $this->debug ? 'disable' : 'enable',
             'referer' => base64_encode($request->server->get('QUERY_STRING', '')),
             'ref' => $request->attributes->get('_contao_referer_id'),
+            'rt' => $this->tokenManager->getDefaultTokenValue(),
         ];
 
         $class = 'icon-debug';

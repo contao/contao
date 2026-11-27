@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 use Contao\Rector\Set\SetList;
 use Rector\CodeQuality\Rector\If_\SimplifyIfReturnBoolRector;
+use Rector\CodingStyle\Rector\ArrowFunction\ArrowFunctionDelegatingCallToFirstClassCallableRector;
 use Rector\Config\RectorConfig;
 use Rector\Php55\Rector\String_\StringClassNameToClassConstantRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php81\Rector\Array_\FirstClassCallableRector;
-use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
+use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 
 return RectorConfig::configure()
     ->withSets([SetList::CONTAO])
@@ -45,18 +45,14 @@ return RectorConfig::configure()
         __DIR__.'/vendor-bin/service-linter/src',
     ])
     ->withSkip([
+        ArrowFunctionDelegatingCallToFirstClassCallableRector::class,
+        ArrayToFirstClassCallableRector::class,
         ClassPropertyAssignToConstructorPromotionRector::class => [
             '*/src/Entity/*',
         ],
         StringClassNameToClassConstantRector::class => [
             'core-bundle/tests/PhpunitExtension/GlobalStateWatcher.php',
         ],
-        FirstClassCallableRector::class => [
-            'core-bundle/tests/Contao/InsertTagsTest.php',
-            'core-bundle/tests/Twig/Interop/ContaoEscaperNodeVisitorTest.php',
-            'core-bundle/tests/Twig/Interop/ContaoEscaperTest.php',
-        ],
-        NullToStrictStringFuncCallArgRector::class,
         SimplifyIfReturnBoolRector::class => [
             'core-bundle/src/EventListener/CommandSchedulerListener.php',
         ],

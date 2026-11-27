@@ -139,9 +139,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
-        if (!isset($attributes['fieldType'])) {
-            $attributes['fieldType'] = 'radio';
-        }
+        $attributes['fieldType'] ??= 'radio';
 
         $value = $config->getValue();
 

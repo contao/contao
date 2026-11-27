@@ -222,6 +222,6 @@ final class BbCode
 
     private function subCompile(array $nodes): string
     {
-        return implode('', array_map(fn (Node $node): string => $this->compile($node), $nodes));
+        return implode('', array_map($this->compile(...), $nodes));
     }
 }

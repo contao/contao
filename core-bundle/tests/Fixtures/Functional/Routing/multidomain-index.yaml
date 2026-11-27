@@ -1,0 +1,63 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      title: Domain A
+      type: root
+      alias: domain-a
+      language: zh
+      dns: a.example.com
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 2
+      pid: 0
+      sorting: 256
+      title: Domain B
+      type: root
+      alias: domain-b
+      language: nl
+      dns: b.example.com
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 3
+      pid: 0
+      sorting: 384
+      title: Domain C
+      type: root
+      alias: domain-c
+      language: nl
+      dns: c.example.com
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1
+
+    - id: 6
+      pid: 3
+      sorting: 128
+      title: Index C
+      type: regular
+      alias: index
+      published: 1
+
+    - id: 7
+      pid: 1
+      sorting: 128
+      title: Index A
+      type: regular
+      alias: index
+      published: 1
+
+    - id: 8
+      pid: 2
+      sorting: 128
+      title: Index B
+      type: regular
+      alias: index
+      published: 1

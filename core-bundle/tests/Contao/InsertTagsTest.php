@@ -425,6 +425,30 @@ class InsertTagsTest extends TestCase
                 $defaultTemplate,
             ],
         ];
+
+        yield 'JavaScript URL' => [
+            '{{figure::123?metadata[link]=javascript:alert(1)}}',
+            [
+                '123',
+                null,
+                [
+                    'metadata' => ['link' => 'javascript%3Aalert(1)'],
+                ],
+                $defaultTemplate,
+            ],
+        ];
+
+        yield 'JavaScript attribute' => [
+            '{{figure::1000?size=5&options[attr][onload]=alert(1)&options[attr][class]=foo&options[attr][href]=javascript:alert(1)&options[link_attr][href]=javascript:alert(1)}}',
+            [
+                '1000',
+                5,
+                [
+                    'options' => ['attr' => ['class' => 'foo'], 'link_attr' => ['href' => 'javascript%3Aalert(1)']],
+                ],
+                $defaultTemplate,
+            ],
+        ];
     }
 
     /**
@@ -1131,7 +1155,12 @@ class InsertTagsTest extends TestCase
      */
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        if (!\ini_get('pcre.jit') || 'off' === strtolower((string) \ini_get('pcre.jit'))) {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessage('PCRE: Backtrack limit exhausted');
+        } else {
+            $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        }
 
         InsertTags::reset();
 

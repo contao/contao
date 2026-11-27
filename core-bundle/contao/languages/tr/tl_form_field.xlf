@@ -279,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.storeFile.1">
         <source>Move the uploaded files to a folder on the server.</source>
-        <target>Bu seçenek etkinleştirildiğinde, yüklenen dosyalar sunucuda bir klasöre taşınır.</target>
+        <target>Etkinleştirildiğinde, yüklenen dosyalar sunucuda bir klasöre taşınır.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.uploadFolder.0">
         <source>Target folder</source>
@@ -303,7 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.1">
         <source>Add a numeric suffix to the new file if the file name already exists.</source>
-        <target>Bu seçenek etkinleştirildiğinde, aynı adlı bir dosya zaten varsa yeni dosyanın adının sonuna bir rakam eklenir.</target>
+        <target>Etkinleştirildiğinde, aynı adlı bir dosya zaten varsa yeni dosyanın adının sonuna bir rakam eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.value.0">
         <source>Default value</source>
@@ -375,7 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
-        <target>Bu seçenek etkinleştirildiğinde, form alanı sitede görüntülenmez.</target>
+        <target>Etkinleştirildiğinde, form alanı sitede görüntülenmez.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
