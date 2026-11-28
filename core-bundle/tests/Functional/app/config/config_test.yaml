@@ -59,8 +59,9 @@ contao:
     cron:
         web_listener: false
     search:
-        default_indexer:
-            enable: false
+        listener:
+            index: false
+            delete: false
     messenger:
         workers: [{ transports: [contao_test] }]
 
