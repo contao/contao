@@ -562,7 +562,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     {
         if ($container->hasDefinition('contao.routing.response_context.csp_handler_factory')) {
             $factory = $container->getDefinition('contao.routing.response_context.csp_handler_factory');
-            $factory->setArgument(1, $config['csp']['max_header_size']);
+            $factory->setArgument('$maxHeaderLength', $config['csp']['max_header_size']);
         }
 
         if ($container->hasDefinition('contao.csp.wysiwyg_style_processor')) {

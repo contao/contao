@@ -8,7 +8,8 @@
 {% endblock %}
 
 {% block body_end %}
-    <script data-labels="{{ defaultLabels|json_encode() }}">
+    {% set script_nonce = csp_handler is defined ? csp_handler.getNonce('script-src') : null %}
+    <script data-labels="{{ defaultLabels|json_encode() }}"{% if script_nonce %} nonce="{{ script_nonce }}"{% endif %}>
         (function (n, d) {
             let language = n.language;
             const data = JSON.parse(d.currentScript.dataset.labels);

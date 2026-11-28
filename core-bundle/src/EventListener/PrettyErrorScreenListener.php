@@ -19,11 +19,14 @@ use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\AcceptHeader;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -51,6 +54,7 @@ class PrettyErrorScreenListener
         private readonly PageRegistry $pageRegistry,
         private readonly HttpKernelInterface $httpKernel,
         private readonly PageFinder $pageFinder,
+        private readonly CspHandlerFactory $cspHandlerFactory,
     ) {
     }
 
@@ -185,11 +189,32 @@ class PrettyErrorScreenListener
         $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
+        $response = $event->getResponse() ?? new Response();
+        $response->setStatusCode($statusCode);
+
+        $cspHandler = $this->createCspHandler($event->getRequest());
+
+        $parameters['csp_handler'] = $cspHandler;
+
         try {
-            $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
+            $response->setContent($this->twig->render($view, $parameters));
         } catch (Error) {
-            $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
+            $response->setStatusCode(500);
+            $response->setContent($this->twig->render('@ContaoCore/Error/error.html.twig', ['csp_handler' => $cspHandler]));
         }
+
+        $cspHandler?->applyHeaders($response, $event->getRequest());
+
+        $event->setResponse($response);
+    }
+
+    private function createCspHandler(Request $request): CspHandler|null
+    {
+        if (!$page = $this->pageFinder->findRootPageForRequest($request)) {
+            return $this->cspHandlerFactory->create("default-src 'self'");
+        }
+
+        return $this->cspHandlerFactory->createFromPage($page);
     }
 
     /**

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Csp\CspParser;
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
@@ -23,9 +24,12 @@ use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,12 +39,82 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Loader\FilesystemLoader;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
+    /**
+     * @dataProvider getPageContentSecurityPolicies
+     */
+    public function testUsesPageContentSecurityPolicy(string $template, int $statusCode, array|null $headers): void
+    {
+        $loader = new FilesystemLoader();
+        $loader->addPath(__DIR__.'/../../templates', 'ContaoCore');
+
+        $twig = new Environment($loader);
+        $twig->addExtension(new TranslationExtension(new Translator('en')));
+
+        $headerName = isset($headers['Content-Security-Policy-Report-Only']) ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
+        $policy = $headers[$headerName] ?? "default-src 'self'";
+        $rootPage = null;
+
+        if (null !== $headers) {
+            $rootPage = $this->mockPageWithProperties([
+                'enableCsp' => (bool) $headers,
+                'csp' => $policy,
+                'cspReportOnly' => 'Content-Security-Policy-Report-Only' === $headerName,
+                'cspReportLog' => false,
+            ]);
+        }
+
+        $event = $this->getResponseEvent(new \RuntimeException());
+        $response = new Response();
+        $event->setResponse($response);
+        $listener = $this->getListener(false, $twig, rootPage: $rootPage);
+
+        $method = new \ReflectionMethod($listener, 'renderTemplate');
+        $method->invoke($listener, $template, $statusCode, $event);
+
+        $this->assertSame($response, $event->getResponse());
+        $this->assertSame($statusCode, $response->getStatusCode());
+
+        if ([] === $headers) {
+            $this->assertFalse($response->headers->has('Content-Security-Policy'));
+            $this->assertFalse($response->headers->has('Content-Security-Policy-Report-Only'));
+            $this->assertStringNotContainsString('nonce=', $response->getContent());
+
+            return;
+        }
+
+        $header = $response->headers->get($headerName);
+
+        $this->assertStringContainsString($policy, $header);
+        $this->assertSame(1, preg_match('/<style nonce="([^"]+)">/', $response->getContent(), $matches));
+        $this->assertStringContainsString("'nonce-".$matches[1]."'", $header);
+
+        if (503 === $statusCode) {
+            $this->assertSame(1, preg_match('/<script[^>]+nonce="([^"]+)"/', $response->getContent(), $matches));
+            $this->assertStringContainsString("script-src https://example.com 'nonce-".$matches[1]."'", $header);
+        }
+
+        $otherHeaderName = 'Content-Security-Policy' === $headerName ? 'Content-Security-Policy-Report-Only' : 'Content-Security-Policy';
+        $this->assertFalse($response->headers->has($otherHeaderName));
+    }
+
+    public static function getPageContentSecurityPolicies(): iterable
+    {
+        yield 'backend' => ['backend', 500, ['Content-Security-Policy' => 'default-src https://example.com']];
+        yield 'frontend report-only' => ['error', 409, ['Content-Security-Policy-Report-Only' => 'default-src https://example.com']];
+        yield 'maintenance' => ['service_unavailable', 503, ['Content-Security-Policy' => 'default-src https://example.com']];
+        yield 'without CSP' => ['service_unavailable', 503, []];
+        yield 'without root page' => ['error', 500, null];
+    }
+
     public function testRendersBackEndExceptions(): void
     {
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
@@ -71,7 +145,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -95,7 +169,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
         $event = $this->getResponseEvent($exception);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertTrue($event->hasResponse());
@@ -232,7 +306,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(false, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -256,7 +330,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException(''));
         $event = $this->getResponseEvent($exception, null, true);
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -277,18 +351,19 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $exception = new InternalServerErrorHttpException('', new ForwardPageNotFoundException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
+
         $twig = $this->createMock(Environment::class);
         $count = 0;
 
         $twig
             ->method('render')
             ->willReturnCallback(
-                static function () use (&$count): string {
+                static function (string $template, array $parameters) use (&$count): string {
                     if (0 === $count++) {
                         throw new Error('foo');
                     }
 
-                    return '';
+                    return '<style nonce="'.$parameters['csp_handler']->getNonce('style-src').'"></style>';
                 },
             )
         ;
@@ -298,6 +373,8 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame(1, preg_match('/nonce="([^"]+)"/', $event->getResponse()->getContent(), $matches));
+        $this->assertStringContainsString("'nonce-".$matches[1]."'", $event->getResponse()->headers->get('Content-Security-Policy'));
     }
 
     public function testDoesNothingIfTheFormatIsNotHtml(): void
@@ -318,7 +395,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend', 'json'));
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -345,7 +422,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $exception = new InternalServerErrorHttpException('', new InsecureInstallationException());
         $event = $this->getResponseEvent($exception, $this->getRequest('backend', 'html', 'application/json'));
 
-        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
@@ -374,12 +451,16 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null, PageModel|null $rootPage = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
 
         $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('findRootPageForRequest')
+            ->willReturn($rootPage)
+        ;
         $pageRegistry = $this->createMock(PageRegistry::class);
 
         if ($errorPage) {
@@ -407,7 +488,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn($isBackendUser)
         ;
 
-        return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder);
+        return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel, $pageFinder, $this->mockCspHandlerFactory());
     }
 
     private function getRequest(string $scope = 'backend', string $format = 'html', string $accept = 'text/html'): Request
@@ -427,6 +508,11 @@ class PrettyErrorScreenListenerTest extends TestCase
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
 
         return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
+    }
+
+    private function mockCspHandlerFactory(): CspHandlerFactory
+    {
+        return new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class));
     }
 
     private function mockPageWithProperties(array $properties = []): PageModel&MockObject

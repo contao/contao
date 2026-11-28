@@ -449,6 +449,7 @@ services:
             - '@contao.routing.page_registry'
             - '@http_kernel'
             - '@contao.routing.page_finder'
+            - '@contao.routing.response_context.csp_handler_factory'
 
     contao.listener.preview_authentication:
         class: Contao\CoreBundle\EventListener\PreviewAuthenticationListener

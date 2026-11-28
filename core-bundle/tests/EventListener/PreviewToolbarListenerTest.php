@@ -43,7 +43,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $response = new Response($content);
@@ -83,7 +83,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -108,7 +108,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -133,7 +133,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -158,7 +158,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -183,7 +183,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -211,7 +211,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -252,7 +252,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -293,7 +293,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -318,7 +318,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
@@ -343,7 +343,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockTokenChecker(),
             $this->mockTwig(),
             $this->mockRouterWithContext(),
-            new CspHandlerFactory(new CspParser(new PolicyManager())),
+            new CspHandlerFactory(new CspParser(new PolicyManager()), $this->createMock(UrlGeneratorInterface::class)),
         );
 
         $listener($event);
