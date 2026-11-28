@@ -8,7 +8,8 @@
         <meta name="generator" content="Contao Open Source CMS">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
         {% block style %}
-            <style>
+            {% set style_nonce = csp_handler is defined ? csp_handler.getNonce('style-src') : null %}
+            <style{% if style_nonce %} nonce="{{ style_nonce }}"{% endif %}>
                 html {
                     background: #fff;
                 }
