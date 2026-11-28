@@ -281,6 +281,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes' => 'maxlength="2048"', 'dcaPicker' => true),
 					'caption'         => array('type' => 'textarea', 'basicEntities' => true, 'allowHtml' => true),
+					'description'     => array('type' => 'textarea'),
 					'license'         => array(
 						'attributes'  => 'maxlength="255"',
 						'dcaPicker'   => true,

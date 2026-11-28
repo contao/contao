@@ -1175,6 +1175,9 @@
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
       </trans-unit>
+      <trans-unit id="MSC.aw_description">
+        <source>Description</source>
+      </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License URL</source>
       </trans-unit>
