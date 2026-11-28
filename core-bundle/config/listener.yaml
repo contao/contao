@@ -134,6 +134,11 @@ services:
             - '@contao.framework'
             - '@translator'
 
+    contao.listener.data_container.disable_search_index:
+        class: Contao\CoreBundle\EventListener\DataContainer\DisableSearchIndexListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.data_container.enum_options:
         class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
         arguments:
