@@ -71,6 +71,7 @@ class MetadataTest extends TestCase
         $metadata = new Metadata([
             Metadata::VALUE_ALT => 'alt',
             Metadata::VALUE_CAPTION => 'caption',
+            Metadata::VALUE_DESCRIPTION => 'description',
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
             Metadata::VALUE_UUID => '1234-5678',
@@ -82,6 +83,7 @@ class MetadataTest extends TestCase
 
         $this->assertSame('alt', $metadata->getAlt());
         $this->assertSame('caption', $metadata->getCaption());
+        $this->assertSame('description', $metadata->getDescription());
         $this->assertSame('title', $metadata->getTitle());
         $this->assertSame('url', $metadata->getUrl());
         $this->assertSame('https://creativecommons.org/licenses/by/4.0/', $metadata->getLicense());
@@ -91,6 +93,7 @@ class MetadataTest extends TestCase
             [
                 Metadata::VALUE_ALT => 'alt',
                 Metadata::VALUE_CAPTION => 'caption',
+                Metadata::VALUE_DESCRIPTION => 'description',
                 Metadata::VALUE_TITLE => 'title',
                 Metadata::VALUE_URL => 'url',
                 Metadata::VALUE_UUID => '1234-5678',
@@ -107,6 +110,7 @@ class MetadataTest extends TestCase
 
         $this->assertSame('', $metadata->getAlt());
         $this->assertSame('', $metadata->getCaption());
+        $this->assertSame('', $metadata->getDescription());
         $this->assertSame('', $metadata->getTitle());
         $this->assertSame('', $metadata->getUrl());
         $this->assertSame('', $metadata->getLicense());
@@ -267,6 +271,7 @@ class MetadataTest extends TestCase
         $metadata = new Metadata([
             Metadata::VALUE_ALT => 'alt',
             Metadata::VALUE_CAPTION => 'caption',
+            Metadata::VALUE_DESCRIPTION => 'description',
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
             Metadata::VALUE_UUID => '1234-5678',
@@ -279,31 +284,37 @@ class MetadataTest extends TestCase
                 'AudioObject' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
                 'ImageObject' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
                 'MediaObject' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
                 'VideoObject' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
                 'DigitalDocument' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
                 'SpreadsheetDigitalDocument' => [
                     'name' => 'title',
                     'caption' => 'caption',
+                    'description' => 'description',
                     'license' => 'https://creativecommons.org/licenses/by/4.0/',
                 ],
             ],
@@ -314,6 +325,7 @@ class MetadataTest extends TestCase
             [
                 'name' => 'title',
                 'caption' => 'caption',
+                'description' => 'description',
                 'license' => 'https://creativecommons.org/licenses/by/4.0/',
             ],
             $metadata->getSchemaOrgData('ImageObject'),

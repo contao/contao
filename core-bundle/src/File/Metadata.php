@@ -27,6 +27,8 @@ class Metadata
 
     final public const VALUE_CAPTION = 'caption';
 
+    final public const VALUE_DESCRIPTION = 'description';
+
     final public const VALUE_TITLE = 'title';
 
     final public const VALUE_URL = 'link';
@@ -76,6 +78,11 @@ class Metadata
     public function getCaption(): string
     {
         return $this->values[self::VALUE_CAPTION] ?? '';
+    }
+
+    public function getDescription(): string
+    {
+        return $this->values[self::VALUE_DESCRIPTION] ?? '';
     }
 
     public function getTitle(): string
@@ -157,6 +164,15 @@ class Metadata
             $this->schemaOrgJsonLd['VideoObject']['caption'] = $this->getCaption();
             $this->schemaOrgJsonLd['DigitalDocument']['caption'] = $this->getCaption();
             $this->schemaOrgJsonLd['SpreadsheetDigitalDocument']['caption'] = $this->getCaption();
+        }
+
+        if ($this->has(self::VALUE_DESCRIPTION)) {
+            $this->schemaOrgJsonLd['AudioObject']['description'] = $this->getDescription();
+            $this->schemaOrgJsonLd['ImageObject']['description'] = $this->getDescription();
+            $this->schemaOrgJsonLd['MediaObject']['description'] = $this->getDescription();
+            $this->schemaOrgJsonLd['VideoObject']['description'] = $this->getDescription();
+            $this->schemaOrgJsonLd['DigitalDocument']['description'] = $this->getDescription();
+            $this->schemaOrgJsonLd['SpreadsheetDigitalDocument']['description'] = $this->getDescription();
         }
 
         if ($this->has(self::VALUE_LICENSE)) {

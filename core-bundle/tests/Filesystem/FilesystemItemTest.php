@@ -115,6 +115,7 @@ class FilesystemItemTest extends TestCase
                     [
                         'en' => new Metadata([
                             Metadata::VALUE_TITLE => 'My title!',
+                            Metadata::VALUE_DESCRIPTION => 'My description!',
                         ]),
                     ],
                     ['en'],
@@ -337,6 +338,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'ImageObject',
                 'contentUrl' => 'foo/bar.png',
+                'description' => 'My description!',
                 'encodingFormat' => 'image/png',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -349,6 +351,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'VideoObject',
                 'contentUrl' => 'foo/bar.mp4',
+                'description' => 'My description!',
                 'encodingFormat' => 'video/mp4',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -362,6 +365,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'AudioObject',
                 'contentUrl' => 'foo/bar.m4a',
+                'description' => 'My description!',
                 'encodingFormat' => 'audio/mp4',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -374,6 +378,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'DigitalDocument',
                 'contentUrl' => 'foo/bar.pdf',
+                'description' => 'My description!',
                 'encodingFormat' => 'application/pdf',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -386,6 +391,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'SpreadsheetDigitalDocument',
                 'contentUrl' => 'foo/bar.xlsx',
+                'description' => 'My description!',
                 'encodingFormat' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -398,6 +404,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'MediaObject',
                 'contentUrl' => 'foo/bar.sql',
+                'description' => 'My description!',
                 'encodingFormat' => 'application/sql',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
@@ -410,6 +417,7 @@ class FilesystemItemTest extends TestCase
             [
                 '@type' => 'MediaObject',
                 'contentUrl' => 'foo/bar.whatisthis',
+                'description' => 'My description!',
                 'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
                 'name' => 'My title!',
             ],
