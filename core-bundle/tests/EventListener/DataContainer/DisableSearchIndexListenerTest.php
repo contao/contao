@@ -57,6 +57,7 @@ class DisableSearchIndexListenerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('_scope', $scope);
+
         $event = new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener = new DisableSearchIndexListener($this->mockScopeMatcher());
