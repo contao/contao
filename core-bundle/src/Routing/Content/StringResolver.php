@@ -13,10 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\InsertTag\Exception\RecursionException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Component\Routing\Exception\RuntimeException as RoutingException;
 use Symfony\Component\Routing\RequestContext;
 
 class StringResolver implements ContentUrlResolverInterface
@@ -35,7 +37,11 @@ class StringResolver implements ContentUrlResolverInterface
             return null;
         }
 
-        $url = $this->insertTagParser->replaceInline($content->value);
+        try {
+            $url = $this->insertTagParser->replaceInline($content->value);
+        } catch (RecursionException $exception) {
+            throw new RoutingException($exception->getMessage(), previous: $exception);
+        }
 
         if ('' === $url) {
             throw new ForwardPageNotFoundException();
