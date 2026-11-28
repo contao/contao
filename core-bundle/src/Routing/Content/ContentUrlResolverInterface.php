@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Content;
 
 use Contao\PageModel;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 interface ContentUrlResolverInterface
 {
@@ -24,6 +25,8 @@ interface ContentUrlResolverInterface
      * - ContentUrlResult::resolve() to generate the URL for the given PageModel with the current content.
      *
      * Return NULL if you cannot handle the content.
+     *
+     * @throws ExceptionInterface
      */
     public function resolve(object $content): ContentUrlResult|null;
 

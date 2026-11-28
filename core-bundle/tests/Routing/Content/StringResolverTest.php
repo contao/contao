@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\Content;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\InsertTag\Exception\RecursionException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\Content\StringResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
@@ -21,6 +22,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
+use Symfony\Component\Routing\Exception\RuntimeException as RoutingException;
 use Symfony\Component\Routing\RequestContext;
 
 class StringResolverTest extends TestCase
@@ -65,6 +67,37 @@ class StringResolverTest extends TestCase
         $this->expectException(ForwardPageNotFoundException::class);
 
         $resolver->resolve($content);
+    }
+
+    public function testThrowsRoutingExceptionIfInsertTagsRecurse(): void
+    {
+        $content = new StringUrl('{{link_url::42}}');
+        $exception = new RecursionException('Maximum insert tag nesting level reached');
+
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with($content->value)
+            ->willThrowException($exception)
+        ;
+
+        $requestStack = new RequestStack();
+        $requestContext = new RequestContext();
+        $urlHelper = new UrlHelper($requestStack, $requestContext);
+
+        $resolver = new StringResolver($insertTagParser, $urlHelper, $requestStack, $requestContext);
+
+        try {
+            $resolver->resolve($content);
+        } catch (RoutingException $routingException) {
+            $this->assertSame($exception->getMessage(), $routingException->getMessage());
+            $this->assertSame($exception, $routingException->getPrevious());
+
+            return;
+        }
+
+        $this->fail('Expected a routing exception');
     }
 
     /**

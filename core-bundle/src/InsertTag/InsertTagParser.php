@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\InsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\Exception\RecursionException;
 use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
@@ -458,7 +459,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (\count($this->recursionTrace) >= self::MAX_RECURSION) {
-            throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
+            throw new RecursionException(\sprintf('Maximum insert tag nesting level of %s reached. Trace: %s', self::MAX_RECURSION, self::formatRecursionTrace([...$this->recursionTrace, $tag->serialize()])));
         }
 
         $this->recursionTrace[] = $tag->serialize();

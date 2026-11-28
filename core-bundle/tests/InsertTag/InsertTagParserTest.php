@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\InsertTag;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\Exception\RecursionException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
@@ -430,6 +431,7 @@ class InsertTagParserTest extends TestCase
             ),
         );
 
+        $this->expectException(RecursionException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
         $parser->replaceInline('{{recursion}}');
     }
@@ -457,6 +459,7 @@ class InsertTagParserTest extends TestCase
             ),
         );
 
+        $this->expectException(RecursionException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{recursion}} -> {{recursion}} -> ... (repeats)');
         $parser->replaceInline('{{recursion::{{recursion}}}}');
     }
@@ -503,6 +506,7 @@ class InsertTagParserTest extends TestCase
             ),
         );
 
+        $this->expectException(RecursionException::class);
         $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached. Trace: {{foo}} -> {{bar}} -> {{foo}} -> ... (repeats)');
         $parser->replaceInline('{{foo}}');
     }
