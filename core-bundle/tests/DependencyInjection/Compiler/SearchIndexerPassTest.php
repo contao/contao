@@ -32,6 +32,7 @@ class SearchIndexerPassTest extends TestCase
 
         $container->setDefinition('contao.search.super-indexer', $definition);
         $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
+        $container->setDefinition('contao.listener.data_container.disable_search_index', new Definition());
         $container->setDefinition('contao.listener.search_index', new Definition());
         $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 
@@ -44,6 +45,7 @@ class SearchIndexerPassTest extends TestCase
         $this->assertSame('addIndexer', $methodCalls[0][0]);
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
 
+        $this->assertFalse($container->hasDefinition('contao.listener.data_container.disable_search_index'));
         $this->assertTrue($container->hasDefinition('contao.listener.search_index'));
         $this->assertTrue($container->hasDefinition('contao.crawl.escargot.search_index_subscriber'));
         $this->assertTrue($container->hasAlias('contao.search.indexer'));
@@ -58,12 +60,14 @@ class SearchIndexerPassTest extends TestCase
         $delegatingDefinition->addTag('contao.search_indexer');
 
         $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
+        $container->setDefinition('contao.listener.data_container.disable_search_index', new Definition());
         $container->setDefinition('contao.listener.search_index', new Definition());
         $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
+        $this->assertTrue($container->hasDefinition('contao.listener.data_container.disable_search_index'));
         $this->assertFalse($container->hasDefinition('contao.search.delegating_indexer'));
         $this->assertFalse($container->hasDefinition('contao.listener.search_index'));
         $this->assertFalse($container->hasDefinition('contao.crawl.escargot.search_index_subscriber'));

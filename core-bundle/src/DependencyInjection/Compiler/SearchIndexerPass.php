@@ -50,6 +50,9 @@ class SearchIndexerPass implements CompilerPassInterface
             return;
         }
 
+        // Keep the search DCA and purge job if indexing is enabled
+        $container->removeDefinition('contao.listener.data_container.disable_search_index');
+
         $definition = $container->findDefinition(self::DELEGATING_SERVICE_ID);
 
         foreach ($indexers as $reference) {
